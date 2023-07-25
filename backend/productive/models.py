@@ -42,7 +42,12 @@ class Goal(models.Model):
     deadline = models.DateTimeField()
     is_achieved = models.BooleanField(default=False)
     
-
+class Note(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notes')
+    
 @receiver(post_save, sender=User)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:

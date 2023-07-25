@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
 from .permissions import IsOwner
 from rest_framework.permissions import AllowAny, IsAdminUser
-from .serializers import TaskSerializer, UserSerializer
+from .serializers import NoteSerializer, TaskSerializer, UserSerializer
 from rest_framework import generics
-from .models import Task
+from .models import Note, Project, Task
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -21,7 +21,7 @@ class CreateTask(APIView):
     def post(self, request):
         serializer = TaskSerializer(data=request.data)
         if serializer.project.owner != request.user:
-            return Response(status=status.HTTP_403_FORBIDDEN)   
+            return Response(status=status.HTTP_403_FORBIDDEN)
         if serializer.is_valid():
             serializer.save(owner=request.user)
             return Response(serializer.data, status=HTTP_201_CREATED)
@@ -73,3 +73,42 @@ def delete(self, req, id, format=None):
     task = self.get_object(id)
     task.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ListCreateProject(APIView):
+    def get(self, request):
+        projects = Project.objects.all(owner=request.user)
+        serializer = ProjectSerializer(projects, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = ProjectSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
+            return Response(serializer.data, status=HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+class ProjectDetail(APIView):
+    permissions_classes = [IsOwner]
+
+    def get_object(self, id):
+        try:
+            return Project.objects.get(pk=id)
+        except Project.DoesNotExist:
+            raise Http404
+        
+
+class ListCreateNote(generics.ListCreateAPIView):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
+
+    def get_queryset(self):
+        return Note.objects.filter(owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+        
+class NoteDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
+    permissions_classes = [IsOwner]
