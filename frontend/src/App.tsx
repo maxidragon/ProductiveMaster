@@ -4,12 +4,15 @@ import Login from "./Pages/Auth/Login/Login";
 import Register from "./Pages/Auth/Register/Register";
 import { SnackbarProvider } from "notistack";
 import { ConfirmProvider } from "material-ui-confirm";
+import Dashboard from "./Pages/Dashboard/Dashboard";
+import Layout from "./Layout/Layout";
+import Notes from "./Pages/Notes/Notes";
 
 const router = createBrowserRouter([
-  // {
-  //     path: "/",
-  //     element: <Layout children={<Main />} />
-  // },
+  {
+    path: "/",
+    element: <Layout children={<Dashboard />} />
+  },
   {
     path: "/auth/login",
     element: <Login />,
@@ -22,6 +25,10 @@ const router = createBrowserRouter([
   //     path: "/about",
   //     element: <Layout children={<About />} />
   // },
+  {
+    path: "/notes",
+    element: <Layout children={<Notes />} />
+  }
   // {
   //     path: "*",
   //     element: <Layout children={<ErrorElement message="404 not found" />} />
@@ -34,13 +41,13 @@ const lightTheme = createTheme({
 });
 const App = () => {
   return (
-      <ThemeProvider theme={lightTheme}>
-        <SnackbarProvider>
-          <ConfirmProvider>
-            <RouterProvider router={router} />
-          </ConfirmProvider>
-        </SnackbarProvider>
-      </ThemeProvider>
+    <ThemeProvider theme={lightTheme}>
+      <SnackbarProvider>
+        <ConfirmProvider>
+          <RouterProvider router={router} />
+        </ConfirmProvider>
+      </SnackbarProvider>
+    </ThemeProvider>
   );
 };
 
