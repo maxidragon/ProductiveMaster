@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
 from .permissions import IsOwner
 from rest_framework.permissions import AllowAny, IsAdminUser
-from .serializers import NoteSerializer, TaskSerializer, UserSerializer
+from .serializers import ActivitySerializer, NoteSerializer, TaskSerializer, UserSerializer
 from rest_framework import generics
-from .models import Note, Project, Task
+from .models import Activity, Note, Project, Task
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -111,4 +111,23 @@ class ListCreateNote(generics.ListCreateAPIView):
 class NoteDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
+    permissions_classes = [IsOwner]
+    
+class ListActivities(APIView):
+    def get(self, request, date):
+        activities = Activity.objects.filter(start_time__date=date, owner=request.user)
+        serializer = ActivitySerializer(activities, many=True)
+        return Response(serializer.data)
+    
+class CreateActivity(APIView):
+    def post(self, request):
+        serializer = ActivitySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
+            return Response(serializer.data, status=HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        
+class ActivityDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Activity.objects.all()
+    serializer_class = ActivitySerializer
     permissions_classes = [IsOwner]

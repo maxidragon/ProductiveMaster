@@ -3,12 +3,13 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework import serializers, exceptions
 from rest_framework.validators import UniqueValidator
-from .models import Note, Project, Task
+from .models import Activity, Note, Project, Task
 
 
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=False, validators=[
-        UniqueValidator(queryset=User.objects.all(), message='A user with that email already exists.')
+        UniqueValidator(queryset=User.objects.all(),
+                        message='A user with that email already exists.')
     ])
 
     class Meta:
@@ -26,26 +27,39 @@ class UserSerializer(serializers.ModelSerializer):
             raise exceptions.ValidationError({'password': e.messages})
         else:
             if email:
-                user = User.objects.create_user(username=username, password=password, email=email)
+                user = User.objects.create_user(
+                    username=username, password=password, email=email)
             else:
-                user = User.objects.create_user(username=username, password=password)
+                user = User.objects.create_user(
+                    username=username, password=password)
             return user
-        
+
+
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ('id', 'title', 'description', 'status', 'created_at', 'owner', 'project')
+        fields = ('id', 'title', 'description', 'status',
+                  'created_at', 'owner', 'project')
         read_only_fields = ('created_at', 'owner')
-        
+
+
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ('id', 'title', 'description', 'status', 'owner')
         read_only_fields = ('owner',)
-        
-class NoteSerializer(serializers.ModelSerializer): 
-    
+
+
+class NoteSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Note
         fields = ('id', 'title', 'description', 'created_at', 'owner')
         read_only_fields = ('created_at', 'owner')
+
+class ActivitySerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Activity
+        fields = ('id', 'title', 'description', 'start_time', 'end_time', 'owner')
+        read_only_fields = ('owner',)
