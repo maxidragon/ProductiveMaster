@@ -3,6 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework import serializers, exceptions
 from rest_framework.validators import UniqueValidator
+from .models import Task
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -29,3 +30,9 @@ class UserSerializer(serializers.ModelSerializer):
             else:
                 user = User.objects.create_user(username=username, password=password)
             return user
+        
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ('id', 'title', 'description', 'status', 'created_at', 'owner', 'project')
+        read_only_fields = ('created_at', 'owner')
