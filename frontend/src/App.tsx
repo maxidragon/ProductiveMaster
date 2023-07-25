@@ -1,26 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Login from "./Pages/Auth/Login/Login";
+import Register from "./Pages/Auth/Register/Register";
+import { SnackbarProvider } from "notistack";
+import { ConfirmProvider } from "material-ui-confirm";
 
-function App() {
+const router = createBrowserRouter([
+  // {
+  //     path: "/",
+  //     element: <Layout children={<Main />} />
+  // },
+  {
+    path: "/auth/login",
+    element: <Login />,
+  },
+  {
+    path: "/auth/register",
+    element: <Register />,
+  },
+  // {
+  //     path: "/about",
+  //     element: <Layout children={<About />} />
+  // },
+  // {
+  //     path: "*",
+  //     element: <Layout children={<ErrorElement message="404 not found" />} />
+  // }
+]);
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+});
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <ThemeProvider theme={lightTheme}>
+        <SnackbarProvider>
+          <ConfirmProvider>
+            <RouterProvider router={router} />
+          </ConfirmProvider>
+        </SnackbarProvider>
+      </ThemeProvider>
   );
-}
+};
 
 export default App;
