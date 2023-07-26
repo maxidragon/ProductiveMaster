@@ -16,6 +16,8 @@ urlpatterns = [
     path('activities/', views.ListActivities.as_view(), name='activities'),
     path('activities/create', views.CreateActivity.as_view(), name='create-activity'),
     path('activities/<int:pk>/', views.ActivityDetail.as_view(), name='activity-detail'),
+    path('goals/', views.ListCreateGoal.as_view(), name='goals'),
+    path('goals/<int:pk>/', views.GoalDetail.as_view(), name='goal-detail'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

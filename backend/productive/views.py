@@ -138,7 +138,7 @@ class ListCreateGoal (generics.ListCreateAPIView):
     serializer_class = GoalSerializer
 
     def get_queryset(self):
-        return Note.objects.filter(owner=self.request.user)
+        return Goal.objects.filter(owner=self.request.user)
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
