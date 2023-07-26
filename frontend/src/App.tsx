@@ -8,6 +8,7 @@ import Dashboard from "./Pages/Dashboard/Dashboard";
 import Layout from "./Layout/Layout";
 import Notes from "./Pages/Notes/Notes";
 import SingleNote from "./Pages/Notes/SingleNote";
+import Goals from "./Pages/Goals/Goals";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
     path: "/note/:id",
     element: <Layout children={<SingleNote />} />
   },
+  {
+    path: "/goals",
+    element: <Layout children={<Goals />} />
+  }
   // {
   //     path: "*",
   //     element: <Layout children={<ErrorElement message="404 not found" />} />

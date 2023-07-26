@@ -100,7 +100,7 @@ const Layout = (props: { children: any }) => {
                         </ListItemIcon>
                         <ListItemText primary="Tasks" />
                     </ListItemButton>
-                    <ListItemButton>
+                    <ListItemButton  component={Link} to={'/goals'}>
                         <ListItemIcon>
                             <BarChartIcon />
                         </ListItemIcon>
