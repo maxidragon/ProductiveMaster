@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
 from .permissions import IsOwner
 from rest_framework.permissions import AllowAny, IsAdminUser
-from .serializers import ActivitySerializer, NoteSerializer, TaskSerializer, UserSerializer
+from .serializers import ActivitySerializer, GoalSerializer, NoteSerializer, TaskSerializer, UserSerializer
 from rest_framework import generics
-from .models import Activity, Note, Project, Task
+from .models import Activity, Goal, Note, Project, Task
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -130,4 +130,20 @@ class CreateActivity(APIView):
 class ActivityDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
+    permissions_classes = [IsOwner]
+    
+    
+class ListCreateGoal (generics.ListCreateAPIView):
+    queryset = Goal.objects.all()
+    serializer_class = GoalSerializer
+
+    def get_queryset(self):
+        return Note.objects.filter(owner=self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+        
+class GoalDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Goal.objects.all()
+    serializer_class = GoalSerializer
     permissions_classes = [IsOwner]

@@ -3,7 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework import serializers, exceptions
 from rest_framework.validators import UniqueValidator
-from .models import Activity, Note, Project, Task
+from .models import Activity, Goal, Note, Project, Task
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -62,4 +62,11 @@ class ActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Activity
         fields = ('id', 'title', 'description', 'start_time', 'end_time', 'owner')
+        read_only_fields = ('owner',)
+        
+class GoalSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Goal
+        fields = ('id', 'title', 'description', 'deadline', 'is_achieved', 'owner')
         read_only_fields = ('owner',)

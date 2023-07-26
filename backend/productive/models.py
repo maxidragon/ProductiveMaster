@@ -41,6 +41,7 @@ class Goal(models.Model):
     description = models.TextField()
     deadline = models.DateTimeField()
     is_achieved = models.BooleanField(default=False)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='goals')
     
 class Note(models.Model):
     title = models.CharField(max_length=100)
