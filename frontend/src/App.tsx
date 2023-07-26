@@ -7,6 +7,7 @@ import { ConfirmProvider } from "material-ui-confirm";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import Layout from "./Layout/Layout";
 import Notes from "./Pages/Notes/Notes";
+import SingleNote from "./Pages/Notes/SingleNote";
 
 const router = createBrowserRouter([
   {
@@ -28,7 +29,11 @@ const router = createBrowserRouter([
   {
     path: "/notes",
     element: <Layout children={<Notes />} />
-  }
+  },
+  {
+    path: "/note/:id",
+    element: <Layout children={<SingleNote />} />
+  },
   // {
   //     path: "*",
   //     element: <Layout children={<ErrorElement message="404 not found" />} />
