@@ -1,4 +1,4 @@
-import { CircularProgress, Box, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { CircularProgress, Box, IconButton } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Project, ProjectStatus } from "../../logic/interfaces";
 import { getAllProjects, getProjectsByStatus } from "../../logic/projects";
@@ -18,7 +18,6 @@ const Projects = () => {
             setLoading(false);
         } else {
             const data = await getAllProjects();
-
             setProjects(data);
             setLoading(false);
         }
@@ -27,6 +26,7 @@ const Projects = () => {
         setCreateModalOpen(false);
         fetchData();
     };
+
     useEffect(() => {
         fetchData();
     }, []);

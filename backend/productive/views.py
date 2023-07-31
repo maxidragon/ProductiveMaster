@@ -52,27 +52,25 @@ class TaskDetail(APIView):
             return Task.objects.get(pk=id)
         except Task.DoesNotExist:
             raise Http404
-
-
-def get(self, req, id, format=None):
-    task = self.get_object(id)
-    serializer = Task(task)
-    return Response(serializer.data)
-
-
-def put(self, req, id, format=None):
-    task = self.get_object(id)
-    serializer = TaskSerializer(task, data=req.data)
-    if serializer.is_valid():
-        serializer.save()
+    def get(self, req, id, format=None):
+        task = self.get_object(id)
+        serializer = TaskSerializer(task)
         return Response(serializer.data)
-    return Response(serializer.errors)
 
 
-def delete(self, req, id, format=None):
-    task = self.get_object(id)
-    task.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    def put(self, req, id, format=None):
+        task = self.get_object(id)
+        serializer = TaskSerializer(task, data=req.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+
+    def delete(self, req, id, format=None):
+        task = self.get_object(id)
+        task.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ListCreateProject(APIView):
@@ -102,7 +100,25 @@ class ProjectDetail(APIView):
             return Project.objects.get(pk=id)
         except Project.DoesNotExist:
             raise Http404
-        
+    def get(self, req, id, format=None):
+        project = self.get_object(id)
+        serializer = ProjectSerializer(project)
+        return Response(serializer.data)
+
+
+    def put(self, req, id, format=None):
+        project = self.get_object(id)
+        serializer = ProjectSerializer(project, data=req.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+
+    def delete(self, req, pk, format=None):
+        project = self.get_object(pk)
+        project.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class ListCreateNote(generics.ListCreateAPIView):
     queryset = Note.objects.all()
