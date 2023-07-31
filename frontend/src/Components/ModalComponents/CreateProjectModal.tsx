@@ -1,9 +1,5 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import { useRef } from "react";
+import {Box, Typography, Modal, TextField, Button} from "@mui/material";
 import { style } from "./modalStyles";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { enqueueSnackbar } from "notistack";
@@ -49,7 +45,7 @@ const CreateProjectModal = (props: { open: boolean; handleClose: any }) => {
         <TextField
           multiline
           rows={15}
-          placeholder={"Write your note here..."}
+          placeholder={"Write project description  here..."}
           fullWidth
           inputRef={descriptionRef}
         />

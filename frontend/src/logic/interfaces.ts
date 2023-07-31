@@ -15,12 +15,6 @@ export interface Project {
     id: number;
     title: string;
     description: string;
-    status: ProjectStatus;
+    status: string;
     github?: string;
-};
-
-export enum ProjectStatus {
-    TODO = 'Todo',
-    IN_PROGRESS = 'In progress',
-    DONE = 'Done'
 };

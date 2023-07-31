@@ -6,7 +6,7 @@ export const getAllProjects = async (): Promise<Project[]> => {
     return await response.json();
 };
 export const getProjectsByStatus = async (status: string): Promise<Project[]> => {
-    const response = await backendRequest(`projects/${status}/`, 'GET', true);
+    const response = await backendRequest(`projects/status/${status}/`, 'GET', true);
     return await response.json();
 };
 
@@ -20,8 +20,8 @@ export const createProject = async (title: string, description: string, github?:
     return response.status;
 };
 
-export const updateProject = async (id: string, title: string, description: string, github?: string): Promise<number> => {
-    const response = await backendRequest(`projects/${id}/`, 'PUT', true, {title, description, github});
+export const updateProject = async (project: Project): Promise<number> => {
+    const response = await backendRequest(`projects/${project.id}/`, 'PUT', true, project);
     return response.status;
 };
 

@@ -4,13 +4,17 @@ import { Project } from "../../logic/interfaces";
 import GitHubIcon from '@mui/icons-material/GitHub';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
 import { deleteProject } from "../../logic/projects";
+import EditProjectModal from "../ModalComponents/EditProjectModal";
 
 const ProjectRow = ({ project }: { project: Project }) => {
     const confirm = useConfirm();
     const [hide, setHide] = useState(false);
+    const [edit, setEdit] = useState(false);
+    const [editedProject, setEditedProject] = useState<Project>(project);
     const handleDelete = async () => {
         if (project === null) return;
         confirm({ description: "Are you sure you want to delete this project and all tasks?" }).then(async () => {
@@ -25,24 +29,30 @@ const ProjectRow = ({ project }: { project: Project }) => {
             enqueueSnackbar("Project not deleted!", { variant: "info" });
         });
     };
+    const updateProject = (project: Project) => {
+        setEditedProject(project);
+    };
 
     return (
         <>
             {!hide && (
                 <TableRow
-                    key={project.id}
+                    key={editedProject.id}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                     <TableCell component="th" scope="row">
-                        {project.title}
+                        {editedProject.title}
                     </TableCell>
-                    <TableCell>{project.description}</TableCell>
-                    <TableCell>{project.status}</TableCell>
+                    <TableCell>{editedProject.description}</TableCell>
+                    <TableCell>{editedProject.status}</TableCell>
                     <TableCell>
-                        {project.github && <IconButton component={Link} href={project.github} target="_blank">
+                        {editedProject.github && <IconButton component={Link} href={editedProject.github} target="_blank">
                             <GitHubIcon />
                         </IconButton>}
                         <IconButton>
+                            <AssignmentIcon />
+                        </IconButton>
+                        <IconButton onClick={() => setEdit(true)}>
                             <EditIcon />
                         </IconButton>
                         <IconButton onClick={handleDelete}>
@@ -51,6 +61,7 @@ const ProjectRow = ({ project }: { project: Project }) => {
                     </TableCell>
                 </TableRow>
             )}
+            {edit && <EditProjectModal open={edit} handleClose={() => setEdit(false)} project={editedProject} updateProject={updateProject} />}
         </>
     );
 };

@@ -106,8 +106,8 @@ class ProjectDetail(APIView):
         return Response(serializer.data)
 
 
-    def put(self, req, id, format=None):
-        project = self.get_object(id)
+    def put(self, req, pk, format=None):
+        project = self.get_object(pk)
         serializer = ProjectSerializer(project, data=req.data)
         if serializer.is_valid():
             serializer.save()
