@@ -18,3 +18,13 @@ export interface Project {
     status: string;
     github?: string;
 };
+
+export interface Task {
+    id: number;
+    title: string;
+    description: string;
+    status: string;
+    issue?: string;
+    pull_request?: string;
+    project: number;
+};

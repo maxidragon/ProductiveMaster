@@ -20,12 +20,13 @@ class ListCreateUser(generics.ListCreateAPIView):
 class CreateTask(APIView):
     def post(self, request):
         serializer = TaskSerializer(data=request.data)
-        if serializer.project.owner != request.user:
+        project = Project.objects.get(pk=request.data['project'])
+        if project.owner != request.user:
             return Response(status=status.HTTP_403_FORBIDDEN)
         if serializer.is_valid():
             serializer.save(owner=request.user)
-            return Response(serializer.data, status=HTTP_201_CREATED)
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ListTask(APIView):
@@ -38,40 +39,18 @@ class ListTask(APIView):
 class TasksForProject(APIView):
     permissions_classes = [IsOwner]
 
-    def get(self, request, project_id):
-        tasks = Task.objects.filter(project=project_id)
+    def get(self, request, project_id, status = None):
+        if status:        
+            tasks = Task.objects.filter(project=project_id, status = status, owner=request.user)
+        else:
+            tasks = Task.objects.filter(project=project_id, owner=request.user)
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
 
-
-class TaskDetail(APIView):
+class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
     permissions_classes = [IsOwner]
-
-    def get_object(self, id):
-        try:
-            return Task.objects.get(pk=id)
-        except Task.DoesNotExist:
-            raise Http404
-    def get(self, req, id, format=None):
-        task = self.get_object(id)
-        serializer = TaskSerializer(task)
-        return Response(serializer.data)
-
-
-    def put(self, req, id, format=None):
-        task = self.get_object(id)
-        serializer = TaskSerializer(task, data=req.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
-
-
-    def delete(self, req, id, format=None):
-        task = self.get_object(id)
-        task.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 class ListCreateProject(APIView):
     def get(self, request):
@@ -91,35 +70,12 @@ class ProjectsByStatus(APIView):
         projects = Project.objects.filter(owner=request.user, status=status)
         serializer = ProjectSerializer(projects, many=True)
         return Response(serializer.data)
-    
-class ProjectDetail(APIView):
+
+class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
     permissions_classes = [IsOwner]
-
-    def get_object(self, id):
-        try:
-            return Project.objects.get(pk=id)
-        except Project.DoesNotExist:
-            raise Http404
-    def get(self, req, id, format=None):
-        project = self.get_object(id)
-        serializer = ProjectSerializer(project)
-        return Response(serializer.data)
-
-
-    def put(self, req, pk, format=None):
-        project = self.get_object(pk)
-        serializer = ProjectSerializer(project, data=req.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
-
-
-    def delete(self, req, pk, format=None):
-        project = self.get_object(pk)
-        project.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
+    
 class ListCreateNote(generics.ListCreateAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer

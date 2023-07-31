@@ -8,7 +8,9 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
 import { deleteProject } from "../../logic/projects";
+import {Link as RouterLink} from "react-router-dom";
 import EditProjectModal from "../ModalComponents/EditProjectModal";
+
 
 const ProjectRow = ({ project }: { project: Project }) => {
     const confirm = useConfirm();
@@ -49,7 +51,7 @@ const ProjectRow = ({ project }: { project: Project }) => {
                         {editedProject.github && <IconButton component={Link} href={editedProject.github} target="_blank">
                             <GitHubIcon />
                         </IconButton>}
-                        <IconButton>
+                        <IconButton component={RouterLink} to={`/tasks/project/${editedProject.id}`}>
                             <AssignmentIcon />
                         </IconButton>
                         <IconButton onClick={() => setEdit(true)}>

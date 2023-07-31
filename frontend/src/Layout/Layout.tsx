@@ -82,25 +82,25 @@ const Layout = (props: { children: any }) => {
                 </Toolbar>
                 <Divider />
                 <List component="nav">
-                    <ListItemButton>
+                    <ListItemButton component={Link} to={'/'}>
                         <ListItemIcon>
                             <DashboardIcon />
                         </ListItemIcon>
                         <ListItemText primary="Dashboard" />
                     </ListItemButton>
-                    <ListItemButton component={Link} to={'/projects'}> 
+                    <ListItemButton component={Link} to={'/projects'}>
                         <ListItemIcon>
                             <FolderCopyIcon />
                         </ListItemIcon>
                         <ListItemText primary="Projects" />
                     </ListItemButton>
-                    <ListItemButton>
+                    <ListItemButton component={Link} to={'/tasks'}>
                         <ListItemIcon>
                             <PeopleIcon />
                         </ListItemIcon>
                         <ListItemText primary="Tasks" />
                     </ListItemButton>
-                    <ListItemButton  component={Link} to={'/goals'}>
+                    <ListItemButton component={Link} to={'/goals'}>
                         <ListItemIcon>
                             <BarChartIcon />
                         </ListItemIcon>

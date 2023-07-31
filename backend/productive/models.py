@@ -14,6 +14,8 @@ class Task(models.Model):
         ('DONE', 'Done'),
     ]
     status = models.CharField(max_length=11, choices=STATUS_CHOICES, default='TODO')
+    issue = models.URLField(null=True, blank=True)
+    pull_request = models.URLField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
     project = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)

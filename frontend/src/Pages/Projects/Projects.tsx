@@ -33,10 +33,7 @@ const Projects = () => {
     }, []);
 
     useEffect(() => {
-        if (status === "") {
-            fetchData();
-        }
-        fetchData(status);
+        status === "" ? fetchData() : fetchData(status);
     }, [status]);
 
     return (

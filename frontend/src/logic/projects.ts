@@ -11,7 +11,7 @@ export const getProjectsByStatus = async (status: string): Promise<Project[]> =>
 };
 
 export const getProjectById = async (id: string): Promise<Project> => {
-    const response = await backendRequest(`projects/${id}/`, 'GET', true);
+    const response = await backendRequest(`projects/detail/${id}/`, 'GET', true);
     return await response.json();
 };
 
@@ -21,11 +21,11 @@ export const createProject = async (title: string, description: string, github?:
 };
 
 export const updateProject = async (project: Project): Promise<number> => {
-    const response = await backendRequest(`projects/${project.id}/`, 'PUT', true, project);
+    const response = await backendRequest(`projects/detail/${project.id}/`, 'PUT', true, project);
     return response.status;
 };
 
 export const deleteProject = async (id: string): Promise<number> => {
-    const response = await backendRequest(`projects/${id}/`, 'DELETE', true);
+    const response = await backendRequest(`projects/detail/${id}/`, 'DELETE', true);
     return response.status;
 };

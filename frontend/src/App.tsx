@@ -10,6 +10,8 @@ import Notes from "./Pages/Notes/Notes";
 import SingleNote from "./Pages/Notes/SingleNote";
 import Goals from "./Pages/Goals/Goals";
 import Projects from "./Pages/Projects/Projects";
+import ErrorElement from "./Pages/ErrorElement/ErrorElement";
+import TasksForProject from "./Pages/Tasks/TasksForProject";
 
 const router = createBrowserRouter([
   {
@@ -24,10 +26,6 @@ const router = createBrowserRouter([
     path: "/auth/register",
     element: <Register />,
   },
-  // {
-  //     path: "/about",
-  //     element: <Layout children={<About />} />
-  // },
   {
     path: "/notes",
     element: <Layout children={<Notes />} />
@@ -43,11 +41,15 @@ const router = createBrowserRouter([
   {
     path: "/projects",
     element: <Layout children={<Projects />} />
+  },
+  {
+    path: "/tasks/project/:projectId",
+    element: <Layout children={<TasksForProject />} />
+  },
+  {
+      path: "*",
+      element: <Layout children={<ErrorElement message="404 not found" />} />
   }
-  // {
-  //     path: "*",
-  //     element: <Layout children={<ErrorElement message="404 not found" />} />
-  // }
 ]);
 const lightTheme = createTheme({
   palette: {
