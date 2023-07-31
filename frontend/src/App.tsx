@@ -9,6 +9,7 @@ import Layout from "./Layout/Layout";
 import Notes from "./Pages/Notes/Notes";
 import SingleNote from "./Pages/Notes/SingleNote";
 import Goals from "./Pages/Goals/Goals";
+import Projects from "./Pages/Projects/Projects";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
   {
     path: "/goals",
     element: <Layout children={<Goals />} />
+  },
+  {
+    path: "/projects",
+    element: <Layout children={<Projects />} />
   }
   // {
   //     path: "*",

@@ -46,7 +46,7 @@ class TaskSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ('id', 'title', 'description', 'status', 'owner')
+        fields = ('id', 'title', 'description', 'status', 'github', 'owner')
         read_only_fields = ('owner',)
 
 

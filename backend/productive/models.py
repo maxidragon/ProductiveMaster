@@ -27,6 +27,7 @@ class Project(models.Model):
         ('DONE', 'Done'),
     ]
     status = models.CharField(max_length=11, choices=STATUS_CHOICES, default='PLANNED')
+    github = models.URLField(null=True, blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')
     
 class Activity(models.Model):

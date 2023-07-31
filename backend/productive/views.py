@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from .permissions import IsOwner
 from rest_framework.permissions import AllowAny, IsAdminUser
-from .serializers import ActivitySerializer, GoalSerializer, NoteSerializer, TaskSerializer, UserSerializer
+from .serializers import ActivitySerializer, GoalSerializer, NoteSerializer, ProjectSerializer, TaskSerializer, UserSerializer
 from rest_framework import generics
 from .models import Activity, Goal, Note, Project, Task
 from rest_framework.views import APIView
@@ -77,7 +77,7 @@ def delete(self, req, id, format=None):
 
 class ListCreateProject(APIView):
     def get(self, request):
-        projects = Project.objects.all(owner=request.user)
+        projects = Project.objects.filter(owner=request.user)
         serializer = ProjectSerializer(projects, many=True)
         return Response(serializer.data)
 
@@ -85,9 +85,15 @@ class ListCreateProject(APIView):
         serializer = ProjectSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(owner=request.user)
-            return Response(serializer.data, status=HTTP_201_CREATED)
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class ProjectsByStatus(APIView):
+    def get(self, request, status):
+        projects = Project.objects.filter(owner=request.user, status=status)
+        serializer = ProjectSerializer(projects, many=True)
+        return Response(serializer.data)
+    
 class ProjectDetail(APIView):
     permissions_classes = [IsOwner]
 

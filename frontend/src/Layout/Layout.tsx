@@ -19,7 +19,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
@@ -88,9 +88,9 @@ const Layout = (props: { children: any }) => {
                         </ListItemIcon>
                         <ListItemText primary="Dashboard" />
                     </ListItemButton>
-                    <ListItemButton>
+                    <ListItemButton component={Link} to={'/projects'}> 
                         <ListItemIcon>
-                            <ShoppingCartIcon />
+                            <FolderCopyIcon />
                         </ListItemIcon>
                         <ListItemText primary="Projects" />
                     </ListItemButton>
