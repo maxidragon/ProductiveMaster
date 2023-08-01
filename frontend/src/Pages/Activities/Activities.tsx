@@ -1,4 +1,4 @@
-import { Box, IconButton } from "@mui/material";
+import { Box, CircularProgress, IconButton } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
 import { getActivitiesForDay } from "../../logic/activities";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -28,12 +28,17 @@ const Activities = () => {
     }, [fetchData]);
     return (
         <>
-            <Box>
-                <IconButton onClick={() => setCreateModalOpen(true)}><AddCircleIcon /></IconButton>
-            </Box>
-            <DatePicker value={dayjs(date)} onChange={(date) => setDate(dayjs(date))} />
-            <ActivitiesTable activities={activities} />
-            {createModalOpen && <CreateActivityModal open={createModalOpen} handleClose={handleCloseCreateModal} />}
+            {loading ? <CircularProgress /> :
+                (
+                    <>
+                        <Box>
+                            <IconButton onClick={() => setCreateModalOpen(true)}><AddCircleIcon /></IconButton>
+                        </Box>
+                        <DatePicker value={dayjs(date)} onChange={(date) => setDate(dayjs(date))} />
+                        <ActivitiesTable activities={activities} />
+                        {createModalOpen && <CreateActivityModal open={createModalOpen} handleClose={handleCloseCreateModal} />}
+                    </>
+                )}
         </>
     );
 };
