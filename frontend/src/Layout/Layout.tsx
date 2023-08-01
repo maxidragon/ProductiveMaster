@@ -23,6 +23,7 @@ import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Link } from 'react-router-dom';
 
 const Layout = (props: { children: any }) => {
@@ -100,17 +101,23 @@ const Layout = (props: { children: any }) => {
                         </ListItemIcon>
                         <ListItemText primary="Tasks" />
                     </ListItemButton>
-                    <ListItemButton component={Link} to={'/goals'}>
+                    <ListItemButton component={Link} to={'/activities'}>
                         <ListItemIcon>
-                            <BarChartIcon />
+                            <CalendarMonthIcon />
                         </ListItemIcon>
-                        <ListItemText primary="Goals" />
+                        <ListItemText primary="Activities" />
                     </ListItemButton>
                     <ListItemButton component={Link} to={'/notes'}>
                         <ListItemIcon>
                             <NoteAltIcon />
                         </ListItemIcon>
                         <ListItemText primary="Notes" />
+                    </ListItemButton>
+                    <ListItemButton component={Link} to={'/goals'}>
+                        <ListItemIcon>
+                            <BarChartIcon />
+                        </ListItemIcon>
+                        <ListItemText primary="Goals" />
                     </ListItemButton>
                 </List>
             </Drawer>
