@@ -55,7 +55,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         return obj.tasks.filter(status='DONE').count()
 
 class TaskSerializer(serializers.ModelSerializer):
-    project = ProjectSerializer()
 
     class Meta:
         model = Task
@@ -63,6 +62,14 @@ class TaskSerializer(serializers.ModelSerializer):
                   'created_at', 'owner', 'project', 'issue', 'pull_request')
         read_only_fields = ('created_at', 'owner')
 
+class TaskListSerializer(serializers.ModelSerializer):
+    project = ProjectSerializer()
+
+    class Meta:
+        model = Task
+        fields = ('id', 'title', 'description', 'status',
+                  'created_at', 'owner', 'project', 'issue', 'pull_request')
+        read_only_fields = ('created_at', 'owner')
 
 class NoteSerializer(serializers.ModelSerializer):
 

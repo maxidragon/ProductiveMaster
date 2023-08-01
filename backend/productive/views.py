@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from .permissions import IsOwner
 from rest_framework.permissions import AllowAny, IsAdminUser
-from .serializers import ActivitySerializer, GoalSerializer, NoteSerializer, ProjectSerializer, TaskSerializer, UserSerializer
+from .serializers import ActivitySerializer, GoalSerializer, NoteSerializer, ProjectSerializer, TaskListSerializer, TaskSerializer, UserSerializer
 from rest_framework import generics
 from .models import Activity, Goal, Note, Project, Task
 from rest_framework.views import APIView
@@ -46,7 +46,7 @@ class TasksForProject(APIView):
                 project=project_id, status=status, owner=request.user)
         else:
             tasks = Task.objects.filter(project=project_id, owner=request.user)
-        serializer = TaskSerializer(tasks, many=True)
+        serializer = TaskListSerializer(tasks, many=True)
         return Response(serializer.data)
 
 
