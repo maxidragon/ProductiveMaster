@@ -3,21 +3,23 @@ import { useRef } from "react";
 import { style } from "./modalStyles";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { enqueueSnackbar } from "notistack";
-import { DateTimePicker } from "@mui/x-date-pickers";
-import { createActivity } from "../../logic/activities";
+import { createGoal } from "../../logic/goals";
+import { DatePicker } from "@mui/x-date-pickers";
 
-const CreateActivityModal = (props: { open: boolean; handleClose: any }) => {
+const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
   const titleRef: any = useRef();
   const descriptionRef: any = useRef();
-  const startTimeRef: any = useRef();
-  const endTimeRef: any = useRef();
+  const deadlineRef: any = useRef();
+
   const handleCreate = async (event: any) => {
     event.preventDefault();
     const title = titleRef.current.value;
     const description = descriptionRef.current.value;
-    const status = await createActivity(title, description, startTimeRef.current.value, endTimeRef.current.value);
+    const deadline = deadlineRef.current.value;
+
+    const status = await createGoal(title, description, deadline);
     if (status === 201) {
-      enqueueSnackbar("Activity created!", { variant: "success" });
+      enqueueSnackbar("Goal created!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
@@ -30,16 +32,8 @@ const CreateActivityModal = (props: { open: boolean; handleClose: any }) => {
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Create activity
+          Create goal
         </Typography>
-        <DateTimePicker
-          label="Start"
-          inputRef={startTimeRef}
-        />
-        <DateTimePicker
-          label="End"
-          inputRef={endTimeRef}
-        />
         <TextField
           placeholder={"Title"}
           fullWidth
@@ -52,6 +46,10 @@ const CreateActivityModal = (props: { open: boolean; handleClose: any }) => {
           fullWidth
           inputRef={descriptionRef}
         />
+        <DatePicker
+          label="End"
+          inputRef={deadlineRef}
+        />
         <Box sx={{ display: 'flex', justifyContent: 'end', mt: 2 }}>
           <Button variant="contained" endIcon={<AddCircleIcon />} onClick={handleCreate}>Create</Button>
         </Box>
@@ -60,4 +58,4 @@ const CreateActivityModal = (props: { open: boolean; handleClose: any }) => {
   )
 };
 
-export default CreateActivityModal;
+export default CreateGoalModal;

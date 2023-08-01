@@ -1,8 +1,4 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import {Box, Button, Modal, TextField, Typography} from "@mui/material";
 import { style } from "./modalStyles";
 import EditIcon from '@mui/icons-material/Edit';
 import { enqueueSnackbar } from "notistack";

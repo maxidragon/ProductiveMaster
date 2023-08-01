@@ -7,6 +7,7 @@ export interface Note {
 export interface Goal {
     id: number;
     title: string;
+    description: string;
     deadline: Date;
     is_achieved: boolean;
 };
