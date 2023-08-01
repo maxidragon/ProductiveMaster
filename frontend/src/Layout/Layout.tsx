@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     CssBaseline,
     Box,
@@ -7,14 +7,12 @@ import {
     Typography,
     Divider,
     IconButton,
-    Badge,
     Container,
 } from '@mui/material';
 import AppBar from './AppBar';
 import Drawer from './Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -24,10 +22,21 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import LoginPartial from './LoginPartial';
+import { isUserLoggedIn } from '../logic/auth';
 
 const Layout = (props: { children: any }) => {
+    const navigate = useNavigate();
     const [open, setOpen] = useState(true);
+    const userLoggedIn = isUserLoggedIn();
+
+    useEffect(() => {
+        if (!userLoggedIn) {
+            navigate('/auth/login');
+        }
+    }, [userLoggedIn, navigate]);
+
     const toggleDrawer = () => {
         setOpen(!open);
     };
@@ -61,11 +70,7 @@ const Layout = (props: { children: any }) => {
                     >
                         Dashboard
                     </Typography>
-                    <IconButton color="inherit">
-                        <Badge badgeContent={4} color="secondary">
-                            <NotificationsIcon />
-                        </Badge>
-                    </IconButton>
+                    <LoginPartial userLoggedIn={userLoggedIn} />
                 </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
