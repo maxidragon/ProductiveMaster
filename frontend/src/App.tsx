@@ -12,6 +12,7 @@ import Goals from "./Pages/Goals/Goals";
 import Projects from "./Pages/Projects/Projects";
 import ErrorElement from "./Pages/ErrorElement/ErrorElement";
 import TasksForProject from "./Pages/Tasks/TasksForProject";
+import Tasks from "./Pages/Tasks/Tasks";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
   {
     path: "/projects",
     element: <Layout children={<Projects />} />
+  },
+  {
+    path: "/tasks",
+    element: <Layout children={<Tasks />} />
   },
   {
     path: "/tasks/project/:projectId",

@@ -35,19 +35,21 @@ class UserSerializer(serializers.ModelSerializer):
             return user
 
 
-class TaskSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Task
-        fields = ('id', 'title', 'description', 'status',
-                  'created_at', 'owner', 'project', 'issue', 'pull_request')
-        read_only_fields = ('created_at', 'owner')
-
-
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ('id', 'title', 'description', 'status', 'github', 'owner')
         read_only_fields = ('owner',)
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    project = ProjectSerializer()
+
+    class Meta:
+        model = Task
+        fields = ('id', 'title', 'description', 'status',
+                  'created_at', 'owner', 'project', 'issue', 'pull_request')
+        read_only_fields = ('created_at', 'owner')
 
 
 class NoteSerializer(serializers.ModelSerializer):
@@ -57,16 +59,20 @@ class NoteSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'description', 'created_at', 'owner')
         read_only_fields = ('created_at', 'owner')
 
+
 class ActivitySerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Activity
-        fields = ('id', 'title', 'description', 'start_time', 'end_time', 'owner')
+        fields = ('id', 'title', 'description',
+                  'start_time', 'end_time', 'owner')
         read_only_fields = ('owner',)
-        
+
+
 class GoalSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Goal
-        fields = ('id', 'title', 'description', 'deadline', 'is_achieved', 'owner')
+        fields = ('id', 'title', 'description',
+                  'deadline', 'is_achieved', 'owner')
         read_only_fields = ('owner',)

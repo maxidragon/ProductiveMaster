@@ -5,6 +5,7 @@ import TaskRow from "./TaskRow";
 
 const TasksTable = (props: {
     tasks: Task[];
+    multipleProjects?: boolean;
 }) => {
     return (
         <TableContainer component={Paper}>
@@ -13,6 +14,8 @@ const TasksTable = (props: {
                     <TableRow>
                         <TableCell>Titlte</TableCell>
                         <TableCell>Description</TableCell>
+                        {props.multipleProjects && <TableCell>Project</TableCell>}
+                        {props.multipleProjects && <TableCell>Tasks for project</TableCell>}
                         <TableCell>Status</TableCell>
                         <TableCell>Issue</TableCell>
                         <TableCell>PR</TableCell>
@@ -21,7 +24,7 @@ const TasksTable = (props: {
                 </TableHead>
                 <TableBody>
                     {props.tasks.map((task: Task) => (
-                        <TaskRow key={task.id} task={task} />
+                        <TaskRow key={task.id} task={task} multipleProjects={props.multipleProjects} />
                     ))}
 
                 </TableBody>

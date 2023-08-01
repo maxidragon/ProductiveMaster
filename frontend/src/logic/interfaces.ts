@@ -26,5 +26,5 @@ export interface Task {
     status: string;
     issue?: string;
     pull_request?: string;
-    project: number;
+    project: Project;
 };

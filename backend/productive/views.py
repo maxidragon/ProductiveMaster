@@ -31,7 +31,7 @@ class CreateTask(APIView):
 
 class ListTask(APIView):
     def get(self, request, status='TODO'):
-        tasks = Task.objects.all(owner=request.user, status=status)
+        tasks = Task.objects.filter(owner=request.user, status=status)
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
 

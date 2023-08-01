@@ -1,6 +1,11 @@
 import { Task } from "./interfaces";
 import { backendRequest } from "./request";
 
+export const getTasksByStatus = async (status: string) => {
+  const response = await backendRequest(`tasks/list/${status}/`, "GET", true);
+  return await response.json();
+};
+
 export const getTasksForProject = async (
   projectId: string,
   status?: string
