@@ -6,7 +6,7 @@ import { Project } from "../../logic/interfaces";
 import EditIcon from '@mui/icons-material/Edit';
 
 const EditProjectModal = (props: { open: boolean; handleClose: any, project: Project, updateProject: any }) => {
-  const handleEdit = async (event: any) => {
+  const handleEdit = async (event: any) => {  
     event.preventDefault();
     const status = await updateProject(props.project);
     if (status === 200) {

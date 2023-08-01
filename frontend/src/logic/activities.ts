@@ -14,8 +14,10 @@ export const createActivity = async (title: string, description: string, start_t
     return response.status;
 };
 
-export const updateActivity = async (id: number, title: string, description: string, start_time: Date, end_time: Date): Promise<number> => {
-    const response = await backendRequest(`activities/detail/${id}/`, 'PUT', true, { title, description, start_time, end_time });
+export const updateActivity = async (activity: Activity): Promise<number> => {
+    const startDate = new Date(activity.start_time);
+    const endDate = new Date(activity.end_time);
+    const response = await backendRequest(`activities/detail/${activity.id}/`, 'PUT', true, { ...activity, start_time: startDate, end_time: endDate });
     return response.status;
 };
 

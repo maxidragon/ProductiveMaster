@@ -7,6 +7,7 @@ import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
 import { deleteActivity } from "../../../logic/activities";
 import { formatDateTime } from "../../../logic/other";
+import EditActivityModal from "../../ModalComponents/EditActivityModal";
 
 
 const ActivityRow = ({ activity }: { activity: Activity }) => {
@@ -55,7 +56,7 @@ const ActivityRow = ({ activity }: { activity: Activity }) => {
                     </TableCell>
                 </TableRow>
             )}
-            {/* {edit && <EditProjectModal open={edit} handleClose={() => setEdit(false)} project={editedActivity} updateProject={updateProject} />} */}
+            {edit && <EditActivityModal open={edit} handleClose={() => setEdit(false)} activity={editedActivity} updateActivity={editActivity} />}
         </>
     );
 };

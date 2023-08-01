@@ -34,7 +34,7 @@ const CreateActivityModal = (props: { open: boolean; handleClose: any }) => {
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Create note
+          Create activity
         </Typography>
         <DateTimePicker
           label="Start"
