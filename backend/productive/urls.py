@@ -15,9 +15,9 @@ urlpatterns = [
     path('projects/detail/<int:pk>/', views.ProjectDetail.as_view(), name='project-detail'),
     path('notes/', views.ListCreateNote.as_view(), name='notes'),
     path('notes/<int:pk>/', views.NoteDetail.as_view(), name='note-detail'),
+    path('activities/create/', views.CreateActivity.as_view(), name='create-activity'),
     path('activities/<str:date>/', views.ListActivities.as_view(), name='activities'),
-    path('activities/create', views.CreateActivity.as_view(), name='create-activity'),
-    path('activities/<int:pk>/', views.ActivityDetail.as_view(), name='activity-detail'),
+    path('activities/detail/<int:pk>/', views.ActivityDetail.as_view(), name='activity-detail'),
     path('goals/', views.ListCreateGoal.as_view(), name='goals'),
     path('goals/<int:pk>/', views.GoalDetail.as_view(), name='goal-detail'),
 ]

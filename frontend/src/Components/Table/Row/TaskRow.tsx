@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { TableRow, TableCell, IconButton, Link } from "@mui/material";
-import { Task } from "../../logic/interfaces";
+import { Task } from "../../../logic/interfaces";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useConfirm } from "material-ui-confirm";
@@ -8,8 +8,8 @@ import { enqueueSnackbar } from "notistack";
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import AssignmentReturnedIcon from '@mui/icons-material/AssignmentReturned';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { deleteTask, updateTask } from "../../logic/tasks";
-import EditTaskModal from "../ModalComponents/EditTaskModal";
+import { deleteTask, updateTask } from "../../../logic/tasks";
+import EditTaskModal from "../../ModalComponents/EditTaskModal";
 import { Link as RouterLink } from "react-router-dom";
 import AssignmentIcon from '@mui/icons-material/Assignment';
 

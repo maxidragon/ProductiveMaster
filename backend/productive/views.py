@@ -7,6 +7,7 @@ from .models import Activity, Goal, Note, Project, Task
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from datetime import datetime
 
 
 class ListCreateUser(generics.ListCreateAPIView):
@@ -39,18 +40,21 @@ class ListTask(APIView):
 class TasksForProject(APIView):
     permissions_classes = [IsOwner]
 
-    def get(self, request, project_id, status = None):
-        if status:        
-            tasks = Task.objects.filter(project=project_id, status = status, owner=request.user)
+    def get(self, request, project_id, status=None):
+        if status:
+            tasks = Task.objects.filter(
+                project=project_id, status=status, owner=request.user)
         else:
             tasks = Task.objects.filter(project=project_id, owner=request.user)
         serializer = TaskSerializer(tasks, many=True)
         return Response(serializer.data)
 
+
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     permissions_classes = [IsOwner]
+
 
 class ListCreateProject(APIView):
     def get(self, request):
@@ -65,17 +69,20 @@ class ListCreateProject(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class ProjectsByStatus(APIView):
     def get(self, request, status):
         projects = Project.objects.filter(owner=request.user, status=status)
         serializer = ProjectSerializer(projects, many=True)
         return Response(serializer.data)
 
+
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permissions_classes = [IsOwner]
-    
+
+
 class ListCreateNote(generics.ListCreateAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
@@ -85,42 +92,49 @@ class ListCreateNote(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-        
+
+
 class NoteDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
     permissions_classes = [IsOwner]
-    
+
+
 class ListActivities(APIView):
     def get(self, request, date):
-        activities = Activity.objects.filter(start_time__date=date, owner=request.user)
+        date_obj = datetime.strptime(date, "%Y-%m-%d")
+        activities = Activity.objects.filter(
+            start_time__year=date_obj.year, start_time__month=date_obj.month, start_time__day=date_obj.day, owner=request.user).order_by('start_time')
         serializer = ActivitySerializer(activities, many=True)
         return Response(serializer.data)
-    
+
+
 class CreateActivity(APIView):
     def post(self, request):
         serializer = ActivitySerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(owner=request.user)
-            return Response(serializer.data, status=HTTP_201_CREATED)
-        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
-        
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class ActivityDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
     permissions_classes = [IsOwner]
-    
-    
+
+
 class ListCreateGoal (generics.ListCreateAPIView):
     queryset = Goal.objects.all()
     serializer_class = GoalSerializer
 
     def get_queryset(self):
         return Goal.objects.filter(owner=self.request.user)
-    
+
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-        
+
+
 class GoalDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Goal.objects.all()
     serializer_class = GoalSerializer

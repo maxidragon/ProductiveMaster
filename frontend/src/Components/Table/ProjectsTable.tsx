@@ -1,11 +1,10 @@
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
-import { Task } from "../../logic/interfaces";
+import { Project } from "../../logic/interfaces";
 
-import TaskRow from "./TaskRow";
+import ProjectRow from "./Row/ProjectRow";
 
-const TasksTable = (props: {
-    tasks: Task[];
-    multipleProjects?: boolean;
+const ProjectsTable = (props: {
+    projects: Project[];
 }) => {
     return (
         <TableContainer component={Paper}>
@@ -14,17 +13,13 @@ const TasksTable = (props: {
                     <TableRow>
                         <TableCell>Titlte</TableCell>
                         <TableCell>Description</TableCell>
-                        {props.multipleProjects && <TableCell>Project</TableCell>}
-                        {props.multipleProjects && <TableCell>Tasks for project</TableCell>}
                         <TableCell>Status</TableCell>
-                        <TableCell>Issue</TableCell>
-                        <TableCell>PR</TableCell>
                         <TableCell>Actions</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {props.tasks.map((task: Task) => (
-                        <TaskRow key={task.id} task={task} multipleProjects={props.multipleProjects} />
+                    {props.projects.map((project: Project) => (
+                        <ProjectRow key={project.id} project={project} />
                     ))}
 
                 </TableBody>
@@ -33,4 +28,4 @@ const TasksTable = (props: {
     );
 };
 
-export default TasksTable;
+export default ProjectsTable;

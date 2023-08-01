@@ -14,6 +14,8 @@ import ErrorElement from "./Pages/ErrorElement/ErrorElement";
 import TasksForProject from "./Pages/Tasks/TasksForProject";
 import Tasks from "./Pages/Tasks/Tasks";
 import Activities from "./Pages/Activities/Activities";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 const router = createBrowserRouter([
   {
@@ -57,8 +59,8 @@ const router = createBrowserRouter([
     element: <Layout children={<Activities />} />
   },
   {
-      path: "*",
-      element: <Layout children={<ErrorElement message="404 not found" />} />
+    path: "*",
+    element: <Layout children={<ErrorElement message="404 not found" />} />
   }
 ]);
 const lightTheme = createTheme({
@@ -68,13 +70,15 @@ const lightTheme = createTheme({
 });
 const App = () => {
   return (
-    <ThemeProvider theme={lightTheme}>
-      <SnackbarProvider>
-        <ConfirmProvider>
-          <RouterProvider router={router} />
-        </ConfirmProvider>
-      </SnackbarProvider>
-    </ThemeProvider>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <ThemeProvider theme={lightTheme}>
+        <SnackbarProvider>
+          <ConfirmProvider>
+            <RouterProvider router={router} />
+          </ConfirmProvider>
+        </SnackbarProvider>
+      </ThemeProvider>
+    </LocalizationProvider>
   );
 };
 

@@ -4,7 +4,7 @@ import { Project } from "../../logic/interfaces";
 import { getAllProjects, getProjectsByStatus } from "../../logic/projects";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CreateProjectModal from "../../Components/ModalComponents/CreateProjectModal";
-import ProjectsTable from "../../Components/Projects/ProjectsTable";
+import ProjectsTable from "../../Components/Table/ProjectsTable";
 
 const Projects = () => {
     const [projects, setProjects] = useState<Project[]>([]);

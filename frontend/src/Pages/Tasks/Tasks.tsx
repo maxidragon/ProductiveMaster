@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Task } from "../../logic/interfaces";
 import { getTasksByStatus } from "../../logic/tasks";
 import { CircularProgress, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
-import TasksTable from "../../Components/Tasks/TasksTable";
+import TasksTable from "../../Components/Table/TasksTable";
 
 const Tasks = () => {
     const [tasks, setTasks] = useState<Task[]>([]);

@@ -3,7 +3,7 @@ import { getTasksForProject } from '../../logic/tasks';
 import { CircularProgress, Box, IconButton, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import TasksTable from '../../Components/Tasks/TasksTable';
+import TasksTable from '../../Components/Table/TasksTable';
 import { Task } from '../../logic/interfaces';
 import CreateTaskModal from '../../Components/ModalComponents/CreateTaskModal';
 
