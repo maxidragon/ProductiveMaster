@@ -6,6 +6,7 @@ import ProjectRow from "./Row/ProjectRow";
 const ProjectsTable = (props: {
     projects: Project[];
 }) => {
+    console.log(props.projects);
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -14,6 +15,7 @@ const ProjectsTable = (props: {
                         <TableCell>Titlte</TableCell>
                         <TableCell>Description</TableCell>
                         <TableCell>Status</TableCell>
+                        <TableCell>Tasks (TODO, in progress, done)</TableCell>
                         <TableCell>Actions</TableCell>
                     </TableRow>
                 </TableHead>

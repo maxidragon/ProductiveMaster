@@ -17,6 +17,9 @@ export interface Project {
     description: string;
     status: string;
     github?: string;
+    num_tasks_todo?: number;
+    num_tasks_in_progress?: number;
+    num_tasks_done?: number;
 };
 
 export interface Task {

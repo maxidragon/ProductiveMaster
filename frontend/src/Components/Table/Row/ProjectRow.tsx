@@ -47,6 +47,7 @@ const ProjectRow = ({ project }: { project: Project }) => {
                     </TableCell>
                     <TableCell>{editedProject.description}</TableCell>
                     <TableCell>{editedProject.status}</TableCell>
+                    <TableCell>{editedProject.num_tasks_todo}, {editedProject.num_tasks_in_progress}, {editedProject.num_tasks_done}</TableCell>
                     <TableCell>
                         {editedProject.github && <IconButton component={Link} href={editedProject.github} target="_blank">
                             <GitHubIcon />
