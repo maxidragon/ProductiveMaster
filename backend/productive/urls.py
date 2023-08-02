@@ -20,7 +20,7 @@ urlpatterns = [
     path('activities/detail/<int:pk>/', views.ActivityDetail.as_view(), name='activity-detail'),
     path('goals/', views.ListCreateGoal.as_view(), name='goals'),
     path('goals/<int:pk>/', views.GoalDetail.as_view(), name='goal-detail'),
-    path('goals/category/<str:category>/', views.GoalsByCategory.as_view(), name='goals-by-category'),
+    path('goals/category/<int:category>/', views.GoalsByCategory.as_view(), name='goals-by-category'),
     path('goals/categories/', views.ListCreateGoalCategory.as_view(), name='goal-categories'),
     path('goals/categories/<int:pk>/', views.GoalCategoryDetail.as_view(), name='goal-category-detail'),
     
