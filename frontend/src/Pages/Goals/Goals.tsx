@@ -5,7 +5,6 @@ import { getAllGoals, getGoalsByCategoryId } from "../../logic/goals";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { CircularProgress, Box, IconButton, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import CreateGoalModal from "../../Components/ModalComponents/CreateGoalModal";
-import GoalCategorySelect from "../../Components/Goals/GoalCategorySelect";
 import { getGoalCategories } from "../../logic/goalCategories";
 
 const Goals = () => {

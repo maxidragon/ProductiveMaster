@@ -1,12 +1,16 @@
-import {Box, Button, Modal, TextField, Typography} from "@mui/material";
-import { useRef } from "react";
+import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 import { style } from "./modalStyles";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { enqueueSnackbar } from "notistack";
 import { createGoal } from "../../logic/goals";
 import { DatePicker } from "@mui/x-date-pickers";
+import { GoalCategory } from "../../logic/interfaces";
+import { getGoalCategories } from "../../logic/goalCategories";
 
 const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
+  const [goalCategories, setGoalCategories] = useState<GoalCategory[]>([]);
+  const [selected, setSelected] = useState<number>(0);
   const titleRef: any = useRef();
   const descriptionRef: any = useRef();
   const deadlineRef: any = useRef();
@@ -16,8 +20,15 @@ const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
     const title = titleRef.current.value;
     const description = descriptionRef.current.value;
     const deadline = deadlineRef.current.value;
-
-    const status = await createGoal(title, description, deadline);
+    const data: any = {
+      title: title,
+      description: description,
+      deadline: deadline,
+    };
+    if (selected !== 0) {
+      data["goal_category"] = selected;
+    }
+    const status = await createGoal(data);
     if (status === 201) {
       enqueueSnackbar("Goal created!", { variant: "success" });
       props.handleClose();
@@ -25,6 +36,14 @@ const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const categories = await getGoalCategories();
+      setGoalCategories(categories);  
+    };
+    fetchData();
+  }, []);
   return (
     <Modal
       open={props.open}
@@ -46,6 +65,29 @@ const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
           fullWidth
           inputRef={descriptionRef}
         />
+        <FormControl fullWidth>
+          <InputLabel id="goal-category-select-label">
+            Goal Category
+          </InputLabel>
+          <Select
+            labelId="goal-category-select-label"
+            id="goal-category-select"
+            value={selected}
+            label="Goal Category"
+            onChange={(event: any) => {
+              setSelected(event.target.value);
+            }}
+          >
+            <MenuItem key={0} value={0}>
+              Without category
+            </MenuItem>
+            {goalCategories.map((goalCategory: GoalCategory) => (
+              <MenuItem key={goalCategory.id} value={goalCategory.id}>
+                {goalCategory.title}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <DatePicker
           label="End"
           inputRef={deadlineRef}

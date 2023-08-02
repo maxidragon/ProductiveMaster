@@ -1,16 +1,32 @@
-import { Box, Button, Checkbox, FormControlLabel, Grid, Modal, TextField, Typography } from "@mui/material";
+import { Box, Button, Checkbox, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
 import { style } from "./modalStyles";
 import EditIcon from '@mui/icons-material/Edit';
 import { enqueueSnackbar } from "notistack";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { updateGoalById } from "../../logic/goals";
-import { Goal } from "../../logic/interfaces";
+import { Goal, GoalCategory } from "../../logic/interfaces";
+import { useState, useEffect } from "react";
+import { getGoalCategories } from "../../logic/goalCategories";
 
 const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, updateGoal: any }) => {
+  const [goalCategories, setGoalCategories] = useState<GoalCategory[]>([]);
+  const [selected, setSelected] = useState<number>(props.goal.goal_category || 0);
+
+
   const handleEdit = async (event: any) => {
     event.preventDefault();
-    const status = await updateGoalById(props.goal);
+    let data: any;
+    if (props.goal.goal_category !== selected) {
+      props.updateGoal({ ...props.goal, goal_category: selected });
+      data = { ...props.goal, goal_category: selected };
+    }
+    if (selected === 0) {
+      props.updateGoal({ ...props.goal, goal_category: null });
+      data = props.goal;
+    }
+
+    const status = await updateGoalById(data);
     if (status === 200) {
       enqueueSnackbar("Goal updated!", { variant: "success" });
       props.handleClose();
@@ -18,6 +34,13 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
       enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      const categories = await getGoalCategories();
+      setGoalCategories(categories);
+    };
+    fetchData();
+  }, []);
   return (
     <Modal
       open={props.open}
@@ -28,7 +51,7 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
           Update goal
         </Typography>
         <Grid>
-          <Grid item xs={12} sm={6} sx={{mb: 2}}>
+          <Grid item xs={12} sm={6} sx={{ mb: 2 }}>
             <TextField
               placeholder={"Title"}
               fullWidth
@@ -36,7 +59,7 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
               onChange={(event) => props.updateGoal({ ...props.goal, title: event.target.value })}
             />
           </Grid>
-          <Grid item xs={12} sm={6} sx={{mb: 2}}>
+          <Grid item xs={12} sm={6} sx={{ mb: 2 }}>
             <TextField
               multiline
               rows={15}
@@ -46,14 +69,39 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
               onChange={(event) => props.updateGoal({ ...props.goal, description: event.target.value })}
             />
           </Grid>
-          <Grid item xs={12} sm={6} sx={{mb: 2}}>
+          <Grid item xs={12} sm={6} sx={{ mb: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel id="goal-category-select-label">
+                Goal Category
+              </InputLabel>
+              <Select
+                labelId="goal-category-select-label"
+                id="goal-category-select"
+                value={selected}
+                label="Goal Category"
+                onChange={(event: any) => {
+                  setSelected(event.target.value);
+                }}
+              >
+                <MenuItem key={0} value={0}>
+                  Without category
+                </MenuItem>
+                {goalCategories.map((goalCategory: GoalCategory) => (
+                  <MenuItem key={goalCategory.id} value={goalCategory.id}>
+                    {goalCategory.title}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={6} sx={{ mb: 2 }}>
             <DatePicker
               label="End"
               value={dayjs(props.goal.deadline)}
               onChange={(value) => props.updateGoal({ ...props.goal, deadline: value })}
             />
           </Grid>
-          <Grid item xs={12} sm={6} sx={{mb: 2}}>
+          <Grid item xs={12} sm={6} sx={{ mb: 2 }}>
             <FormControlLabel control={<Checkbox checked={props.goal.is_achieved} onChange={(event) => props.updateGoal({ ...props.goal, is_achieved: event.target.checked })} />} label="Is achieved" />
           </Grid>
           <Grid item xs={12} sm={6}>

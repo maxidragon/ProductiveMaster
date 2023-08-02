@@ -11,9 +11,10 @@ export const getGoalsByCategoryId = async (id: number): Promise<Goal[]> => {
     return await response.json();
 };
 
-export const createGoal = async (title: string, description: string, deadline: Date): Promise<number> => {
-    const deadlineDate = new Date(deadline);
-    const response = await backendRequest("goals/", "POST", true, { title, description, deadline: deadlineDate });
+export const createGoal = async (data: {title: string, description: string, deadline: Date, goal_category?: number}): Promise<number> => {
+    const deadlineDate = new Date(data.deadline);
+    data.deadline = deadlineDate;   
+    const response = await backendRequest("goals/", "POST", true, data);
     return response.status;
 };
 
