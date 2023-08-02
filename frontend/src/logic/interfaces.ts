@@ -10,6 +10,7 @@ export interface Goal {
     description: string;
     deadline: Date;
     is_achieved: boolean;
+    goal_category?: number;
 };
 
 export interface Project {
@@ -39,4 +40,9 @@ export interface Activity {
     description: string;
     start_time: Date;
     end_time: Date;
+};
+
+export interface GoalCategory {
+    id: number;
+    title: string;
 };

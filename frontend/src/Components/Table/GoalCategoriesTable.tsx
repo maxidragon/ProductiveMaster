@@ -1,8 +1,8 @@
-import { Goal } from '../../logic/interfaces';
+import { GoalCategory } from '../../logic/interfaces';
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import GoalRow from './Row/GoalRow';
+import GoalCategoryRow from './Row/GoalCategoryRow';
 
-const GoalsTable = (props: { goals: Goal[] }) => {
+const GoalCategoriesTable = (props: { goalCategories: GoalCategory[] }) => {
 
   return (
     <TableContainer component={Paper}>
@@ -10,21 +10,17 @@ const GoalsTable = (props: { goals: Goal[] }) => {
         <TableHead>
           <TableRow>
             <TableCell>Titlte</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Deadline</TableCell>
-            <TableCell>Is achieved</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.goals.map((goal: Goal) => (
-            <GoalRow key={goal.id} goal={goal} />
+          {props.goalCategories.map((goalCategory: GoalCategory) => (
+            <GoalCategoryRow key={goalCategory.id} goalCategory={goalCategory} />
           ))}
-
         </TableBody>
       </Table>
     </TableContainer>
   );
 };
 
-export default GoalsTable;
+export default GoalCategoriesTable;
