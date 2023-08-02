@@ -34,7 +34,12 @@ class UserSerializer(serializers.ModelSerializer):
                     username=username, password=password)
             return user
 
+class ChangePasswordSerializer(serializers.Serializer):
+    model = User
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
 
+    
 class ProjectSerializer(serializers.ModelSerializer):
     
     num_tasks_todo = serializers.SerializerMethodField()

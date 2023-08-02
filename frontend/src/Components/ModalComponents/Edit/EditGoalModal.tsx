@@ -1,13 +1,13 @@
 import { Box, Button, Checkbox, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
-import { style } from "./modalStyles";
+import { style } from "../modalStyles";
 import EditIcon from '@mui/icons-material/Edit';
 import { enqueueSnackbar } from "notistack";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { updateGoalById } from "../../logic/goals";
-import { Goal, GoalCategory } from "../../logic/interfaces";
+import { updateGoalById } from "../../../logic/goals";
+import { Goal, GoalCategory } from "../../../logic/interfaces";
 import { useState, useEffect } from "react";
-import { getGoalCategories } from "../../logic/goalCategories";
+import { getGoalCategories } from "../../../logic/goalCategories";
 
 const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, updateGoal: any }) => {
   const [goalCategories, setGoalCategories] = useState<GoalCategory[]>([]);

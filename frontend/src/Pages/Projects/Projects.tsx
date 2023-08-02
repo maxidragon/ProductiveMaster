@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Project } from "../../logic/interfaces";
 import { getAllProjects, getProjectsByStatus } from "../../logic/projects";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import CreateProjectModal from "../../Components/ModalComponents/CreateProjectModal";
+import CreateProjectModal from "../../Components/ModalComponents/Create/CreateProjectModal";
 import ProjectsTable from "../../Components/Table/ProjectsTable";
 
 const Projects = () => {

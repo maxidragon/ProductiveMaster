@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
 import { deleteGoalCategory } from "../../../logic/goalCategories";
-import EditGoalCategoryModal from "../../ModalComponents/EditGoalCategoryModal";
+import EditGoalCategoryModal from "../../ModalComponents/Edit/EditGoalCategoryModal";
 
 
 const GoalCategoryRow = ({ goalCategory }: { goalCategory: GoalCategory }) => {

@@ -1,23 +1,23 @@
-import {Box, Button, Modal, TextField, Typography} from "@mui/material";
 import { useRef } from "react";
-import { style } from "./modalStyles";
+import {Box, Typography, Modal, TextField, Button} from "@mui/material";
+import { style } from "../modalStyles";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { enqueueSnackbar } from "notistack";
-import { DateTimePicker } from "@mui/x-date-pickers";
-import { createActivity } from "../../logic/activities";
+import { createProject } from "../../../logic/projects";
 
-const CreateActivityModal = (props: { open: boolean; handleClose: any }) => {
+const CreateProjectModal = (props: { open: boolean; handleClose: any }) => {
   const titleRef: any = useRef();
   const descriptionRef: any = useRef();
-  const startTimeRef: any = useRef();
-  const endTimeRef: any = useRef();
+  const githubLinkRef: any = useRef();
+
   const handleCreate = async (event: any) => {
     event.preventDefault();
     const title = titleRef.current.value;
     const description = descriptionRef.current.value;
-    const status = await createActivity(title, description, startTimeRef.current.value, endTimeRef.current.value);
+    const github = githubLinkRef.current.value;
+    const status = await createProject(title, description, github);
     if (status === 201) {
-      enqueueSnackbar("Activity created!", { variant: "success" });
+      enqueueSnackbar("Project created!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
@@ -30,25 +30,22 @@ const CreateActivityModal = (props: { open: boolean; handleClose: any }) => {
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Create activity
+          Create project
         </Typography>
-        <DateTimePicker
-          label="Start"
-          inputRef={startTimeRef}
-        />
-        <DateTimePicker
-          label="End"
-          inputRef={endTimeRef}
-        />
         <TextField
           placeholder={"Title"}
           fullWidth
           inputRef={titleRef}
         />
         <TextField
+          placeholder={"Github"}
+          fullWidth
+          inputRef={githubLinkRef}
+        />
+        <TextField
           multiline
           rows={15}
-          placeholder={"Write description here..."}
+          placeholder={"Write project description  here..."}
           fullWidth
           inputRef={descriptionRef}
         />
@@ -60,4 +57,4 @@ const CreateActivityModal = (props: { open: boolean; handleClose: any }) => {
   )
 };
 
-export default CreateActivityModal;
+export default CreateProjectModal;

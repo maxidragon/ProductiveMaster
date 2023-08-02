@@ -1,10 +1,10 @@
 import {Box, Button, Modal, TextField, Typography} from "@mui/material";
-import { style } from "./modalStyles";
+import { style } from "../modalStyles";
 import EditIcon from '@mui/icons-material/Edit';
 import { enqueueSnackbar } from "notistack";
 import { DateTimePicker } from "@mui/x-date-pickers";
-import { Activity } from "../../logic/interfaces";
-import { updateActivity } from "../../logic/activities";
+import { Activity } from "../../../logic/interfaces";
+import { updateActivity } from "../../../logic/activities";
 import dayjs from "dayjs";
 
 const EditActivityModal = (props: { open: boolean; handleClose: any, activity: Activity, updateActivity: any }) => {

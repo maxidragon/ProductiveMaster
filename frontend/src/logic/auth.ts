@@ -26,6 +26,7 @@ export const login = async (username: FormDataEntryValue | null, password: FormD
         console.log(error);
     }
 };
+
 export const logout = async () => {
     localStorage.removeItem("token");
 };
@@ -33,4 +34,12 @@ export const logout = async () => {
 export const isUserLoggedIn = () => {
     const token = localStorage.getItem("token");
     return token !== null;
+};
+
+export const changePassword = async (oldPassword: string, newPassword: string) => {
+    const response = await backendRequest("auth/password/change/", "POST", true, {
+        old_password: oldPassword,
+        new_password: newPassword
+    });
+    return response.status;
 };

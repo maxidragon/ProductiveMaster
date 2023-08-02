@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from .permissions import IsOwner
 from rest_framework.permissions import AllowAny, IsAdminUser
-from .serializers import ActivitySerializer, GoalCategorySerializer, GoalSerializer, NoteSerializer, ProjectSerializer, TaskListSerializer, TaskSerializer, UserSerializer
+from .serializers import ActivitySerializer, ChangePasswordSerializer, GoalCategorySerializer, GoalSerializer, NoteSerializer, ProjectSerializer, TaskListSerializer, TaskSerializer, UserSerializer
 from rest_framework import generics
 from .models import Activity, Goal, GoalCategory, Note, Project, Task
 from rest_framework.views import APIView
@@ -161,3 +161,21 @@ class GoalsByCategory(APIView):
         serializer = GoalSerializer(goals, many=True)
         return Response(serializer.data)
     
+class ChangePasswordView(APIView):
+
+        def get_object(self, queryset=None):
+            obj = self.request.user
+            return obj
+
+        def post(self, request):
+            self.object = self.get_object()
+            serializer = ChangePasswordSerializer(data=request.data)
+
+            if serializer.is_valid():
+                if not self.object.check_password(serializer.data.get("old_password")):
+                    return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+                self.object.set_password(serializer.data.get("new_password"))
+                self.object.save()
+                return Response(status=status.HTTP_200_OK)
+
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

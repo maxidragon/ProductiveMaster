@@ -1,30 +1,13 @@
 import { useEffect, useState } from 'react';
-import {
-    CssBaseline,
-    Box,
-    Toolbar,
-    List,
-    Typography,
-    Divider,
-    IconButton,
-    Container,
-} from '@mui/material';
+import { CssBaseline, Box, Toolbar, Typography, Divider, IconButton, Container } from '@mui/material';
 import AppBar from './AppBar';
 import Drawer from './Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import FolderCopyIcon from '@mui/icons-material/FolderCopy';
-import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import NoteAltIcon from '@mui/icons-material/NoteAlt';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import LoginPartial from './LoginPartial';
 import { isUserLoggedIn } from '../logic/auth';
+import Navbar from './Navbar';
 
 const Layout = (props: { children: any }) => {
     const navigate = useNavigate();
@@ -87,44 +70,7 @@ const Layout = (props: { children: any }) => {
                     </IconButton>
                 </Toolbar>
                 <Divider />
-                <List component="nav">
-                    <ListItemButton component={Link} to={'/'}>
-                        <ListItemIcon>
-                            <DashboardIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Dashboard" />
-                    </ListItemButton>
-                    <ListItemButton component={Link} to={'/projects'}>
-                        <ListItemIcon>
-                            <FolderCopyIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Projects" />
-                    </ListItemButton>
-                    <ListItemButton component={Link} to={'/tasks'}>
-                        <ListItemIcon>
-                            <PeopleIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Tasks" />
-                    </ListItemButton>
-                    <ListItemButton component={Link} to={'/activities'}>
-                        <ListItemIcon>
-                            <CalendarMonthIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Activities" />
-                    </ListItemButton>
-                    <ListItemButton component={Link} to={'/notes'}>
-                        <ListItemIcon>
-                            <NoteAltIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Notes" />
-                    </ListItemButton>
-                    <ListItemButton component={Link} to={'/goals'}>
-                        <ListItemIcon>
-                            <BarChartIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Goals" />
-                    </ListItemButton>
-                </List>
+                <Navbar />
             </Drawer>
             <Box
                 component="main"

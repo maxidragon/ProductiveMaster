@@ -17,6 +17,7 @@ import Activities from "./Pages/Activities/Activities";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import GoalCategories from "./Pages/GoalCategories/GoalCategories";
+import Settings from "./Pages/Settings/Settings";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
   {
     path: "/goals/categories",
     element: <Layout children={<GoalCategories />} />
+  },
+  {
+    path: "/settings",
+    element: <Layout children={<Settings />} />
   },
   {
     path: "*",

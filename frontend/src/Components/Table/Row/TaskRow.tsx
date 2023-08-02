@@ -9,7 +9,7 @@ import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import AssignmentReturnedIcon from '@mui/icons-material/AssignmentReturned';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { deleteTask, updateTask } from "../../../logic/tasks";
-import EditTaskModal from "../../ModalComponents/EditTaskModal";
+import EditTaskModal from "../../ModalComponents/Edit/EditTaskModal";
 import { Link as RouterLink } from "react-router-dom";
 import AssignmentIcon from '@mui/icons-material/Assignment';
 

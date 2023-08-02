@@ -7,7 +7,7 @@ import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
 import { formatDateTime } from "../../../logic/other";
 import { deleteGoalById } from "../../../logic/goals";
-import EditGoalModal from "../../ModalComponents/EditGoalModal";
+import EditGoalModal from "../../ModalComponents/Edit/EditGoalModal";
 
 
 const GoalRow = ({ goal }: { goal: Goal }) => {

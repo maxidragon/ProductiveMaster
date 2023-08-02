@@ -1,12 +1,12 @@
 import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { style } from "./modalStyles";
+import { style } from "../modalStyles";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { enqueueSnackbar } from "notistack";
-import { createGoal } from "../../logic/goals";
+import { createGoal } from "../../../logic/goals";
 import { DatePicker } from "@mui/x-date-pickers";
-import { GoalCategory } from "../../logic/interfaces";
-import { getGoalCategories } from "../../logic/goalCategories";
+import { GoalCategory } from "../../../logic/interfaces";
+import { getGoalCategories } from "../../../logic/goalCategories";
 
 const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
   const [goalCategories, setGoalCategories] = useState<GoalCategory[]>([]);

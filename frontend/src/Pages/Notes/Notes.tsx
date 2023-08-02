@@ -4,7 +4,7 @@ import { Note } from "../../logic/interfaces";
 import { Box, CircularProgress, IconButton } from "@mui/material";
 import NoteCard from "../../Components/CardComponents/NoteCard";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import CreateNoteModal from "../../Components/ModalComponents/CreateNoteModal";
+import CreateNoteModal from "../../Components/ModalComponents/Create/CreateNoteModal";
 
 const Notes = () => {
     const [notes, setNotes] = useState<Note[]>([]);

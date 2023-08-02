@@ -23,6 +23,7 @@ urlpatterns = [
     path('goals/category/<int:category>/', views.GoalsByCategory.as_view(), name='goals-by-category'),
     path('goals/categories/', views.ListCreateGoalCategory.as_view(), name='goal-categories'),
     path('goals/categories/<int:pk>/', views.GoalCategoryDetail.as_view(), name='goal-category-detail'),
+    path('auth/password/change/', views.ChangePasswordView.as_view(), name='auth-password-change'),
     
 ]
 

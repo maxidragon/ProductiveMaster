@@ -1,21 +1,23 @@
 import {Box, Button, Modal, TextField, Typography} from "@mui/material";
 import { useRef } from "react";
-import { style } from "./modalStyles";
-import { createNote } from "../../logic/notes";
+import { style } from "../modalStyles";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { enqueueSnackbar } from "notistack";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { createActivity } from "../../../logic/activities";
 
-const CreateNoteModal = (props: { open: boolean; handleClose: any }) => {
+const CreateActivityModal = (props: { open: boolean; handleClose: any }) => {
   const titleRef: any = useRef();
   const descriptionRef: any = useRef();
-
+  const startTimeRef: any = useRef();
+  const endTimeRef: any = useRef();
   const handleCreate = async (event: any) => {
     event.preventDefault();
     const title = titleRef.current.value;
     const description = descriptionRef.current.value;
-    const status = await createNote(title, description);
+    const status = await createActivity(title, description, startTimeRef.current.value, endTimeRef.current.value);
     if (status === 201) {
-      enqueueSnackbar("Note created!", { variant: "success" });
+      enqueueSnackbar("Activity created!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
@@ -28,8 +30,16 @@ const CreateNoteModal = (props: { open: boolean; handleClose: any }) => {
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Create note
+          Create activity
         </Typography>
+        <DateTimePicker
+          label="Start"
+          inputRef={startTimeRef}
+        />
+        <DateTimePicker
+          label="End"
+          inputRef={endTimeRef}
+        />
         <TextField
           placeholder={"Title"}
           fullWidth
@@ -38,7 +48,7 @@ const CreateNoteModal = (props: { open: boolean; handleClose: any }) => {
         <TextField
           multiline
           rows={15}
-          placeholder={"Write your note here..."}
+          placeholder={"Write description here..."}
           fullWidth
           inputRef={descriptionRef}
         />
@@ -50,4 +60,4 @@ const CreateNoteModal = (props: { open: boolean; handleClose: any }) => {
   )
 };
 
-export default CreateNoteModal;
+export default CreateActivityModal;

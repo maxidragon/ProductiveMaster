@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import TasksTable from '../../Components/Table/TasksTable';
 import { Task } from '../../logic/interfaces';
-import CreateTaskModal from '../../Components/ModalComponents/CreateTaskModal';
+import CreateTaskModal from '../../Components/ModalComponents/Create/CreateTaskModal';
 
 const TasksForProject = () => {
     const { projectId } = useParams<{ projectId: string }>();

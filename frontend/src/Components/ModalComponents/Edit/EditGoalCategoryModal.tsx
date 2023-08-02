@@ -1,9 +1,9 @@
 import { Box, Button, Grid, Modal, TextField, Typography } from "@mui/material";
-import { style } from "./modalStyles";
+import { style } from "../modalStyles";
 import EditIcon from '@mui/icons-material/Edit';
 import { enqueueSnackbar } from "notistack";
-import { GoalCategory } from "../../logic/interfaces";
-import { updateGoalCategory } from "../../logic/goalCategories";
+import { GoalCategory } from "../../../logic/interfaces";
+import { updateGoalCategory } from "../../../logic/goalCategories";
 
 const EditGoalCategoryModal = (props: { open: boolean; handleClose: any, goalCategory: GoalCategory, updateGoalCategory: any }) => {
   const handleEdit = async (event: any) => {

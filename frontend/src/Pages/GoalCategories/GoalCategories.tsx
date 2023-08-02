@@ -3,7 +3,7 @@ import { GoalCategory } from "../../logic/interfaces";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { CircularProgress, Box, IconButton } from "@mui/material";
 import { getGoalCategories } from "../../logic/goalCategories";
-import CreateGoalCategoryModal from "../../Components/ModalComponents/CreateGoalCategoryModal";
+import CreateGoalCategoryModal from "../../Components/ModalComponents/Create/CreateGoalCategoryModal";
 import GoalCategoriesTable from "../../Components/Table/GoalCategoriesTable";
 
 const GoalCategories = () => {

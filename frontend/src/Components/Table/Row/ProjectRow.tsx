@@ -9,7 +9,7 @@ import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
 import { deleteProject } from "../../../logic/projects";
 import {Link as RouterLink} from "react-router-dom";
-import EditProjectModal from "../../ModalComponents/EditProjectModal";
+import EditProjectModal from "../../ModalComponents/Edit/EditProjectModal";
 
 
 const ProjectRow = ({ project }: { project: Project }) => {

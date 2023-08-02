@@ -1,9 +1,9 @@
 import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import { useRef } from "react";
-import { style } from "./modalStyles";
+import { style } from "../modalStyles";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { enqueueSnackbar } from "notistack";
-import { createGoalCategory } from "../../logic/goalCategories";
+import { createGoalCategory } from "../../../logic/goalCategories";
 
 const CreateGoalCategoryModal = (props: { open: boolean; handleClose: any }) => {
   const titleRef: any = useRef();

@@ -2,7 +2,7 @@ import { Box, CircularProgress, IconButton } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
 import { getActivitiesForDay } from "../../logic/activities";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import CreateActivityModal from "../../Components/ModalComponents/CreateActivityModal";
+import CreateActivityModal from "../../Components/ModalComponents/Create/CreateActivityModal";
 import { Activity } from "../../logic/interfaces";
 import ActivitiesTable from "../../Components/Table/ActivitiesTable";
 import { DatePicker } from "@mui/x-date-pickers";
