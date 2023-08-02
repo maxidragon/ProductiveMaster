@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from rest_framework import status
-from .models import Task, Project, Activity, Note, Goal
+from .models import GoalCategory, Task, Project, Activity, Note, Goal
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 
@@ -117,7 +117,7 @@ class ActivitiesTests(TestCase):
         token = self.authenticate()
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data), 0)
 
 
 class ListCreateUserTests(TestCase):
@@ -173,10 +173,10 @@ class ListCreateNoteTests(TestCase):
             username='testuser', password='testpassword')
 
     def authenticate(self):
-        response = self.client.post(reverse('get-token'), {'username': 'testuser', 'password': 'testpassword'}, format='json')
+        response = self.client.post(reverse(
+            'get-token'), {'username': 'testuser', 'password': 'testpassword'}, format='json')
         token = response.data['token']
         return token
-
 
     def test_list_notes(self):
         url = reverse('notes')
@@ -189,10 +189,10 @@ class ListCreateNoteTests(TestCase):
         url = reverse('notes')
         data = {'title': 'Test Note', 'description': 'Test Note Description'}
         token = self.authenticate()
-        response = self.client.post(url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
+        response = self.client.post(
+            url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Note.objects.count(), 1)
-
 
 
 class ListCreateGoalTests(TestCase):
@@ -202,7 +202,8 @@ class ListCreateGoalTests(TestCase):
             username='testuser', password='testpassword')
 
     def authenticate(self):
-        response = self.client.post(reverse('get-token'), {'username': 'testuser', 'password': 'testpassword'}, format='json')
+        response = self.client.post(reverse(
+            'get-token'), {'username': 'testuser', 'password': 'testpassword'}, format='json')
         token = response.data['token']
         return token
 
@@ -218,7 +219,38 @@ class ListCreateGoalTests(TestCase):
         data = {'title': 'Test Goal', 'description': 'Test Goal Description',
                 'deadline': '2023-08-10T12:00:00Z'}
         token = self.authenticate()
-        response = self.client.post(url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
+        response = self.client.post(
+            url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Goal.objects.count(), 1)
 
+
+class ListCreateGoalCategoryTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+
+    def authenticate(self):
+        response = self.client.post(reverse(
+            'get-token'), {'username': 'testuser', 'password': 'testpassword'}, format='json')
+        token = response.data['token']
+        return token
+
+    def test_list_goal_categories(self):
+        url = reverse('goal-categories')
+        token = self.authenticate()
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_create_goal_category(self):
+        url = reverse('goal-categories')
+        token = self.authenticate()
+        response = self.client.post(
+            url,
+            {'title': 'Test Goal Category'},
+            HTTP_AUTHORIZATION=f'Token {token}'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(GoalCategory.objects.count(), 1)

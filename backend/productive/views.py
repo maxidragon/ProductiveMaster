@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
 from .permissions import IsOwner
 from rest_framework.permissions import AllowAny, IsAdminUser
-from .serializers import ActivitySerializer, GoalSerializer, NoteSerializer, ProjectSerializer, TaskListSerializer, TaskSerializer, UserSerializer
+from .serializers import ActivitySerializer, GoalCategorySerializer, GoalSerializer, NoteSerializer, ProjectSerializer, TaskListSerializer, TaskSerializer, UserSerializer
 from rest_framework import generics
-from .models import Activity, Goal, Note, Project, Task
+from .models import Activity, Goal, GoalCategory, Note, Project, Task
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -139,3 +139,25 @@ class GoalDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Goal.objects.all()
     serializer_class = GoalSerializer
     permissions_classes = [IsOwner]
+
+class ListCreateGoalCategory (generics.ListCreateAPIView):
+    queryset = GoalCategory.objects.all()
+    serializer_class = GoalCategorySerializer
+
+    def get_queryset(self):
+        return GoalCategory.objects.filter(owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+        
+class GoalCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = GoalCategory.objects.all()
+    serializer_class = GoalCategorySerializer
+    permission_classes = [IsOwner]
+    
+class GoalsByCategory(APIView):
+    def get(self, request, category=None):
+        goals = Goal.objects.filter(owner=request.user, goal_category=category)
+        serializer = GoalSerializer(goals, many=True)
+        return Response(serializer.data)
+    
