@@ -28,12 +28,12 @@ const Goals = () => {
     };
     const handleGoalCategoryChange = async (event: any) => {
         const id = event.target.value;
+        setSelected(id);
+        setLoading(true);
         if (id === 0) {
             await fetchData();
             return;
         }
-        setSelected(id);
-        setLoading(true);
         const data = await getGoalsByCategoryId(id);
         setGoals(data);
         setLoading(false);
