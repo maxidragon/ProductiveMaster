@@ -45,7 +45,64 @@ class TasksTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
+class TaskDetailTests(TestCase):
+    def setUp(self): 
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.user2 = User.objects.create_user(
+            username="noowner", password="nopassword")
+        self.project = Project.objects.create(
+            title='Test Project', owner=self.user)
+        self.task = Task.objects.create(
+            title='Test Task', project=self.project, owner=self.user)
+        
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password}, format='json')
+        token = response.data['token']
+        return token    
+    
+    def test_get_task(self):
+        url = reverse('task-detail', args=[self.task.id])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], self.task.title)
+        
+    def test_get_task_forbidden(self):
+        url = reverse('task-detail', args=[self.task.id])
+        token = self.authenticate('noowner', 'nopassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        
+    def test_update_task(self):
+        url = reverse('task-detail', args=[self.task.id])
+        data = {'title': 'New Title', 'description': 'New Description', 'issue': 'https://github.com', 'project': self.project.id, 'status': 'TODO', 'owner': self.user.id, 'pull_request': 'https://github.com'}
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.put(url, data, HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], 'New Title')
 
+    def test_update_task_forbidden(self):
+        url = reverse('task-detail', args=[self.task.id])
+        data = {'title': 'New Title', 'description': 'New Description', 'issue': 'https://github.com', 'project': self.project.id, 'status': 'TODO', 'owner': self.user.id, 'pull_request': 'https://github.com'}
+        token = self.authenticate('noowner', 'nopassword')
+        response = self.client.put(url, data, HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_task(self):
+        url = reverse('task-detail', args=[self.task.id])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        
+    def test_delete_task_forbidden(self):
+        url = reverse('task-detail', args=[self.task.id])
+        token = self.authenticate('noowner', 'nopassword')
+        response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        
 class ProjectsTests(TestCase):
     def setUp(self):
         self.client = Client()
