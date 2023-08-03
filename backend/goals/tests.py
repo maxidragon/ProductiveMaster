@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.test import TestCase, Client
 from django.urls import reverse
 from rest_framework import status
@@ -64,3 +65,54 @@ class ListCreateGoalCategoryTest(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(GoalCategory.objects.count(), 1)
+
+
+class GoalDetailTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.user2 = User.objects.create_user(
+            username='nonowner', password='nonownerpassword')
+        self.goal = Goal.objects.create(
+            title='Test Goal', description='Test Goal Description', deadline=datetime.now(), owner=self.user)
+
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password}, format='json')
+        token = response.data['token']
+        return token
+
+    def test_get_goal(self):
+        url = reverse('goal-detail', kwargs={'pk': self.goal.id})
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], self.goal.title)
+
+    def test_update_goal(self):
+        url = reverse('goal-detail', kwargs={'pk': self.goal.id})
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.put(url, {'title': 'Updated goal', 'description': 'desc', 'deadline': self.goal.deadline,
+                                   'owner': self.goal.owner.id}, HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], 'Updated goal')
+
+    def test_update_goal_forbidden(self):
+        url = reverse('goal-detail', kwargs={'pk': self.goal.id})
+        token = self.authenticate('nonowner', 'nonownerpassword')
+        response = self.client.put(url, {'title': 'Updated goal', 'description': 'desc', 'deadline': self.goal.deadline,
+                                   'owner': self.goal.owner.id}, HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_goal(self):
+        url = reverse('goal-detail', kwargs={'pk': self.goal.id})
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_goal_forbidden(self):
+        url = reverse('goal-detail', kwargs={'pk': self.goal.id})
+        token = self.authenticate('nonowner', 'nonownerpassword')
+        response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
