@@ -1,6 +1,6 @@
-import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { style } from "../modalStyles";
+import { actionsButtons, formStyle, style } from "../modalStyles";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { enqueueSnackbar } from "notistack";
 import { createGoal } from "../../../logic/goals";
@@ -40,7 +40,7 @@ const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
   useEffect(() => {
     const fetchData = async () => {
       const categories = await getGoalCategories();
-      setGoalCategories(categories);  
+      setGoalCategories(categories);
     };
     fetchData();
   }, []);
@@ -50,49 +50,61 @@ const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
       onClose={props.handleClose}
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Create goal
-        </Typography>
-        <TextField
-          placeholder={"Title"}
-          fullWidth
-          inputRef={titleRef}
-        />
-        <TextField
-          multiline
-          rows={15}
-          placeholder={"Write description here..."}
-          fullWidth
-          inputRef={descriptionRef}
-        />
-        <FormControl fullWidth>
-          <InputLabel id="goal-category-select-label">
-            Goal Category
-          </InputLabel>
-          <Select
-            labelId="goal-category-select-label"
-            id="goal-category-select"
-            value={selected}
-            label="Goal Category"
-            onChange={(event: any) => {
-              setSelected(event.target.value);
-            }}
-          >
-            <MenuItem key={0} value={0}>
-              Without category
-            </MenuItem>
-            {goalCategories.map((goalCategory: GoalCategory) => (
-              <MenuItem key={goalCategory.id} value={goalCategory.id}>
-                {goalCategory.title}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <DatePicker
-          label="End"
-          inputRef={deadlineRef}
-        />
-        <Box sx={{ display: 'flex', justifyContent: 'end', mt: 2 }}>
+        <Grid container sx={formStyle}>
+          <Grid item>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Create goal
+            </Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              placeholder={"Title"}
+              fullWidth
+              inputRef={titleRef}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              multiline
+              rows={15}
+              placeholder={"Write description here..."}
+              fullWidth
+              inputRef={descriptionRef}
+            />
+          </Grid>
+          <Grid item>
+            <FormControl fullWidth>
+              <InputLabel id="goal-category-select-label">
+                Goal Category
+              </InputLabel>
+              <Select
+                labelId="goal-category-select-label"
+                id="goal-category-select"
+                value={selected}
+                label="Goal Category"
+                onChange={(event: any) => {
+                  setSelected(event.target.value);
+                }}
+              >
+                <MenuItem key={0} value={0}>
+                  Without category
+                </MenuItem>
+                {goalCategories.map((goalCategory: GoalCategory) => (
+                  <MenuItem key={goalCategory.id} value={goalCategory.id}>
+                    {goalCategory.title}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <DatePicker
+              label="End"
+              inputRef={deadlineRef}
+            />
+          </Grid>
+        </Grid>
+        <Box sx={actionsButtons}>
           <Button variant="contained" endIcon={<AddCircleIcon />} onClick={handleCreate}>Create</Button>
         </Box>
       </Box>

@@ -31,10 +31,11 @@ const Activities = () => {
             {loading ? <CircularProgress /> :
                 (
                     <>
-                        <Box>
+                        <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                            <DatePicker value={dayjs(date)} onChange={(date) => setDate(dayjs(date))} />
                             <IconButton onClick={() => setCreateModalOpen(true)}><AddCircleIcon /></IconButton>
                         </Box>
-                        <DatePicker value={dayjs(date)} onChange={(date) => setDate(dayjs(date))} />
+
                         <ActivitiesTable activities={activities} />
                         {createModalOpen && <CreateActivityModal open={createModalOpen} handleClose={handleCloseCreateModal} />}
                     </>

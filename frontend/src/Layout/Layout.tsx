@@ -65,6 +65,9 @@ const Layout = (props: { children: any }) => {
                         px: [1],
                     }}
                 >
+                    <Typography variant="h6" noWrap component="div">
+                        ProductiveMaster
+                    </Typography>
                     <IconButton onClick={toggleDrawer}>
                         <ChevronLeftIcon />
                     </IconButton>

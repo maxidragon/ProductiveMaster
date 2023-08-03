@@ -41,9 +41,8 @@ const Projects = () => {
             {loading ? (
                 <CircularProgress />) : (
                 <>
-                    <Box>
-                        <IconButton onClick={() => setCreateModalOpen(true)}><AddCircleIcon /></IconButton>
-                        <FormControl fullWidth>
+                    <Box sx={{display: 'flex', flexDirection: 'row', mb: 2}}>
+                        <FormControl sx={{width: 200}}>
                             <InputLabel id="status">Status</InputLabel>
                             <Select
                                 labelId="status"
@@ -59,6 +58,7 @@ const Projects = () => {
                                 <MenuItem value={"DONE"}>Done</MenuItem>
                             </Select>
                         </FormControl>
+                        <IconButton onClick={() => setCreateModalOpen(true)}><AddCircleIcon /></IconButton>
                     </Box>
                     <ProjectsTable projects={projects} />
                 </>

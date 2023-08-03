@@ -1,5 +1,5 @@
 import { Box, Button, Checkbox, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
-import { style } from "../modalStyles";
+import { actionsButtons, formStyle, style } from "../modalStyles";
 import EditIcon from '@mui/icons-material/Edit';
 import { enqueueSnackbar } from "notistack";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -47,11 +47,14 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
       onClose={props.handleClose}
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Update goal
-        </Typography>
-        <Grid>
-          <Grid item xs={12} sm={6} sx={{ mb: 2 }}>
+
+        <Grid container sx={formStyle}>
+          <Grid item>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Update goal
+            </Typography>
+          </Grid>
+          <Grid item>
             <TextField
               placeholder={"Title"}
               fullWidth
@@ -59,7 +62,7 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
               onChange={(event) => props.updateGoal({ ...props.goal, title: event.target.value })}
             />
           </Grid>
-          <Grid item xs={12} sm={6} sx={{ mb: 2 }}>
+          <Grid item>
             <TextField
               multiline
               rows={15}
@@ -69,7 +72,7 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
               onChange={(event) => props.updateGoal({ ...props.goal, description: event.target.value })}
             />
           </Grid>
-          <Grid item xs={12} sm={6} sx={{ mb: 2 }}>
+          <Grid item>
             <FormControl fullWidth>
               <InputLabel id="goal-category-select-label">
                 Goal Category
@@ -94,23 +97,20 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
               </Select>
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6} sx={{ mb: 2 }}>
+          <Grid item>
             <DatePicker
               label="End"
               value={dayjs(props.goal.deadline)}
               onChange={(value) => props.updateGoal({ ...props.goal, deadline: value })}
             />
           </Grid>
-          <Grid item xs={12} sm={6} sx={{ mb: 2 }}>
+          <Grid item>
             <FormControlLabel control={<Checkbox checked={props.goal.is_achieved} onChange={(event) => props.updateGoal({ ...props.goal, is_achieved: event.target.checked })} />} label="Is achieved" />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Box sx={{ display: 'flex', justifyContent: 'end', mt: 2 }}>
-              <Button variant="contained" endIcon={<EditIcon />} onClick={handleEdit}>Edit</Button>
-            </Box>
-          </Grid>
         </Grid>
-
+        <Box sx={actionsButtons}>
+          <Button variant="contained" endIcon={<EditIcon />} onClick={handleEdit}>Edit</Button>
+        </Box>
       </Box>
     </Modal>
   )

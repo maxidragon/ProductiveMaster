@@ -73,10 +73,9 @@ const TasksForProject = () => {
             {loading ? (
                 <CircularProgress />) : (
                 <>
-                    <Box>
-                        <IconButton onClick={() => setCreateModalOpen(true)}><AddTaskIcon /></IconButton>
-                    </Box>
-                    <FormControl fullWidth>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', mb: 2 }}>
+
+                        <FormControl sx={{width: '50%', mr: 2}}>
                             <InputLabel id="status">Status</InputLabel>
                             <Select
                                 labelId="status"
@@ -93,6 +92,9 @@ const TasksForProject = () => {
                             </Select>
                         </FormControl>
                         <TextField fullWidth label="Search" variant="outlined" value={search} onChange={handleSearch} />
+                        <IconButton onClick={() => setCreateModalOpen(true)}><AddTaskIcon /></IconButton>
+                    </Box>
+
                     <TasksTable tasks={tasks} />
                 </>
             )}

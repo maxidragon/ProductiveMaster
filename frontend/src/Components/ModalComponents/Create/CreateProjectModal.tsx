@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import {Box, Typography, Modal, TextField, Button} from "@mui/material";
-import { style } from "../modalStyles";
+import { Box, Typography, Modal, TextField, Button, Grid } from "@mui/material";
+import { style, formStyle, actionsButtons } from "../modalStyles";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { enqueueSnackbar } from "notistack";
 import { createProject } from "../../../logic/projects";
@@ -29,27 +29,37 @@ const CreateProjectModal = (props: { open: boolean; handleClose: any }) => {
       onClose={props.handleClose}
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Create project
-        </Typography>
-        <TextField
-          placeholder={"Title"}
-          fullWidth
-          inputRef={titleRef}
-        />
-        <TextField
-          placeholder={"Github"}
-          fullWidth
-          inputRef={githubLinkRef}
-        />
-        <TextField
-          multiline
-          rows={15}
-          placeholder={"Write project description  here..."}
-          fullWidth
-          inputRef={descriptionRef}
-        />
-        <Box sx={{ display: 'flex', justifyContent: 'end', mt: 2 }}>
+        <Grid container sx={formStyle}>
+          <Grid item>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Create project
+            </Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              placeholder={"Title"}
+              fullWidth
+              inputRef={titleRef}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              placeholder={"Github"}
+              fullWidth
+              inputRef={githubLinkRef}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              multiline
+              rows={15}
+              placeholder={"Write project description  here..."}
+              fullWidth
+              inputRef={descriptionRef}
+            />
+          </Grid>
+        </Grid>
+        <Box sx={actionsButtons}>
           <Button variant="contained" endIcon={<AddCircleIcon />} onClick={handleCreate}>Create</Button>
         </Box>
       </Box>

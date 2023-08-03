@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Modal, TextField, Typography } from "@mui/material";
-import { style } from "../modalStyles";
+import { actionsButtons, formStyle, style } from "../modalStyles";
 import EditIcon from '@mui/icons-material/Edit';
 import { enqueueSnackbar } from "notistack";
 import { GoalCategory } from "../../../logic/interfaces";
@@ -22,11 +22,13 @@ const EditGoalCategoryModal = (props: { open: boolean; handleClose: any, goalCat
       onClose={props.handleClose}
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Update category
-        </Typography>
-        <Grid>
-          <Grid item xs={12} sm={6} sx={{ mb: 2 }}>
+        <Grid container sx={formStyle}>
+          <Grid item>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Update category
+            </Typography>
+          </Grid>
+          <Grid item>
             <TextField
               placeholder={"Name"}
               fullWidth
@@ -34,13 +36,10 @@ const EditGoalCategoryModal = (props: { open: boolean; handleClose: any, goalCat
               onChange={(event) => props.updateGoalCategory({ ...props.goalCategory, title: event.target.value })}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Box sx={{ display: 'flex', justifyContent: 'end', mt: 2 }}>
-              <Button variant="contained" endIcon={<EditIcon />} onClick={handleEdit}>Edit</Button>
-            </Box>
-          </Grid>
         </Grid>
-
+        <Box sx={actionsButtons}>
+          <Button variant="contained" endIcon={<EditIcon />} onClick={handleEdit}>Edit</Button>
+        </Box>
       </Box>
     </Modal>
   )

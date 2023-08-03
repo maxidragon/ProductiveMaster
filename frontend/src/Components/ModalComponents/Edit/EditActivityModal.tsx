@@ -1,5 +1,5 @@
-import {Box, Button, Modal, TextField, Typography} from "@mui/material";
-import { style } from "../modalStyles";
+import { Box, Button, Grid, Modal, TextField, Typography } from "@mui/material";
+import { actionsButtons, formStyle, style } from "../modalStyles";
 import EditIcon from '@mui/icons-material/Edit';
 import { enqueueSnackbar } from "notistack";
 import { DateTimePicker } from "@mui/x-date-pickers";
@@ -25,34 +25,46 @@ const EditActivityModal = (props: { open: boolean; handleClose: any, activity: A
       onClose={props.handleClose}
     >
       <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Update activity
-        </Typography>
-        <DateTimePicker
-          label="Start"
-          value={dayjs(props.activity.start_time)}
-          onChange={(value) => props.updateActivity({ ...props.activity, start_time: value })}
-        />
-        <DateTimePicker
-          label="End"
-          value={dayjs(props.activity.end_time)}
-          onChange={(value) => props.updateActivity({ ...props.activity, end_time: value })}
-        />
-        <TextField
-          placeholder={"Title"}
-          fullWidth
-          value={props.activity.title}
-          onChange={(event) => props.updateActivity({ ...props.activity, title: event.target.value })}
-        />
-        <TextField
-          multiline
-          rows={15}
-          placeholder={"Write description here..."}
-          fullWidth
-          value={props.activity.description}
-          onChange={(event) => props.updateActivity({ ...props.activity, description: event.target.value })}
-        />
-        <Box sx={{ display: 'flex', justifyContent: 'end', mt: 2 }}>
+        <Grid container sx={formStyle}>
+          <Grid item>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Edit activity
+            </Typography>
+          </Grid>
+          <Grid item>
+            <DateTimePicker
+              label="Start"
+              value={dayjs(props.activity.start_time)}
+              onChange={(value) => props.updateActivity({ ...props.activity, start_time: value })}
+            />
+          </Grid>
+          <Grid item>
+            <DateTimePicker
+              label="End"
+              value={dayjs(props.activity.end_time)}
+              onChange={(value) => props.updateActivity({ ...props.activity, end_time: value })}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              placeholder={"Title"}
+              fullWidth
+              value={props.activity.title}
+              onChange={(event) => props.updateActivity({ ...props.activity, title: event.target.value })}
+            />
+          </Grid>
+          <Grid item>
+            <TextField
+              multiline
+              rows={15}
+              placeholder={"Write description here..."}
+              fullWidth
+              value={props.activity.description}
+              onChange={(event) => props.updateActivity({ ...props.activity, description: event.target.value })}
+            />
+          </Grid>
+        </Grid>
+        <Box sx={actionsButtons}>
           <Button variant="contained" endIcon={<EditIcon />} onClick={handleEdit}>Edit</Button>
         </Box>
       </Box>
