@@ -1,6 +1,6 @@
 import AddTaskIcon from '@mui/icons-material/AddTask';
-import { getTasksForProject } from '../../logic/tasks';
-import { CircularProgress, Box, IconButton, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { getTasksForProject, searchTasksForProject } from '../../logic/tasks';
+import { CircularProgress, Box, IconButton, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import TasksTable from '../../Components/Table/TasksTable';
@@ -11,6 +11,7 @@ const TasksForProject = () => {
     const { projectId } = useParams<{ projectId: string }>();
     const [tasks, setTasks] = useState<Task[]>([]);
     const [status, setStatus] = useState<string>("");
+    const [search, setSearch] = useState<string>("");
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const fetchData = useCallback(async (statusParam?: string) => {
@@ -31,6 +32,32 @@ const TasksForProject = () => {
     const handleCloseCreateModal = () => {
         setCreateModalOpen(false);
         fetchData();
+    };
+
+    const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (projectId === undefined) {
+            return;
+        }
+        setSearch(event.target.value);
+        if (status === "") {
+            if (event.target.value === "") {
+                fetchData();
+                return;
+            }
+            const filteredTasks = await searchTasksForProject(event.target.value, +projectId);
+            setTasks(filteredTasks);
+        } else {
+            if (event.target.value === "") {
+                fetchData(status);
+                return;
+            }
+            const filteredTasks = await searchTasksForProject(event.target.value, +projectId, status);
+            setTasks(filteredTasks);
+        }
+        if (event.target.value === "") {
+            fetchData(status);
+            return;
+        }
     };
 
     useEffect(() => {
@@ -65,6 +92,7 @@ const TasksForProject = () => {
                                 <MenuItem value={"DONE"}>Done</MenuItem>
                             </Select>
                         </FormControl>
+                        <TextField fullWidth label="Search" variant="outlined" value={search} onChange={handleSearch} />
                     <TasksTable tasks={tasks} />
                 </>
             )}

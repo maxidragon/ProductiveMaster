@@ -1,11 +1,12 @@
 import { useState, useCallback, useEffect } from "react";
 import { Task } from "../../logic/interfaces";
-import { getTasksByStatus } from "../../logic/tasks";
-import { CircularProgress, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { getTasksByStatus, searchTasks } from "../../logic/tasks";
+import { CircularProgress, FormControl, InputLabel, Select, MenuItem, TextField } from "@mui/material";
 import TasksTable from "../../Components/Table/TasksTable";
 
 const Tasks = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [search, setSearch] = useState<string>("");
     const [status, setStatus] = useState<string>("TODO");
     const [loading, setLoading] = useState(true);
 
@@ -20,6 +21,16 @@ const Tasks = () => {
     useEffect(() => {
         fetchData(status);
     }, [status, fetchData]);
+
+    const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(event.target.value);
+        if (event.target.value === "") {
+            fetchData(status);
+            return;
+        }
+        const filteredTasks = await searchTasks(event.target.value, status);
+        setTasks(filteredTasks);
+    };
     return (
         <>
             {loading ? (
@@ -40,6 +51,7 @@ const Tasks = () => {
                             <MenuItem value={"DONE"}>Done</MenuItem>
                         </Select>
                     </FormControl>
+                    <TextField fullWidth label="Search" variant="outlined" value={search} onChange={handleSearch}/>
                     <TasksTable tasks={tasks} multipleProjects={true} />
                 </>
             )}

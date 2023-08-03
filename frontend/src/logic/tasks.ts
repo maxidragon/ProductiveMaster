@@ -22,6 +22,19 @@ export const getTaskById = async (taskId: string) => {
   return await response.json();
 };
 
+export const searchTasks = async (query: string, status: string) => {
+  const response = await backendRequest(`tasks/search/status/${query}/${status}`, "GET", true);
+  return await response.json();
+};
+
+export const searchTasksForProject = async (query: string, projectId: number, status?: string) => {
+  let url = `tasks/search/project/${projectId}/${query}/`;
+  if (status) {
+    url += `status/${status}/`;
+  }
+  const response = await backendRequest(url, "GET", true);
+  return await response.json();
+};
 export const createTask = async (
   projectId: string,
   title: string,
@@ -34,7 +47,8 @@ export const createTask = async (
   return response.status;
 };
 
-export const updateTask = async (task: Task) => {
+export const updateTask = async (task: any) => {
+  task.project = task.project.id;
   const response = await backendRequest(`tasks/${task.id}/`, "PUT", true, task);
   return response.status;
 };

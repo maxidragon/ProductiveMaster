@@ -7,7 +7,7 @@ export const registerUser = async (email: FormDataEntryValue | null, username: F
             username: username,
             password: password,
         };
-        const response = await backendRequest("users/", "POST", false, body);
+        const response = await backendRequest("auth/users/", "POST", false, body);
         return await response.json();
     } catch (error) {
         console.log(error);

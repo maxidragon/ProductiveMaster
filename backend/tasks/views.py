@@ -40,6 +40,20 @@ class TasksForProject(APIView):
         serializer = TaskListSerializer(tasks, many=True)
         return Response(serializer.data)
 
+class SearchTask(APIView):
+    def get(self, request, search, status):
+        tasks = Task.objects.filter(owner=request.user, title__icontains=search, status=status)
+        serializer = TaskSerializer(tasks, many=True)
+        return Response(serializer.data)
+    
+class SearchTaskFromProject(APIView):
+    def get(self, request, project_id, search, status=None):
+        if status is None:
+            tasks = Task.objects.filter(owner=request.user, title__icontains=search, project=project_id)
+        else:
+            tasks = Task.objects.filter(owner=request.user, title__icontains=search, project=project_id, status=status)
+        serializer = TaskSerializer(tasks, many=True)
+        return Response(serializer.data)
 
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
