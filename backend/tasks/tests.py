@@ -133,3 +133,57 @@ class ProjectsTests(TestCase):
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
+
+
+class ProjectDetailTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.user2 = User.objects.create_user(
+            username="noowner", password="nopassword")
+        self.project = Project.objects.create(
+            title='Test Project', description='Test Project Description', owner=self.user)
+        
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password}, format='json')
+        token = response.data['token']
+        return token    
+    
+    def test_get_project(self):
+        url = reverse('project-detail', args=[self.project.id])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], self.project.title)
+        
+    def test_get_project_forbidden(self):
+        url = reverse('project-detail', args=[self.project.id])
+        token = self.authenticate('noowner', 'nopassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        
+    def test_update_project(self):
+        url = reverse('project-detail', args=[self.project.id])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.put(url, {'title': 'New Title', 'description': 'New Description'}, HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+    def test_update_project_forbidden(self):
+        url = reverse('project-detail', args=[self.project.id])
+        token = self.authenticate('noowner', 'nopassword')
+        response = self.client.put(url, {'title': 'New Title', 'description': 'New Description'}, HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        
+    def test_delete_project(self):
+        url = reverse('project-detail', args=[self.project.id])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        
+    def test_delete_project_forbidden(self):
+        url = reverse('project-detail', args=[self.project.id])
+        token = self.authenticate('noowner', 'nopassword')
+        response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
