@@ -73,15 +73,17 @@ const router = createBrowserRouter([
     element: <Layout children={<ErrorElement message="404 not found" />} />
   }
 ]);
-const lightTheme = createTheme({
+
+const darkTheme = createTheme({
   palette: {
-    mode: 'light',
+    mode: 'dark',
   },
 });
+
 const App = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <ThemeProvider theme={lightTheme}>
+      <ThemeProvider theme={darkTheme}>
         <SnackbarProvider>
           <ConfirmProvider>
             <RouterProvider router={router} />
