@@ -1,4 +1,3 @@
-import { Task } from "./interfaces";
 import { backendRequest } from "./request";
 
 export const getTasksByStatus = async (status: string) => {
