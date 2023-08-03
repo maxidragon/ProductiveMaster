@@ -29,7 +29,7 @@ class ListTask(APIView):
 
 
 class TasksForProject(APIView):
-    permissions_classes = [IsOwner]
+    permission_classes = [IsOwner]
 
     def get(self, request, project_id, status=None):
         if status:
@@ -58,7 +58,7 @@ class SearchTaskFromProject(APIView):
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    permissions_classes = [IsOwner]
+    permission_classes = [IsOwner]
 
 
 class ListCreateProject(APIView):
@@ -85,4 +85,4 @@ class ProjectsByStatus(APIView):
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permissions_classes = [IsOwner]
+    permission_classes = [IsOwner]

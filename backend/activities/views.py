@@ -29,4 +29,4 @@ class CreateActivity(APIView):
 class ActivityDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
-    permissions_classes = [IsOwner]
+    permission_classes = [IsOwner]

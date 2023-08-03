@@ -1,12 +1,4 @@
-import {
-  Modal,
-  Box,
-  Divider,
-  TextField,
-  Typography,
-  Button,
-  Grid,
-} from "@mui/material";
+import { Modal, Box, TextField, Typography, Button, Grid } from "@mui/material";
 import { actionsButtons, formStyle, style } from "./modalStyles";
 import { useRef } from "react";
 import { enqueueSnackbar } from "notistack";

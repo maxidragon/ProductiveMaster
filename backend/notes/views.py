@@ -18,4 +18,4 @@ class ListCreateNote(generics.ListCreateAPIView):
 class NoteDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
-    permissions_classes = [IsOwner]
+    permission_classes = [IsOwner]
