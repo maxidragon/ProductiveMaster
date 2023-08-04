@@ -30,19 +30,22 @@ jobs:
       working-directory: 'backend' 
       run: |
         python3 -m venv venv
-        source venv/bin/activate
     - name: Install Dependencies
       working-directory: 'backend' 
       run: |
         python3 -m pip install --upgrade pip
+        source venv/bin/activate
         pip install -r requirements.txt
     - name: Create .env
       working-directory: 'backend' 
       run: echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
     - name: Apply migrations
       working-directory: 'backend' 
-      run: python3 manage.py migrate
+      run: |
+        source venv/bin/activate
+        python3 manage.py migrate
     - name: Run app
       working-directory: 'backend' 
       run: |
+        source venv/bin/activate
         nohup python3 manage.py runserver
