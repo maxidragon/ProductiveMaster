@@ -15,6 +15,7 @@ jobs:
         node-version: [19.x] 
         
     steps:
+    - uses: actions/checkout@v3
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
@@ -26,6 +27,8 @@ jobs:
     - name: Build
       run: npm run build
       working-directory: ./frontend
+    - name: Copy files to /var/www
+      run: cp -r ~/git/productive/_work/ProductiveMaster/ProductiveMaster/frontend/build /var/www/productive.maksymiliangala.com/
     - name: Create virtual environment
       working-directory: 'backend' 
       run: |
@@ -38,7 +41,7 @@ jobs:
         pip install -r requirements.txt
     - name: Create .env
       working-directory: 'backend' 
-      run: echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
+      run: echo "${{ secrets.ENV_PRODUCTION }}" > .env
     - name: Apply migrations
       working-directory: 'backend' 
       run: |
@@ -48,4 +51,4 @@ jobs:
       working-directory: 'backend' 
       run: |
         source venv/bin/activate
-        nohup python3 manage.py runserver
+        python3 manage.py runserver &
