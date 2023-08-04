@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-k5$dtg*e+6#h%k=(@^aq9d76n9bra^cq=5u^d6r^8gv_uh)y2p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -93,13 +96,25 @@ WSGI_APPLICATION = 'productivemaster.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
+
+if DEBUG == False:
+		DATABASES = {
+		    'default': {
+		        'ENGINE': 'django.db.backends.postgresql',
+		        'NAME': os.environ.get('PGDATABASE'),
+		        'USER': os.environ.get('PGUSER'),
+		        'PASSWORD': os.environ.get('PGPASSWORD'),
+		        'HOST': os.environ.get('PGHOST'),
+		        'PORT': os.environ.get('PGPORT'),
+		    }
+		}
+else:
+    DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
