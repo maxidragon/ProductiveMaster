@@ -19,13 +19,13 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+
     - name: Install frontend dependencies
       run: npm install
-      working-directory: 'frontend'
+      working-directory: ./frontend
     - name: Build
       run: npm run build
-      working-directory: 'frontend'
+      working-directory: ./frontend
     - name: Create virtual environment
       run: |
         python3 -m venv venv
