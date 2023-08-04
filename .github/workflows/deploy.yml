@@ -38,7 +38,7 @@ jobs:
         pip install -r requirements.txt
     - name: Create .env
       working-directory: 'backend' 
-      run: echo "${{ secrets.ENV_PRODUCTION }}" > .env.production
+      run: echo "${{ secrets.ENV_PRODUCTION }}" > .env
     - name: Apply migrations
       working-directory: 'backend' 
       run: |
