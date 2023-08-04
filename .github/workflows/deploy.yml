@@ -47,8 +47,6 @@ jobs:
       run: |
         source venv/bin/activate
         python3 manage.py migrate
-    - name: Run app
+    - name: Restart app
       working-directory: 'backend' 
-      run: |
-        source venv/bin/activate
-        uwsgi --ini uwsgi.ini &
+      run: sudo systemctl restart productivemaster.service
