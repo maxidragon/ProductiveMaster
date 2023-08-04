@@ -49,4 +49,11 @@ jobs:
         python3 manage.py migrate
     - name: Run app
       working-directory: 'backend' 
-      run: sh run.sh
+      run: uwsgi --ini uwsgi.ini
+      background: yes
+    - name: Wait for uWSGI to start
+      run: |
+        until nc -z localhost 8000; do sleep 1; done
+    - name: Test uWSGI
+      run: |
+        curl http://localhost:8000
