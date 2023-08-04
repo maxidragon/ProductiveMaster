@@ -49,6 +49,4 @@ jobs:
         python3 manage.py migrate
     - name: Run app
       working-directory: 'backend' 
-      run: |
-       ./venv/bin/gunicorn --bind 0.0.0.0:8000 productivemaster.wsgi -D
-
+      run: sh run.sh
