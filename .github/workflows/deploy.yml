@@ -27,6 +27,7 @@ jobs:
       run: npm run build
       working-directory: ./frontend
     - name: Create virtual environment
+      working-directory: 'backend' 
       run: |
         python3 -m venv venv
         source venv/bin/activate
