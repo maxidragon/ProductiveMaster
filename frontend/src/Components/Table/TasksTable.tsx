@@ -12,7 +12,7 @@ const TasksTable = (props: {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        <TableCell>Titlte</TableCell>
+                        <TableCell>Title</TableCell>
                         <TableCell>Description</TableCell>
                         {props.multipleProjects && <TableCell>Project</TableCell>}
                         {props.multipleProjects && <TableCell>Tasks for project</TableCell>}
