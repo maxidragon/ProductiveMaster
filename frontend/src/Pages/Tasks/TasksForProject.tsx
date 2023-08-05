@@ -10,7 +10,7 @@ import CreateTaskModal from '../../Components/ModalComponents/Create/CreateTaskM
 const TasksForProject = () => {
     const { projectId } = useParams<{ projectId: string }>();
     const [tasks, setTasks] = useState<Task[]>([]);
-    const [status, setStatus] = useState<string>("");
+    const [status, setStatus] = useState<string>("TODO");
     const [search, setSearch] = useState<string>("");
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -31,7 +31,7 @@ const TasksForProject = () => {
     }, [projectId]);
     const handleCloseCreateModal = () => {
         setCreateModalOpen(false);
-        fetchData();
+        fetchData(status);
     };
 
     const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,8 +61,8 @@ const TasksForProject = () => {
     };
 
     useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+        fetchData(status);
+    }, [fetchData, status]);
 
     useEffect(() => {
         status === "" ? fetchData() : fetchData(status);
@@ -70,33 +70,29 @@ const TasksForProject = () => {
 
     return (
         <>
+            <Box sx={{ display: 'flex', flexDirection: 'row', mb: 2 }}>
+                <FormControl sx={{ width: '50%', mr: 2 }}>
+                    <InputLabel id="status">Status</InputLabel>
+                    <Select
+                        labelId="status"
+                        label="Status"
+                        required
+                        name="status"
+                        value={status}
+                        onChange={(event) => setStatus(event.target.value)}
+                    >
+                        <MenuItem value={""}>All</MenuItem>
+                        <MenuItem value={"TODO"}>To do</MenuItem>
+                        <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
+                        <MenuItem value={"DONE"}>Done</MenuItem>
+                    </Select>
+                </FormControl>
+                <TextField fullWidth label="Search" variant="outlined" value={search} onChange={handleSearch} />
+                <IconButton onClick={() => setCreateModalOpen(true)}><AddTaskIcon /></IconButton>
+            </Box>
             {loading ? (
                 <CircularProgress />) : (
-                <>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', mb: 2 }}>
-
-                        <FormControl sx={{width: '50%', mr: 2}}>
-                            <InputLabel id="status">Status</InputLabel>
-                            <Select
-                                labelId="status"
-                                label="Status"
-                                required
-                                name="status"
-                                value={status}
-                                onChange={(event) => setStatus(event.target.value)}
-                            >
-                                <MenuItem value={""}>All</MenuItem>
-                                <MenuItem value={"TODO"}>To do</MenuItem>
-                                <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
-                                <MenuItem value={"DONE"}>Done</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <TextField fullWidth label="Search" variant="outlined" value={search} onChange={handleSearch} />
-                        <IconButton onClick={() => setCreateModalOpen(true)}><AddTaskIcon /></IconButton>
-                    </Box>
-
-                    <TasksTable tasks={tasks} />
-                </>
+                <TasksTable tasks={tasks} />
             )}
             {createModalOpen && projectId && <CreateTaskModal open={createModalOpen} handleClose={handleCloseCreateModal} projectId={projectId} />}
         </>

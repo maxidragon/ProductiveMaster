@@ -33,30 +33,27 @@ const Tasks = () => {
     };
     return (
         <>
+            <Box sx={{ display: 'flex', flexDirection: 'row', mb: 2 }}>
+                <FormControl sx={{ width: '50%', mr: 2 }}>
+                    <InputLabel id="status">Status</InputLabel>
+                    <Select
+                        labelId="status"
+                        label="Status"
+                        required
+                        name="status"
+                        value={status}
+                        onChange={(event) => setStatus(event.target.value)}
+                    >
+                        <MenuItem value={"TODO"}>To do</MenuItem>
+                        <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
+                        <MenuItem value={"DONE"}>Done</MenuItem>
+                    </Select>
+                </FormControl>
+                <TextField sx={{ width: '50%' }} label="Search" variant="outlined" value={search} onChange={handleSearch} />
+            </Box>
             {loading ? (
                 <CircularProgress />) : (
-                <>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', mb: 2 }}>
-                        <FormControl sx={{width: '50%', mr: 2}}>
-                            <InputLabel id="status">Status</InputLabel>
-                            <Select
-                                labelId="status"
-                                label="Status"
-                                required
-                                name="status"
-                                value={status}
-                                onChange={(event) => setStatus(event.target.value)}
-                            >
-                                <MenuItem value={"TODO"}>To do</MenuItem>
-                                <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
-                                <MenuItem value={"DONE"}>Done</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <TextField sx={{width: '50%'}} label="Search" variant="outlined" value={search} onChange={handleSearch} />
-                    </Box>
-
-                    <TasksTable tasks={tasks} multipleProjects={true} />
-                </>
+                <TasksTable tasks={tasks} multipleProjects={true} />
             )}
         </>
     )

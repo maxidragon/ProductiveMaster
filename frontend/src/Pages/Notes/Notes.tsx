@@ -35,19 +35,17 @@ const Notes = () => {
     };
     return (
         <>
+            <Box sx={{ display: 'flex', flexDirection: 'row', mb: 2 }}>
+                <TextField sx={{ width: '100%' }} label="Search" variant="outlined" value={search} onChange={handleSearch} />
+                <IconButton onClick={() => setCreateModalOpen(true)}><AddCircleIcon /></IconButton>
+            </Box>
             {loading ? (
                 <CircularProgress />) : (
-                <>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', mb: 2 }}>
-                        <TextField sx={{ width: '100%' }} label="Search" variant="outlined" value={search} onChange={handleSearch} />
-                        <IconButton onClick={() => setCreateModalOpen(true)}><AddCircleIcon /></IconButton>
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', mt: 5, flexWrap: 'wrap' }}>
-                        {notes.map((note: Note) => (
-                            <NoteCard key={note.id} note={note} />
-                        ))}
-                    </Box>
-                </>
+                <Box sx={{ display: 'flex', flexDirection: 'row', mt: 5, flexWrap: 'wrap' }}>
+                    {notes.map((note: Note) => (
+                        <NoteCard key={note.id} note={note} />
+                    ))}
+                </Box>
             )}
             {createModalOpen && <CreateNoteModal open={createModalOpen} handleClose={handleCloseCreateModal} />}
         </>

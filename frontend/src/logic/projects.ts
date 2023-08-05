@@ -29,3 +29,8 @@ export const deleteProject = async (id: string): Promise<number> => {
     const response = await backendRequest(`projects/detail/${id}/`, 'DELETE', true);
     return response.status;
 };
+
+export const searchProjects = async (query: string): Promise<Project[]> => {
+    const response = await backendRequest(`projects/search/${query}`, 'GET', true);
+    return await response.json();
+};

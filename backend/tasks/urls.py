@@ -13,8 +13,9 @@ urlpatterns = [
     path('tasks/search/project/<int:project_id>/<str:search>/', views.SearchTaskFromProject.as_view(), name='search-task-from-project'),
     path('tasks/search/status/<str:search>/<str:status>/', views.SearchTask.as_view(), name='search-task'),
     path('projects/', views.ListCreateProject.as_view(), name='projects'),
+    path('projects/search/<str:search>/', views.SearchProjects.as_view(), name='search-projects'),
     path('projects/status/<str:status>/', views.ProjectsByStatus.as_view(), name='projects-by-status'),
     path('projects/detail/<int:pk>/', views.ProjectDetail.as_view(), name='project-detail'),
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns)
+urlpatterns = format_suffix_patterns(urlpatterns)           

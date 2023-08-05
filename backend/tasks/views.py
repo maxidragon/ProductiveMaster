@@ -86,3 +86,9 @@ class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsOwner]
+
+class SearchProjects(APIView):
+    def get(self, request, search):
+        projects = Project.objects.filter(owner=request.user, title__icontains=search)
+        serializer = ProjectSerializer(projects, many=True)
+        return Response(serializer.data)
