@@ -47,13 +47,6 @@ jobs:
       run: |
         source venv/bin/activate
         python3 manage.py migrate
-    - name: Run app
+    - name: Restart app
       working-directory: 'backend' 
-      run: uwsgi --ini uwsgi.ini
-      background: yes
-    - name: Wait for uWSGI to start
-      run: |
-        until nc -z localhost 8000; do sleep 1; done
-    - name: Test uWSGI
-      run: |
-        curl http://localhost:8000
+      run: sudo systemctl restart productivemaster.service
