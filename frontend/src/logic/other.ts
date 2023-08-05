@@ -15,3 +15,6 @@ export const formatDate = (date: Date): string => {
     return `${formatDate(date)} ${formatTime(date)}`;
   };
   
+  export const calculateTotalPages = (count: number, perPage: number): number => {
+    return Math.ceil(count / perPage);
+  }

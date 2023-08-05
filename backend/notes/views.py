@@ -1,3 +1,4 @@
+from .paginators import NotePaginator
 from .models import Note
 from .permissions import IsOwner
 from rest_framework import generics
@@ -9,6 +10,7 @@ from rest_framework.response import Response
 class ListCreateNote(generics.ListCreateAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
+    pagination_class = NotePaginator
 
     def get_queryset(self):
         return Note.objects.filter(owner=self.request.user)

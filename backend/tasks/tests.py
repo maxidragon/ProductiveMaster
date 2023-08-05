@@ -43,7 +43,8 @@ class TasksTests(TestCase):
         token = self.authenticate()
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data.results), 1)
+        self.assertEqual(response.data.count, 1)
 
 class TaskDetailTests(TestCase):
     def setUp(self): 

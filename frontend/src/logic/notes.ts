@@ -3,7 +3,8 @@ import { backendRequest } from "./request"
 
 export const getNotes = async (): Promise<Note[]> => {
     const response = await backendRequest("notes/", "GET", true);
-    return await response.json();
+    const data = await response.json();
+    return data.results;
 };
 
 export const createNote = async (title: string, description: string): Promise<number> => {

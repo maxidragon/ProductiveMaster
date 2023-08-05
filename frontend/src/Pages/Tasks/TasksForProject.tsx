@@ -6,32 +6,64 @@ import { useParams } from 'react-router-dom';
 import TasksTable from '../../Components/Table/TasksTable';
 import { Task } from '../../logic/interfaces';
 import CreateTaskModal from '../../Components/ModalComponents/Create/CreateTaskModal';
+import { calculateTotalPages } from '../../logic/other';
 
 const TasksForProject = () => {
+    const perPage = 10;
     const { projectId } = useParams<{ projectId: string }>();
     const [tasks, setTasks] = useState<Task[]>([]);
     const [status, setStatus] = useState<string>("TODO");
     const [search, setSearch] = useState<string>("");
     const [createModalOpen, setCreateModalOpen] = useState(false);
+    const [page, setPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
     const [loading, setLoading] = useState(true);
-    const fetchData = useCallback(async (statusParam?: string) => {
+    const fetchData = useCallback(async (pageParam: number, statusParam?: string) => {
         if (projectId === undefined) {
             return;
         }
         setLoading(true);
         if (statusParam) {
-            const data = await getTasksForProject(projectId, statusParam);
-            setTasks(data);
+            console.log(projectId, pageParam, statusParam)
+            const data = await getTasksForProject(projectId, pageParam, statusParam);
+            const totalPagesNumber = calculateTotalPages(data.count, perPage);
+            setTotalPages(totalPagesNumber);
+            setPage(pageParam);
+            setTasks(data.results);
             setLoading(false);
         } else {
-            const data = await getTasksForProject(projectId);
-            setTasks(data);
+            const data = await getTasksForProject(projectId, pageParam);
+            console.log(data);
+            const totalPagesNumber = calculateTotalPages(data.count, perPage);
+            setTotalPages(totalPagesNumber);
+            setPage(pageParam);
+            setTasks(data.results);
             setLoading(false);
         }
     }, [projectId]);
     const handleCloseCreateModal = () => {
         setCreateModalOpen(false);
-        fetchData(status);
+        fetchData(1, status);
+    };
+
+    const handlePageChange = async (pageParam: number) => {
+        if (projectId === undefined) {
+            return;
+        }
+        let filteredTasks;
+        if (search !== "") {
+            if (status === "") {
+                filteredTasks = await searchTasksForProject(search, +projectId, pageParam);
+            } else {
+                filteredTasks = await searchTasksForProject(search, +projectId, pageParam, status);
+            }
+        } else {
+            filteredTasks = await getTasksForProject(projectId, pageParam, status);
+        }
+        setTasks(filteredTasks.results);
+        setPage(pageParam);
+        const totalPagesNumber = calculateTotalPages(filteredTasks.count, perPage);
+        setTotalPages(totalPagesNumber);
     };
 
     const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,32 +73,41 @@ const TasksForProject = () => {
         setSearch(event.target.value);
         if (status === "") {
             if (event.target.value === "") {
-                fetchData();
+                fetchData(page);
                 return;
             }
-            const filteredTasks = await searchTasksForProject(event.target.value, +projectId);
-            setTasks(filteredTasks);
+            const filteredTasks = await searchTasksForProject(event.target.value, +projectId, 1);
+            setTasks(filteredTasks.results);
+            setPage(1);
+            const totalPagesNumber = calculateTotalPages(filteredTasks.count, perPage);
+            setTotalPages(totalPagesNumber);
         } else {
             if (event.target.value === "") {
-                fetchData(status);
+                fetchData(1, status);
                 return;
             }
-            const filteredTasks = await searchTasksForProject(event.target.value, +projectId, status);
-            setTasks(filteredTasks);
+            const filteredTasks = await searchTasksForProject(event.target.value, +projectId, 1, status);
+            console.log(filteredTasks);
+            setTasks(filteredTasks.results);
+            setPage(1);
+            const totalPagesNumber = calculateTotalPages(filteredTasks.count, perPage);
+            setTotalPages(totalPagesNumber);
         }
         if (event.target.value === "") {
-            fetchData(status);
+            fetchData(1, status);
             return;
         }
     };
 
     useEffect(() => {
-        fetchData(status);
-    }, [fetchData, status]);
+        setTotalPages(1);
+        setPage(1);
+        fetchData(1, status);
+    }, [status, fetchData]);
 
     useEffect(() => {
-        status === "" ? fetchData() : fetchData(status);
-    }, [status, fetchData]);
+        status === "" ? fetchData(page) : fetchData(page, status);
+    }, [status, page, fetchData]);
 
     return (
         <>
@@ -92,7 +133,7 @@ const TasksForProject = () => {
             </Box>
             {loading ? (
                 <CircularProgress />) : (
-                <TasksTable tasks={tasks} />
+                <TasksTable tasks={tasks} page={page} totalPages={totalPages} handlePageChange={handlePageChange} />
             )}
             {createModalOpen && projectId && <CreateTaskModal open={createModalOpen} handleClose={handleCloseCreateModal} projectId={projectId} />}
         </>

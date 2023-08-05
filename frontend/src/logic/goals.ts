@@ -3,7 +3,8 @@ import { backendRequest } from "./request";
 
 export const getAllGoals = async (): Promise<Goal[]> => {
     const response = await backendRequest("goals/", "GET", true);
-    return await response.json();
+    const data = await response.json();
+    return data.results;
 };
 
 export const getGoalsByCategoryId = async (id: number): Promise<Goal[]> => {

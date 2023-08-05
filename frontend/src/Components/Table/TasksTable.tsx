@@ -1,12 +1,25 @@
-import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
+import {
+    TableContainer,
+    Paper,
+    Table,
+    TableHead,
+    TableRow,
+    TableCell,
+    TableBody,
+    TableFooter,
+} from "@mui/material";
 import { Task } from "../../logic/interfaces";
-
 import TaskRow from "./Row/TaskRow";
+import PaginationFooter from "../Pagination/PaginationFooter";
 
 const TasksTable = (props: {
     tasks: Task[];
     multipleProjects?: boolean;
+    page: number;
+    totalPages: number;
+    handlePageChange: (page: number) => void;
 }) => {
+
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -28,8 +41,11 @@ const TasksTable = (props: {
                     ))}
 
                 </TableBody>
+                <TableFooter>
+                    <PaginationFooter page={props.page} totalPages={props.totalPages} handlePageChange={props.handlePageChange} />
+                </TableFooter>
             </Table>
-        </TableContainer>
+        </TableContainer >
     );
 };
 

@@ -28,6 +28,9 @@ SECRET_KEY = 'django-insecure-k5$dtg*e+6#h%k=(@^aq9d76n9bra^cq=5u^d6r^8gv_uh)y2p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == 'True'
 
+if not DEBUG:
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    
 ALLOWED_HOSTS = ['*']
 
 
@@ -70,6 +73,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
 }
 
 ROOT_URLCONF = 'productivemaster.urls'
@@ -104,16 +109,16 @@ DATABASES = {
 }
 
 if not DEBUG:
-		DATABASES = {
-		    'default': {
-		        'ENGINE': 'django.db.backends.postgresql',
-		        'NAME': os.environ.get('PGDATABASE'),
-		        'USER': os.environ.get('PGUSER'),
-		        'PASSWORD': os.environ.get('PGPASSWORD'),
-		        'HOST': os.environ.get('PGHOST'),
-		        'PORT': os.environ.get('PGPORT'),
-		    }
-		}
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('PGDATABASE'),
+            'USER': os.environ.get('PGUSER'),
+            'PASSWORD': os.environ.get('PGPASSWORD'),
+            'HOST': os.environ.get('PGHOST'),
+            'PORT': os.environ.get('PGPORT'),
+        }
+    }
 
 
 # Password validation

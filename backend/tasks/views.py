@@ -1,3 +1,4 @@
+from .paginators import TasksPaginator
 from .permissions import IsOwner
 from .serializers import ProjectSerializer, TaskListSerializer, TaskSerializer
 from rest_framework import generics
@@ -5,8 +6,6 @@ from .models import Project, Task
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
-
 
 
 class CreateTask(APIView):
@@ -21,39 +20,52 @@ class CreateTask(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class ListTask(APIView):
-    def get(self, request, status='TODO'):
-        tasks = Task.objects.filter(owner=request.user, status=status)
-        serializer = TaskListSerializer(tasks, many=True)
-        return Response(serializer.data)
+class ListTask(generics.ListAPIView):
+    serializer_class = TaskListSerializer
+
+    def get_queryset(self):
+        status = self.kwargs.get('status', 'TODO')
+        return Task.objects.filter(owner=self.request.user, status=status)
 
 
-class TasksForProject(APIView):
+class TasksForProject(generics.ListAPIView):
+    serializer_class = TaskListSerializer
     permission_classes = [IsOwner]
 
-    def get(self, request, project_id, status=None):
+    def get_queryset(self):
+        project_id = self.kwargs['project_id']
+        status = self.kwargs.get('status')
+        queryset = Task.objects.filter(
+            project=project_id, owner=self.request.user)
         if status:
-            tasks = Task.objects.filter(
-                project=project_id, status=status, owner=request.user)
-        else:
-            tasks = Task.objects.filter(project=project_id, owner=request.user)
-        serializer = TaskListSerializer(tasks, many=True)
-        return Response(serializer.data)
+            queryset = queryset.filter(status=status)
+        return queryset
 
-class SearchTask(APIView):
-    def get(self, request, search, status):
-        tasks = Task.objects.filter(owner=request.user, title__icontains=search, status=status)
-        serializer = TaskSerializer(tasks, many=True)
-        return Response(serializer.data)
-    
-class SearchTaskFromProject(APIView):
-    def get(self, request, project_id, search, status=None):
-        if status is None:
-            tasks = Task.objects.filter(owner=request.user, title__icontains=search, project=project_id)
-        else:
-            tasks = Task.objects.filter(owner=request.user, title__icontains=search, project=project_id, status=status)
-        serializer = TaskSerializer(tasks, many=True)
-        return Response(serializer.data)
+
+class SearchTask(generics.ListAPIView):
+    serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        search = self.kwargs.get('search')
+        status = self.kwargs.get('status')
+        queryset = Task.objects.filter(
+            owner=self.request.user, title__icontains=search, status=status)
+        return queryset
+
+
+class SearchTaskFromProject(generics.ListAPIView):
+    serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_id')
+        search = self.kwargs.get('search')
+        status = self.kwargs.get('status')
+        queryset = Task.objects.filter(
+            owner=self.request.user, title__icontains=search, project=project_id)
+        if status is not None:
+            queryset = queryset.filter(status=status)
+        return queryset
+
 
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
@@ -87,8 +99,10 @@ class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProjectSerializer
     permission_classes = [IsOwner]
 
+
 class SearchProjects(APIView):
     def get(self, request, search):
-        projects = Project.objects.filter(owner=request.user, title__icontains=search)
+        projects = Project.objects.filter(
+            owner=request.user, title__icontains=search)
         serializer = ProjectSerializer(projects, many=True)
         return Response(serializer.data)

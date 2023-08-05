@@ -3,7 +3,8 @@ import { backendRequest } from "./request"
 
 export const getGoalCategories = async (): Promise<GoalCategory[]>  => {
     const response = await backendRequest("goals/categories/", "GET", true);
-    return await response.json();
+    const data = await response.json();
+    return data.results;
 };
 
 export const createGoalCategory = async (title: string): Promise<number>  => {

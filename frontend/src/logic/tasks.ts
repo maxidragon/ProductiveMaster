@@ -1,17 +1,22 @@
 import { backendRequest } from "./request";
 
-export const getTasksByStatus = async (status: string) => {
-  const response = await backendRequest(`tasks/list/${status}/`, "GET", true);
+export const getTasksByStatus = async (status: string, page: number = 1) => {
+  const response = await backendRequest(
+    `tasks/list/${status}/?page=${page}`,
+    "GET",
+    true
+  );
   return await response.json();
 };
 
 export const getTasksForProject = async (
   projectId: string,
+  page: number = 1,
   status?: string
 ) => {
   const url = status
-    ? `tasks/project/${projectId}/status/${status}`
-    : `tasks/project/${projectId}/`;
+    ? `tasks/project/${projectId}/status/${status}/?page=${page}`
+    : `tasks/project/${projectId}/?page=${page}`;
   const response = await backendRequest(url, "GET", true);
   return await response.json();
 };
@@ -21,16 +26,30 @@ export const getTaskById = async (taskId: string) => {
   return await response.json();
 };
 
-export const searchTasks = async (query: string, status: string) => {
-  const response = await backendRequest(`tasks/search/status/${query}/${status}`, "GET", true);
+export const searchTasks = async (
+  query: string,
+  status: string,
+  page: number = 1
+) => {
+  const response = await backendRequest(
+    `tasks/search/status/${query}/${status}/?page=${page}`,
+    "GET",
+    true
+  );
   return await response.json();
 };
 
-export const searchTasksForProject = async (query: string, projectId: number, status?: string) => {
+export const searchTasksForProject = async (
+  query: string,
+  projectId: number,
+  page: number = 1,
+  status?: string
+) => {
   let url = `tasks/search/project/${projectId}/${query}/`;
   if (status) {
     url += `status/${status}/`;
   }
+  url += `?page=${page}`;
   const response = await backendRequest(url, "GET", true);
   return await response.json();
 };
