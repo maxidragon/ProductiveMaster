@@ -77,3 +77,33 @@ class NoteDetailTest(TestCase):
         response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Note.objects.count(), 0)    
+        
+    
+class SearchNotes(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.user2 = User.objects.create_user(
+            username='nonowner', password='nonownerpassword')
+        self.note = Note.objects.create(title='Test Note', description='Test Note Description', owner=self.user)
+
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password}, format='json')
+        token = response.data['token']
+        return token    
+    
+    def test_search_notes_as_owner(self):
+        url = reverse('search-notes', kwargs={'search': 'Test'})
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        
+    def test_search_notes_as_non_owner(self):
+        url = reverse('search-notes', kwargs={'search': 'Test'})
+        token = self.authenticate('nonowner', 'nonownerpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)

@@ -25,3 +25,8 @@ export const getNoteById = async (id: number): Promise<Note> => {
     const response = await backendRequest(`notes/${id}/`, "GET", true);
     return await response.json();
 };
+
+export const searchNotes = async (query: string): Promise<Note[]> => {
+    const response = await backendRequest(`notes/search/${query}`, "GET", true);
+    return await response.json();
+}
