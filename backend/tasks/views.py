@@ -34,11 +34,19 @@ class TasksForProject(generics.ListAPIView):
 
     def get_queryset(self):
         project_id = self.kwargs['project_id']
-        status = self.kwargs.get('status')
         queryset = Task.objects.filter(
             project=project_id, owner=self.request.user)
-        if status:
-            queryset = queryset.filter(status=status)
+        return queryset
+
+class TasksForProjectWithStatus(generics.ListAPIView):
+    serializer_class = TaskListSerializer
+    permission_classes = [IsOwner]
+
+    def get_queryset(self):
+        project_id = self.kwargs['project_id']
+        status = self.kwargs.get('status')
+        queryset = Task.objects.filter(
+            project=project_id, owner=self.request.user, status=status)
         return queryset
 
 

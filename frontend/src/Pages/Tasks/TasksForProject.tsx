@@ -23,8 +23,7 @@ const TasksForProject = () => {
             return;
         }
         setLoading(true);
-        if (statusParam) {
-            console.log(projectId, pageParam, statusParam)
+        if (statusParam !== undefined && statusParam !== "") {
             const data = await getTasksForProject(projectId, pageParam, statusParam);
             const totalPagesNumber = calculateTotalPages(data.count, perPage);
             setTotalPages(totalPagesNumber);
@@ -33,7 +32,6 @@ const TasksForProject = () => {
             setLoading(false);
         } else {
             const data = await getTasksForProject(projectId, pageParam);
-            console.log(data);
             const totalPagesNumber = calculateTotalPages(data.count, perPage);
             setTotalPages(totalPagesNumber);
             setPage(pageParam);
@@ -52,6 +50,7 @@ const TasksForProject = () => {
         }
         let filteredTasks;
         if (search !== "") {
+            console.log(projectId, search,  pageParam, status);
             if (status === "") {
                 filteredTasks = await searchTasksForProject(search, +projectId, pageParam);
             } else {
@@ -104,10 +103,6 @@ const TasksForProject = () => {
         setPage(1);
         fetchData(1, status);
     }, [status, fetchData]);
-
-    useEffect(() => {
-        status === "" ? fetchData(page) : fetchData(page, status);
-    }, [status, page, fetchData]);
 
     return (
         <>
