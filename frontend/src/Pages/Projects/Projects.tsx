@@ -1,26 +1,37 @@
 import { CircularProgress, Box, IconButton, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Project } from "../../logic/interfaces";
 import { getAllProjects, getProjectsByStatus, searchProjects } from "../../logic/projects";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CreateProjectModal from "../../Components/ModalComponents/Create/CreateProjectModal";
 import ProjectsTable from "../../Components/Table/ProjectsTable";
+import { calculateTotalPages } from "../../logic/other";
+import { enqueueSnackbar } from "notistack";
 
 const Projects = () => {
+    const perPage = 10;
     const [projects, setProjects] = useState<Project[]>([]);
     const [status, setStatus] = useState<string>("IN_PROGRESS");
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [search, setSearch] = useState<string>("");
+    const [page, setPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
     const [loading, setLoading] = useState(true);
-    const fetchData = async (status?: string) => {
+    const fetchData = async (pageParam: number = 1, status?: string) => {
         setLoading(true);
-        if (status) {
-            const data = await getProjectsByStatus(status);
-            setProjects(data);
+        if (status !== undefined && status !== "") {
+            const data = await getProjectsByStatus(status, pageParam);
+            setProjects(data.results);
+            const totalPagesNumber = calculateTotalPages(data.count, perPage);
+            setTotalPages(totalPagesNumber);
+            setPage(pageParam);
             setLoading(false);
         } else {
-            const data = await getAllProjects();
-            setProjects(data);
+            const data = await getAllProjects(pageParam);
+            setProjects(data.results);
+            const totalPagesNumber = calculateTotalPages(data.count, perPage);
+            setTotalPages(totalPagesNumber);
+            setPage(pageParam);
             setLoading(false);
         }
     };
@@ -28,24 +39,60 @@ const Projects = () => {
         setCreateModalOpen(false);
         fetchData();
     };
-
-    useEffect(() => {
-        fetchData(status);
-    }, [status]);
-
-    useEffect(() => {
-        status === "" ? fetchData() : fetchData(status);
-    }, [status]);
-
-    const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handlePageChange = async (pageParam: number) => {
+        let filteredProjects;
+        if (search !== "") {
+            if (status === "") {
+                filteredProjects = await searchProjects(search, pageParam);
+            } else {
+                filteredProjects = await searchProjects(search, pageParam, status);
+            }
+        } else {
+            if (status === "") {
+                filteredProjects = await getAllProjects(pageParam);
+            } else {
+                filteredProjects = await getProjectsByStatus(status, pageParam);
+            }
+        }
+        if (filteredProjects.detail && filteredProjects.detail === "Invalid page.") {
+            enqueueSnackbar("Invalid page!", { variant: "error" });
+            setPage(pageParam - 1);
+            setTotalPages(totalPages - 1);
+            return;
+        }
+        setProjects(filteredProjects.results);
+        setPage(pageParam);
+        const totalPagesNumber = calculateTotalPages(filteredProjects.count, perPage);
+        setTotalPages(totalPagesNumber);
+    };
+    
+    const handleSearch = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(event.target.value);
         if (event.target.value === "") {
             fetchData();
             return;
         }
-        const filteredProjects = await searchProjects(event.target.value);
-        setProjects(filteredProjects);
-    };
+        let filteredProjects;
+        if (status === "") {
+            filteredProjects = await searchProjects(event.target.value);
+        } else {
+            filteredProjects = await searchProjects(event.target.value, 1, status);
+        }
+        setProjects(filteredProjects.results);
+        setPage(1);
+        const totalPagesNumber = calculateTotalPages(filteredProjects.count, perPage);
+        setTotalPages(totalPagesNumber);
+    }, [status]);
+
+    useEffect(() => {
+        if (search === "") {
+            fetchData(1, status);
+        } else {
+            handleSearch({ target: { value: search } } as React.ChangeEvent<HTMLInputElement>);
+        }
+    }, [status, search, handleSearch]);
+
+
     return (
         <>
             <Box sx={{ display: 'flex', flexDirection: 'row', mb: 2 }}>
@@ -70,7 +117,7 @@ const Projects = () => {
             </Box>
             {loading ? (
                 <CircularProgress />) : (
-                <ProjectsTable projects={projects} />
+                <ProjectsTable projects={projects} page={page} totalPages={totalPages} handlePageChange={handlePageChange} />
             )}
             {createModalOpen && <CreateProjectModal open={createModalOpen} handleClose={handleCloseCreateModal} />}
         </>

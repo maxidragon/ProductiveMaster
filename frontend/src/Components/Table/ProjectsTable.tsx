@@ -1,12 +1,15 @@
-import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody } from "@mui/material";
+import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, TableFooter } from "@mui/material";
 import { Project } from "../../logic/interfaces";
 
 import ProjectRow from "./Row/ProjectRow";
+import PaginationFooter from "../Pagination/PaginationFooter";
 
 const ProjectsTable = (props: {
     projects: Project[];
+    page: number;
+    totalPages: number;
+    handlePageChange: (page: number) => void;
 }) => {
-    console.log(props.projects);
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -23,8 +26,12 @@ const ProjectsTable = (props: {
                     {props.projects.map((project: Project) => (
                         <ProjectRow key={project.id} project={project} />
                     ))}
-
                 </TableBody>
+                {props.totalPages > 0 && (
+                    <TableFooter>
+                        <PaginationFooter page={props.page} totalPages={props.totalPages} handlePageChange={props.handlePageChange} />
+                    </TableFooter>
+                )}
             </Table>
         </TableContainer>
     );

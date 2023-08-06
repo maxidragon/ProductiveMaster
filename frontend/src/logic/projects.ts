@@ -1,12 +1,12 @@
 import { Project } from "./interfaces";
 import { backendRequest } from "./request"
 
-export const getAllProjects = async (): Promise<Project[]> => {
-    const response = await backendRequest('projects/', 'GET', true);
+export const getAllProjects = async (page: number = 1) => {
+    const response = await backendRequest(`projects/?page=${page}`, 'GET', true);
     return await response.json();
 };
-export const getProjectsByStatus = async (status: string): Promise<Project[]> => {
-    const response = await backendRequest(`projects/status/${status}/`, 'GET', true);
+export const getProjectsByStatus = async (status: string, page: number = 1) => {
+    const response = await backendRequest(`projects/status/${status}/?page=${page}`, 'GET', true);
     return await response.json();
 };
 
@@ -30,7 +30,12 @@ export const deleteProject = async (id: string): Promise<number> => {
     return response.status;
 };
 
-export const searchProjects = async (query: string): Promise<Project[]> => {
-    const response = await backendRequest(`projects/search/${query}`, 'GET', true);
+export const searchProjects = async (query: string, page: number = 1, status?: string) => {
+    let url = `projects/search/${query}/`;
+    if (status) {
+      url += `status/${status}/`;
+    }
+    url += `?page=${page}`;
+    const response = await backendRequest(url, 'GET', true);
     return await response.json();
 };

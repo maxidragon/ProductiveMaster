@@ -81,36 +81,39 @@ class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOwner]
 
 
-class ListCreateProject(APIView):
-    def get(self, request):
-        projects = Project.objects.filter(owner=request.user)
-        serializer = ProjectSerializer(projects, many=True)
-        return Response(serializer.data)
+class ListCreateProject(generics.ListCreateAPIView):
+    serializer_class = ProjectSerializer
 
-    def post(self, request):
-        serializer = ProjectSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(owner=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self):
+        return Project.objects.filter(owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 
-class ProjectsByStatus(APIView):
-    def get(self, request, status):
-        projects = Project.objects.filter(owner=request.user, status=status)
-        serializer = ProjectSerializer(projects, many=True)
-        return Response(serializer.data)
+class ProjectsByStatus(generics.ListAPIView):
+    serializer_class = ProjectSerializer
 
+    def get_queryset(self):
+        status = self.kwargs['status']  
+        return Project.objects.filter(owner=self.request.user, status=status)
 
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsOwner]
 
+class SearchProjects(generics.ListAPIView):
+    serializer_class = ProjectSerializer
 
-class SearchProjects(APIView):
-    def get(self, request, search):
-        projects = Project.objects.filter(
-            owner=request.user, title__icontains=search)
-        serializer = ProjectSerializer(projects, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        search = self.kwargs['search']
+        return Project.objects.filter(owner=self.request.user, title__icontains=search)
+    
+class SearchProjectsByStatus(generics.ListAPIView):
+    serializer_class = ProjectSerializer
+    
+    def get_queryset(self):
+        search = self.kwargs['search']
+        status = self.kwargs['status']
+        return Project.objects.filter(owner=self.request.user, title__icontains=search, status=status)
