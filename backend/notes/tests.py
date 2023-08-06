@@ -23,7 +23,7 @@ class ListCreateNoteTests(TestCase):
         token = self.authenticate()
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
+        self.assertEqual(len(response.data['results']), 0)
 
     def test_create_note(self):
         url = reverse('notes')

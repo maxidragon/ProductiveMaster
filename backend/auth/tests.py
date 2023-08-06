@@ -24,7 +24,7 @@ class ListCreateUserTests(TestCase):
         token = self.authenticate('adminuser', 'adminpassword')
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)  # Two users created in setUp
+        self.assertEqual(len(response.data['results']), 2)
 
     def test_list_users_as_normal_user(self):
         url = reverse('users')
