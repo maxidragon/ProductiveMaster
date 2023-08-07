@@ -10,7 +10,7 @@ const EditTaskModal = (props: { open: boolean; handleClose: any, task: Task, upd
     event.preventDefault();
     const status = await updateTask(props.task);
     if (status === 200) {
-      enqueueSnackbar("Project updated!", { variant: "success" });
+      enqueueSnackbar("Task updated!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });

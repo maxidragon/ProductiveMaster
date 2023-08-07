@@ -20,6 +20,7 @@ class GoalDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Goal.objects.all()
     serializer_class = GoalSerializer
     permission_classes = [IsOwner]
+    
 
 class ListCreateGoalCategory (generics.ListCreateAPIView):
     serializer_class = GoalCategorySerializer

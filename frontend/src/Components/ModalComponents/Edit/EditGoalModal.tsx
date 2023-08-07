@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import { updateGoalById } from "../../../logic/goals";
 import { Goal, GoalCategory } from "../../../logic/interfaces";
 import { useState, useEffect } from "react";
-import { getGoalCategories } from "../../../logic/goalCategories";
+import { getAllGoalCategories } from "../../../logic/goalCategories";
 
 const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, updateGoal: any }) => {
   const [goalCategories, setGoalCategories] = useState<GoalCategory[]>([]);
@@ -16,16 +16,11 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
 
   const handleEdit = async (event: any) => {
     event.preventDefault();
-    let data: any;
-    if (props.goal.goal_category !== selected) {
-      props.updateGoal({ ...props.goal, goal_category: selected });
-      data = { ...props.goal, goal_category: selected };
-    }
+    props.updateGoal({ ...props.goal, goal_category: selected });
     if (selected === 0) {
       props.updateGoal({ ...props.goal, goal_category: null });
-      data = props.goal;
     }
-
+    const data = props.goal;
     const status = await updateGoalById(data);
     if (status === 200) {
       enqueueSnackbar("Goal updated!", { variant: "success" });
@@ -36,7 +31,7 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
   };
   useEffect(() => {
     const fetchData = async () => {
-      const categories = await getGoalCategories();
+      const categories = await getAllGoalCategories();
       setGoalCategories(categories);
     };
     fetchData();
