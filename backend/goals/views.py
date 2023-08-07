@@ -36,9 +36,10 @@ class GoalCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GoalCategorySerializer
     permission_classes = [IsOwner]
     
-class GoalsByCategory(APIView):
-    def get(self, request, category=None):
-        goals = Goal.objects.filter(owner=request.user, goal_category=category).order_by('title')
-        serializer = GoalSerializer(goals, many=True)
-        return Response(serializer.data)
+class GoalsByCategory(generics.ListAPIView):
+    serializer_class = GoalSerializer
     
+    def get_queryset(self):
+        category = self.kwargs.get('category')
+        return Goal.objects.filter(owner=self.request.user, goal_category=category).order_by('title')
+

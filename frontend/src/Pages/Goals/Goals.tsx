@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import GoalsTable from "../../Components/Table/GoalsTable";
 import { Goal, GoalCategory } from "../../logic/interfaces";
 import { getAllGoals, getGoalsByCategoryId } from "../../logic/goals";
@@ -8,42 +8,59 @@ import { CircularProgress, Box, IconButton, FormControl, InputLabel, MenuItem, S
 import CreateGoalModal from "../../Components/ModalComponents/Create/CreateGoalModal";
 import { getGoalCategories } from "../../logic/goalCategories";
 import { Link } from "react-router-dom";
+import { calculateTotalPages } from "../../logic/other";
 
 const Goals = () => {
+    const perPage = 10;
     const [goals, setGoals] = useState<Goal[]>([]);
     const [goalCategories, setGoalCategories] = useState<GoalCategory[]>([]);
     const [selected, setSelected] = useState<number>(0);
+    const [page, setPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
     const [createModalOpen, setCreateModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
-    const fetchData = async () => {
+    const fetchData = useCallback(async (category: number, pageParam: number = 1) => {
         setLoading(true);
-        const data = await getAllGoals();
         const categories = await getGoalCategories();
-        setGoals(data);
+        if (category === 0) {
+            const data = await getAllGoals(pageParam);
+            const totalPagesNumber = calculateTotalPages(data.count, perPage);
+            setTotalPages(totalPagesNumber);
+            setPage(pageParam);
+            setGoals(data.results);
+        } else {
+            const data = await getGoalsByCategoryId(category, pageParam);
+            const totalPagesNumber = calculateTotalPages(data.count, perPage);
+            console.log(data);
+            setTotalPages(totalPagesNumber);
+            setPage(pageParam);
+            setGoals(data.results);
+        }
         setGoalCategories(categories);
         setLoading(false);
-    };
+    }, []);
 
     const handleCloseCreateModal = () => {
         setCreateModalOpen(false);
-        fetchData();
+        setPage(1);
+        setTotalPages(1);
+        fetchData(0, 1);
     };
     const handleGoalCategoryChange = async (event: any) => {
         const id = event.target.value;
         setSelected(id);
-        setLoading(true);
-        if (id === 0) {
-            await fetchData();
-            return;
-        }
-        const data = await getGoalsByCategoryId(id);
-        setGoals(data);
-        setLoading(false);
+        fetchData(id, 1);
+    };
+    const handlePageChange = async (pageParam: number) => {
+        setPage(pageParam);
+        fetchData(selected, pageParam);
     };
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        setTotalPages(1);
+        setPage(1);
+        fetchData(selected, 1);
+    }, [fetchData, selected]);
     return (
         <>
             {loading ? (
@@ -75,7 +92,7 @@ const Goals = () => {
                         <IconButton component={Link} to="/goals/categories"><CategoryIcon /></IconButton>
                     </Box>
 
-                    <GoalsTable goals={goals} />
+                    <GoalsTable goals={goals} page={page} totalPages={totalPages} handlePageChange={handlePageChange} />
                 </>
             )}
             {createModalOpen && <CreateGoalModal open={createModalOpen} handleClose={handleCloseCreateModal} />}

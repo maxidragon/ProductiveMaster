@@ -1,14 +1,13 @@
 import { Goal } from "./interfaces";
 import { backendRequest } from "./request";
 
-export const getAllGoals = async (): Promise<Goal[]> => {
-    const response = await backendRequest("goals/", "GET", true);
-    const data = await response.json();
-    return data.results;
+export const getAllGoals = async (page: number = 1) => {
+    const response = await backendRequest(`goals/?page=${page}`, "GET", true);
+    return await response.json();
 };
 
-export const getGoalsByCategoryId = async (id: number): Promise<Goal[]> => {
-    const response = await backendRequest(`goals/category/${id}/`, "GET", true);
+export const getGoalsByCategoryId = async (id: number, page: number = 1) => {
+    const response = await backendRequest(`goals/category/${id}/?page=${page}`, "GET", true);
     return await response.json();
 };
 
