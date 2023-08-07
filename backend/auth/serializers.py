@@ -32,9 +32,18 @@ class UserSerializer(serializers.ModelSerializer):
                     username=username, password=password)
             return user
         
+        
 class ChangePasswordSerializer(serializers.Serializer):
     model = User
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
 
+class UpdateUserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(required=False, validators=[
+        UniqueValidator(queryset=User.objects.all(),
+                        message='A user with that email already exists.')
+    ])
     
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'email')

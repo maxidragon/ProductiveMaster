@@ -46,3 +46,9 @@ export interface GoalCategory {
     id: number;
     title: string;
 };
+
+export interface UserSettings {
+    id: number;
+    email: string;
+    username: string;
+};

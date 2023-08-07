@@ -78,3 +78,31 @@ class ChangePasswordTest(TestCase):
             url, {'old_password': '123', 'new_password': 'MyTree123'}, format='json', HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         
+        
+class UserDetailTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='user', password='normalpassword')
+    
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password}, format='json')
+        token = response.data['token']
+        return token
+    
+    def test_get_user_detail(self):
+        url = reverse('auth-me')
+        token = self.authenticate('user', 'normalpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+    def test_update_user_detail(self):
+        url = reverse('auth-me')
+        token = self.authenticate('user', 'normalpassword')
+        response = self.client.put(
+            url, {'username': 'newuser'}, HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.username, 'newuser')
+        

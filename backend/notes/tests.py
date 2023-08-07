@@ -99,11 +99,12 @@ class SearchNotes(TestCase):
         token = self.authenticate('testuser', 'testpassword')
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['title'], 'Test Note')
         
     def test_search_notes_as_non_owner(self):
         url = reverse('search-notes', kwargs={'search': 'Test'})
         token = self.authenticate('nonowner', 'nonownerpassword')
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
+        self.assertEqual(len(response.data['results']), 0)
