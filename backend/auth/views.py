@@ -8,15 +8,16 @@ from rest_framework.response import Response
 
 
 class ListCreateUser(generics.ListCreateAPIView):
-    queryset = User.objects.all()
     serializer_class = UserSerializer
 
     def get_permissions(self):
         return [IsAdminUser()] if self.request.method == "GET" else [AllowAny()]
     
+    def get_queryset(self):
+        return User.objects.all().order_by('username')
+    
     
 class ChangePasswordView(APIView):
-
         def get_object(self, queryset=None):
             obj = self.request.user
             return obj

@@ -13,7 +13,7 @@ class ListCreateNote(generics.ListCreateAPIView):
     pagination_class = NotePaginator
 
     def get_queryset(self):
-        return Note.objects.filter(owner=self.request.user)
+        return Note.objects.filter(owner=self.request.user).order_by('-updated_at')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -27,6 +27,6 @@ class NoteDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class SearchNotes(APIView):
     def get(self, request, search):
-        notes = Note.objects.filter(owner=request.user, title__icontains=search)
+        notes = Note.objects.filter(owner=request.user, title__icontains=search).order_by('-updated_at')
         serializer = NoteSerializer(notes, many=True)
         return Response(serializer.data)

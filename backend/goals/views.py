@@ -10,7 +10,7 @@ class ListCreateGoal (generics.ListCreateAPIView):
     serializer_class = GoalSerializer
 
     def get_queryset(self):
-        return Goal.objects.filter(owner=self.request.user)
+        return Goal.objects.filter(owner=self.request.user).order_by('title')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -26,7 +26,7 @@ class ListCreateGoalCategory (generics.ListCreateAPIView):
     serializer_class = GoalCategorySerializer
 
     def get_queryset(self):
-        return GoalCategory.objects.filter(owner=self.request.user)
+        return GoalCategory.objects.filter(owner=self.request.user).order_by('title')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -38,7 +38,7 @@ class GoalCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     
 class GoalsByCategory(APIView):
     def get(self, request, category=None):
-        goals = Goal.objects.filter(owner=request.user, goal_category=category)
+        goals = Goal.objects.filter(owner=request.user, goal_category=category).order_by('title')
         serializer = GoalSerializer(goals, many=True)
         return Response(serializer.data)
     
