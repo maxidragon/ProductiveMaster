@@ -8,6 +8,7 @@ urlpatterns = [
     path('<int:pk>/', views.GoalDetail.as_view(), name='goal-detail'),
     path('category/<int:category>/', views.GoalsByCategory.as_view(), name='goals-by-category'),
     path('categories/', views.ListCreateGoalCategory.as_view(), name='goal-categories'),
+    path('categories/all/', views.ListAllGoalCategories.as_view(), name='all-goal-categories'),
     path('categories/<int:pk>/', views.GoalCategoryDetail.as_view(), name='goal-category-detail'),
 ]
 

@@ -6,7 +6,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CategoryIcon from '@mui/icons-material/Category';
 import { CircularProgress, Box, IconButton, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import CreateGoalModal from "../../Components/ModalComponents/Create/CreateGoalModal";
-import { getGoalCategories } from "../../logic/goalCategories";
+import { getAllGoalCategories } from "../../logic/goalCategories";
 import { Link } from "react-router-dom";
 import { calculateTotalPages } from "../../logic/other";
 
@@ -21,7 +21,7 @@ const Goals = () => {
     const [loading, setLoading] = useState(true);
     const fetchData = useCallback(async (category: number, pageParam: number = 1) => {
         setLoading(true);
-        const categories = await getGoalCategories();
+        const categories = await getAllGoalCategories();
         if (category === 0) {
             const data = await getAllGoals(pageParam);
             const totalPagesNumber = calculateTotalPages(data.count, perPage);
@@ -31,7 +31,6 @@ const Goals = () => {
         } else {
             const data = await getGoalsByCategoryId(category, pageParam);
             const totalPagesNumber = calculateTotalPages(data.count, perPage);
-            console.log(data);
             setTotalPages(totalPagesNumber);
             setPage(pageParam);
             setGoals(data.results);
