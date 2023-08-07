@@ -6,7 +6,7 @@ import { enqueueSnackbar } from "notistack";
 import { createGoal } from "../../../logic/goals";
 import { DatePicker } from "@mui/x-date-pickers";
 import { GoalCategory } from "../../../logic/interfaces";
-import { getGoalCategories } from "../../../logic/goalCategories";
+import { getAllGoalCategories } from "../../../logic/goalCategories";
 
 const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
   const [goalCategories, setGoalCategories] = useState<GoalCategory[]>([]);
@@ -39,7 +39,7 @@ const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const categories = await getGoalCategories();
+      const categories = await getAllGoalCategories();
       setGoalCategories(categories);
     };
     fetchData();

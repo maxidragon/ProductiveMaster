@@ -1,10 +1,9 @@
 import { Note } from "./interfaces";
 import { backendRequest } from "./request"
 
-export const getNotes = async (): Promise<Note[]> => {
-    const response = await backendRequest("notes/", "GET", true);
-    const data = await response.json();
-    return data.results;
+export const getNotes = async (page: number = 1) => {
+    const response = await backendRequest(`notes/?page=${page}`, "GET", true);
+    return await response.json();
 };
 
 export const createNote = async (title: string, description: string): Promise<number> => {
@@ -27,7 +26,7 @@ export const getNoteById = async (id: number): Promise<Note> => {
     return await response.json();
 };
 
-export const searchNotes = async (query: string): Promise<Note[]> => {
-    const response = await backendRequest(`notes/search/${query}`, "GET", true);
+export const searchNotes = async (query: string, page: number = 1) => {
+    const response = await backendRequest(`notes/search/${query}/?page=${page}`, "GET", true);
     return await response.json();
-}
+};
