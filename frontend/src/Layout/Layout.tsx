@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import LoginPartial from './LoginPartial';
 import { isUserLoggedIn } from '../logic/auth';
 import Navbar from './Navbar';
+import Copyright from './Copyright';
 
 const Layout = (props: { children: any }) => {
     const navigate = useNavigate();
@@ -91,6 +92,7 @@ const Layout = (props: { children: any }) => {
                 <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                     {props.children}
                 </Container>
+                <Copyright />
             </Box>
         </Box>
     );
