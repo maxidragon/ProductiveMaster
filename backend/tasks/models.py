@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class Task(models.Model):
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     STATUS_CHOICES = [
         ('TODO', 'To do'),
         ('IN_PROGRESS', 'In progress'),

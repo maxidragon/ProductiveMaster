@@ -34,11 +34,18 @@ class CreateListTaskTest(TestCase):
     def test_create_task_forbidden(self):
         url = reverse('create-task')
         data = {'title': 'New Task', 'project': self.project.id}
-        # Not logging in as the project owner
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(Task.objects.count(), 1)
 
+    def test_create_task_without_description(self):
+        url = reverse('create-task')
+        data = {'title': 'New Task', 'project': self.project.id}
+        token = self.authenticate()
+        response = self.client.post(
+            url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+    
     def test_list_tasks(self):
         url = reverse('tasks', args=['TODO'])
         token = self.authenticate()

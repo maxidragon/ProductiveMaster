@@ -27,7 +27,7 @@ export interface Project {
 export interface Task {
     id: number;
     title: string;
-    description: string;
+    description?: string;
     status: string;
     issue?: string;
     pull_request?: string;
