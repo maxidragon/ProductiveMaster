@@ -89,7 +89,7 @@ const Layout = (props: { children: any }) => {
                 }}
             >
                 <Toolbar />
-                <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                <Container maxWidth="lg" sx={{ mt: 4, mb: 4}}>
                     {props.children}
                 </Container>
                 <Copyright />
