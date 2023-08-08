@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { getUserData } from "../../logic/auth";
-import { CardContent, Grid, IconButton, Link, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { UserData } from "../../logic/interfaces";
-import GithubIcon from '@mui/icons-material/GitHub';
 const Dashboard = () => {
     const [data, setData] = useState<UserData | null>(null);
 
