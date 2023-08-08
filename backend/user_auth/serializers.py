@@ -3,6 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from rest_framework import serializers, exceptions
 from rest_framework.validators import UniqueValidator
+from .models import UserData
 
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=False, validators=[
@@ -47,3 +48,8 @@ class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email')
+        
+class UserDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserData
+        fields = ('id', 'github_profile', 'wakatime_api_key', 'gprm_stats', 'gprm_streak', 'gprm_languages')

@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'activities',
     'goals',
     'tasks',
+    'user_auth',
 ]
 
 MIDDLEWARE = [

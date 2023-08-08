@@ -52,3 +52,11 @@ export interface UserSettings {
     email: string;
     username: string;
 };
+
+export interface UserData {
+    github_profile?: string;
+    wakatime_api_key?: string;
+    gprm_stats?: string;
+    gprm_streak?: string;
+    gprm_languages?: string;
+};

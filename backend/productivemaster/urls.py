@@ -7,7 +7,7 @@ if os.environ.get('DEBUG') == 'True':
     urlpatterns = [
         path('admin/', admin.site.urls),
         path('get-token/', views.obtain_auth_token, name='get-token'),
-        path('auth/', include('auth.urls')),
+        path('auth/', include('user_auth.urls')),
         path('notes/', include('notes.urls')),
         path('activities/', include('activities.urls')),
         path('goals/', include('goals.urls')),
@@ -18,7 +18,7 @@ else:
     urlpatterns = [
         path('admin/', admin.site.urls),
         path('api/get-token/', views.obtain_auth_token, name='get-token'),
-        path('api/auth/', include('auth.urls')),
+        path('api/auth/', include('user_auth.urls')),
         path('api/notes/', include('notes.urls')),
         path('api/activities/', include('activities.urls')),
         path('api/goals/', include('goals.urls')),

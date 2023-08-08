@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny, IsAdminUser
-from .serializers import ChangePasswordSerializer, UpdateUserSerializer, UserSerializer
+from .serializers import ChangePasswordSerializer, UpdateUserSerializer, UserDataSerializer, UserSerializer
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from .models import UserData
+from django.db import transaction
 
 
 class ListCreateUser(generics.ListCreateAPIView):
@@ -54,3 +55,23 @@ class ChangePasswordView(APIView):
                 return Response(status=status.HTTP_200_OK)
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class UserDataDetail(APIView):
+        
+    def get(self, request):
+        if (UserData.objects.filter(user=self.request.user).count() == 0):
+           with transaction.atomic():
+                data = UserData.objects.create(user=self.request.user, github_profile="", wakatime_api_key="", gprm_stats="", gprm_streak="", gprm_languages="")
+                return Response(UserDataSerializer(data).data)
+        else:
+            user_data = UserData.objects.get(user=self.request.user)
+            serializer = UserDataSerializer(user_data)
+            return Response(serializer.data)
+    
+    def put(self, request):
+        obj = UserData.objects.get(user=self.request.user)
+        serializer = UserDataSerializer(obj, data=request.data)
+        if serializer.is_valid():   
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

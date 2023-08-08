@@ -3,10 +3,12 @@ import { Grid, Typography, Button, TextField } from "@mui/material";
 import ChangePasswordModal from "../../Components/ModalComponents/ChangePasswordModal";
 import { getUser, updateSettings } from "../../logic/auth";
 import { enqueueSnackbar } from "notistack";
+import EditUserDataModal from "../../Components/ModalComponents/Edit/EditUserDataModal";
 
 const Settings = () => {
     const [settings, setSettings] = useState<any>(null);
     const [openChangePasswordModal, setOpenChangePasswordModal] = useState<boolean>(false);
+    const [openDataModal, setOpenDataModal] = useState<boolean>(false);
 
     const handleEmailChange = (event: any) => {
         setSettings({
@@ -82,6 +84,18 @@ const Settings = () => {
                                 onChange={handleUsernameChange}
                                 autoComplete="username"
                                 fullWidth
+                            />
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                variant="contained"
+                                onClick={() => setOpenDataModal(true)}
+                            >
+                                Edit data
+                            </Button>
+                            <EditUserDataModal
+                                open={openDataModal}
+                                handleClose={() => setOpenDataModal(false)}
                             />
                         </Grid>
                         <Grid item>

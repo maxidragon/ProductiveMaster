@@ -2,7 +2,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from rest_framework import status
 from django.contrib.auth.models import User
-
+from .models import UserData
 
 
 class ListCreateUserTests(TestCase):
@@ -106,3 +106,28 @@ class UserDetailTest(TestCase):
         self.user.refresh_from_db()
         self.assertEqual(self.user.username, 'newuser')
         
+class UserDataTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='user', password='normalpassword')
+    
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password}, format='json')
+        token = response.data['token']
+        return token
+    
+    def test_get_user_data(self):
+        url = reverse('auth-data')
+        token = self.authenticate('user', 'normalpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+    def test_update_user_data(self):
+        url = reverse('auth-data')
+        token = self.authenticate('user', 'normalpassword')
+        response = self.client.put(
+            url, {'github_profile': 'https://github.com', 'wakatime_api_key': 'test', 'gprm_stats': 'test', 'gprm_streak': 'test', 'gprm_languages': 'test'}, HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(UserData.objects.filter(user=self.user)[0].github_profile, 'https://github.com')

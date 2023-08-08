@@ -1,4 +1,4 @@
-import { UserSettings } from "./interfaces";
+import { UserData, UserSettings } from "./interfaces";
 import { backendRequest } from "./request";
 
 export const registerUser = async (
@@ -72,4 +72,14 @@ export const changePassword = async (
 export const updateSettings = async (settings: UserSettings) => {
   const response = await backendRequest("auth/me/", "PUT", true, settings);
   return response;
+};
+
+export const getUserData = async () => {
+  const response = await backendRequest("auth/data/", "GET", true);
+  return await response.json(); 
+};
+
+export const updateUserData = async (data: UserData) => {
+  const response = await backendRequest("auth/data/", "PUT", true, data);
+  return response.status;
 };
