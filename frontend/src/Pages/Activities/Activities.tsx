@@ -15,7 +15,6 @@ const Activities = () => {
     const [date, setDate] = useState<any>(dayjs(new Date()));
     const fetchData = useCallback(async () => {
         const data = await getActivitiesForDay(new Date(date));
-        console.log(data);
         setActivities(data);
         setLoading(false);
     }, [date]);

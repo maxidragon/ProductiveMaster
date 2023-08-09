@@ -17,7 +17,6 @@ const GoalCategories = () => {
     const fetchData = async (pageParam: number = 1) => {
         setLoading(true);
         const data = await getGoalCategories(pageParam);
-        console.log(data);
         const totalPagesNumber = calculateTotalPages(data.count, perPage);
         setTotalPages(totalPagesNumber);
         setPage(pageParam);

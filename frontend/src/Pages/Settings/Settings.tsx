@@ -26,7 +26,6 @@ const Settings = () => {
         event.preventDefault();
         const response = await updateSettings(settings);
         const data = await response.json();
-        console.log(data);
         if (response.status === 200) {
             enqueueSnackbar("Settings has been updated", { variant: "success" });
         } else if (response.status === 400) {

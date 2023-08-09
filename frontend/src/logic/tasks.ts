@@ -60,7 +60,6 @@ export const createTask = async (
   issue?: string
 ) => {
   const body = { project: +projectId, title, description, issue };
-  console.log(body);
   const response = await backendRequest(`tasks/create/`, "POST", true, body);
   return response.status;
 };

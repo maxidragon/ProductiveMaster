@@ -50,7 +50,6 @@ const TasksForProject = () => {
         }
         let filteredTasks;
         if (search !== "") {
-            console.log(projectId, search,  pageParam, status);
             if (status === "") {
                 filteredTasks = await searchTasksForProject(search, +projectId, pageParam);
             } else {
@@ -86,7 +85,6 @@ const TasksForProject = () => {
                 return;
             }
             const filteredTasks = await searchTasksForProject(event.target.value, +projectId, 1, status);
-            console.log(filteredTasks);
             setTasks(filteredTasks.results);
             setPage(1);
             const totalPagesNumber = calculateTotalPages(filteredTasks.count, perPage);
