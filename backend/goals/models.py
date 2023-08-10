@@ -10,7 +10,7 @@ class GoalCategory(models.Model):
 
 class Goal(models.Model):
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     deadline = models.DateTimeField()
     is_achieved = models.BooleanField(default=False)
     owner = models.ForeignKey(
