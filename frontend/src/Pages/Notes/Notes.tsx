@@ -71,7 +71,7 @@ const Notes = () => {
                             <NoteCard key={note.id} note={note} />
                         ))}
                     </Box>
-                    <PaginationFooter page={page} totalPages={totalPages} handlePageChange={handlePageChange} />
+                    {notes.length > 0 && <PaginationFooter page={page} totalPages={totalPages} handlePageChange={handlePageChange} />}
                 </>
             )}
             {createModalOpen && <CreateNoteModal open={createModalOpen} handleClose={handleCloseCreateModal} />}
