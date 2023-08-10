@@ -1,9 +1,9 @@
-import { Box, Button, Grid, Modal, TextField, Typography } from "@mui/material";
+import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
 import { useRef } from "react";
-import { actionsButtons, formStyle, style } from "../modalStyles";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { createGoalCategory } from "../../../logic/goalCategories";
+import ActionsButtons from "../ActionsButtons";
 
 const CreateGoalCategoryModal = (props: { open: boolean; handleClose: any }) => {
   const titleRef: any = useRef();
@@ -40,9 +40,7 @@ const CreateGoalCategoryModal = (props: { open: boolean; handleClose: any }) => 
             />
           </Grid>
         </Grid>
-        <Box sx={actionsButtons}>
-          <Button variant="contained" endIcon={<AddCircleIcon />} onClick={handleCreate}>Create</Button>
-        </Box>
+        <ActionsButtons cancel={props.handleClose} submit={handleCreate} submitText={"Create"} />
       </Box>
     </Modal>
   )

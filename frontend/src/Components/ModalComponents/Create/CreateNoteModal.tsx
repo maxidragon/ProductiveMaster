@@ -1,9 +1,9 @@
-import { Box, Button, Grid, Modal, TextField, Typography } from "@mui/material";
+import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
 import { useRef } from "react";
-import { actionsButtons, formStyle, style } from "../modalStyles";
+import { formStyle, style } from "../modalStyles";
 import { createNote } from "../../../logic/notes";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { enqueueSnackbar } from "notistack";
+import ActionsButtons from "../ActionsButtons";
 
 const CreateNoteModal = (props: { open: boolean; handleClose: any }) => {
   const titleRef: any = useRef();
@@ -50,9 +50,7 @@ const CreateNoteModal = (props: { open: boolean; handleClose: any }) => {
             />
           </Grid>
         </Grid>
-        <Box sx={actionsButtons}>
-          <Button variant="contained" endIcon={<AddCircleIcon />} onClick={handleCreate}>Create</Button>
-        </Box>
+        <ActionsButtons cancel={props.handleClose} submit={handleCreate} submitText={"Create"} />
       </Box>
     </Modal>
   )

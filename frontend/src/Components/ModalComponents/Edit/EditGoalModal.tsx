@@ -1,6 +1,17 @@
-import { Box, Button, Checkbox, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Modal, Select, TextField, Typography } from "@mui/material";
-import { actionsButtons, formStyle, style } from "../modalStyles";
-import EditIcon from '@mui/icons-material/Edit';
+import {
+  Box,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
@@ -8,6 +19,7 @@ import { updateGoalById } from "../../../logic/goals";
 import { Goal, GoalCategory } from "../../../logic/interfaces";
 import { useState, useEffect } from "react";
 import { getAllGoalCategories } from "../../../logic/goalCategories";
+import ActionsButtons from "../ActionsButtons";
 
 const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, updateGoal: any }) => {
   const [goalCategories, setGoalCategories] = useState<GoalCategory[]>([]);
@@ -103,9 +115,7 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
             <FormControlLabel control={<Checkbox checked={props.goal.is_achieved} onChange={(event) => props.updateGoal({ ...props.goal, is_achieved: event.target.checked })} />} label="Is achieved" />
           </Grid>
         </Grid>
-        <Box sx={actionsButtons}>
-          <Button variant="contained" endIcon={<EditIcon />} onClick={handleEdit}>Edit</Button>
-        </Box>
+        <ActionsButtons cancel={props.handleClose} submit={handleEdit} submitText={"Edit"} />
       </Box>
     </Modal>
   )

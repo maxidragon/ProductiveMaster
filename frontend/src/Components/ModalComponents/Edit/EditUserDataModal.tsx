@@ -1,12 +1,13 @@
-import { Modal, Box, TextField, Typography, Button, Grid } from "@mui/material";
-import { actionsButtons, formStyle, style } from "../modalStyles";
+import { Modal, Box, TextField, Typography, Grid } from "@mui/material";
+import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { getUserData, updateUserData } from "../../../logic/auth";
+import ActionsButtons from "../ActionsButtons";
 
 const EditUserDataModal = (props: { open: boolean; handleClose: any }) => {
   const [data, setData] = useState<any>(null);
-  const handleSubmit = async (event: any) => {
+  const handleEdit = async (event: any) => {
     event.preventDefault();
 
     const status = await updateUserData(data);
@@ -85,11 +86,7 @@ const EditUserDataModal = (props: { open: boolean; handleClose: any }) => {
               </>
             )}
           </Grid>
-          <Box sx={actionsButtons}>
-            <Button variant="contained" onClick={handleSubmit}>
-              Edit
-            </Button>
-          </Box>
+          <ActionsButtons cancel={props.handleClose} submit={handleEdit} submitText={"Edit"} />
         </Box>
       </Modal>
     </>

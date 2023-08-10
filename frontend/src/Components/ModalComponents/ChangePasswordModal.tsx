@@ -1,8 +1,9 @@
-import { Modal, Box, TextField, Typography, Button, Grid } from "@mui/material";
-import { actionsButtons, formStyle, style } from "./modalStyles";
+import { Modal, Box, TextField, Typography, Grid } from "@mui/material";
+import { formStyle, style } from "./modalStyles";
 import { useRef } from "react";
 import { enqueueSnackbar } from "notistack";
 import { changePassword } from "../../logic/auth";
+import ActionsButtons from "./ActionsButtons";
 
 const ChangePasswordModal = (props: { open: boolean; handleClose: any }) => {
   const oldPasswordRef: any = useRef();
@@ -66,11 +67,7 @@ const ChangePasswordModal = (props: { open: boolean; handleClose: any }) => {
               />
             </Grid>
           </Grid>
-          <Box sx={actionsButtons}>
-            <Button variant="contained" onClick={handleSubmit}>
-              Change password
-            </Button>
-          </Box>
+          <ActionsButtons cancel={props.handleClose} submit={handleSubmit} submitText={"Change password"} />
         </Box>
       </Modal>
     </>

@@ -1,11 +1,11 @@
-import { Box, Button, Grid, Modal, TextField, Typography } from "@mui/material";
-import { actionsButtons, formStyle, style } from "../modalStyles";
-import EditIcon from '@mui/icons-material/Edit';
+import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
+import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { Activity } from "../../../logic/interfaces";
 import { updateActivity } from "../../../logic/activities";
 import dayjs from "dayjs";
+import ActionsButtons from "../ActionsButtons";
 
 const EditActivityModal = (props: { open: boolean; handleClose: any, activity: Activity, updateActivity: any }) => {
 
@@ -64,9 +64,7 @@ const EditActivityModal = (props: { open: boolean; handleClose: any, activity: A
             />
           </Grid>
         </Grid>
-        <Box sx={actionsButtons}>
-          <Button variant="contained" endIcon={<EditIcon />} onClick={handleEdit}>Edit</Button>
-        </Box>
+        <ActionsButtons cancel={props.handleClose} submit={handleEdit} submitText={"Edit"} />
       </Box>
     </Modal>
   )

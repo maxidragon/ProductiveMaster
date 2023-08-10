@@ -23,3 +23,8 @@ export const actionsButtons = {
   justifyContent: "end",
   mt: 2,
 };
+
+export const buttonStyle = {
+  mr: 1, 
+};
+

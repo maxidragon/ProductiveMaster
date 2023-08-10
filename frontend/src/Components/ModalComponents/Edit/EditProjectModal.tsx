@@ -1,9 +1,19 @@
-import { Box, Typography, Modal, TextField, Button, FormControl, InputLabel, Select, MenuItem, Grid } from "@mui/material";
-import { actionsButtons, formStyle, style } from "../modalStyles";
+import {
+  Box,
+  Typography,
+  Modal,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Grid,
+} from "@mui/material";
+import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { updateProject } from "../../../logic/projects";
 import { Project } from "../../../logic/interfaces";
-import EditIcon from '@mui/icons-material/Edit';
+import ActionsButtons from "../ActionsButtons";
 
 const EditProjectModal = (props: { open: boolean; handleClose: any, project: Project, updateProject: any }) => {
   const handleEdit = async (event: any) => {
@@ -73,9 +83,7 @@ const EditProjectModal = (props: { open: boolean; handleClose: any, project: Pro
             </FormControl>
           </Grid>
         </Grid>
-        <Box sx={actionsButtons}>
-          <Button variant="contained" endIcon={<EditIcon />} onClick={handleEdit}>Edit</Button>
-        </Box>
+        <ActionsButtons cancel={props.handleClose} submit={handleEdit} submitText={"Edit"} />
       </Box>
     </Modal>
   )

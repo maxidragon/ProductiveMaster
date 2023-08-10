@@ -1,9 +1,9 @@
 import { useRef } from "react";
-import { Box, Typography, Modal, TextField, Button, Grid } from "@mui/material";
-import { style, formStyle, actionsButtons } from "../modalStyles";
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { Box, Typography, Modal, TextField, Grid } from "@mui/material";
+import { style, formStyle } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { createProject } from "../../../logic/projects";
+import ActionsButtons from "../ActionsButtons";
 
 const CreateProjectModal = (props: { open: boolean; handleClose: any }) => {
   const titleRef: any = useRef();
@@ -59,9 +59,7 @@ const CreateProjectModal = (props: { open: boolean; handleClose: any }) => {
             />
           </Grid>
         </Grid>
-        <Box sx={actionsButtons}>
-          <Button variant="contained" endIcon={<AddCircleIcon />} onClick={handleCreate}>Create</Button>
-        </Box>
+        <ActionsButtons cancel={props.handleClose} submit={handleCreate} submitText={"Create"} />
       </Box>
     </Modal>
   )
