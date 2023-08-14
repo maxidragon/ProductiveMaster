@@ -66,3 +66,20 @@ export interface Timezone {
   name: string;
   display_name: string;
 }
+
+export interface CreateGoal {
+  title: string;
+  description: string;
+  deadline_string: string;
+  deadline?: Date;
+  goal_category?: number;
+}
+
+export interface EditGoal {
+  id: number;
+  title: string;
+  description: string;
+  is_achieved: boolean;
+  deadline: Date;
+  goal_category?: number;
+}

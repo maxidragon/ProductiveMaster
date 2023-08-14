@@ -5,9 +5,13 @@ import { GoalCategory } from "../../../logic/interfaces";
 import { updateGoalCategory } from "../../../logic/goalCategories";
 import ActionsButtons from "../ActionsButtons";
 
-const EditGoalCategoryModal = (props: { open: boolean; handleClose: any, goalCategory: GoalCategory, updateGoalCategory: any }) => {
-  const handleEdit = async (event: any) => {
-    event.preventDefault();
+const EditGoalCategoryModal = (props: {
+  open: boolean;
+  handleClose: () => void;
+  goalCategory: GoalCategory;
+  updateGoalCategory: (goalCategory: GoalCategory) => void;
+}) => {
+  const handleEdit = async () => {
     const status = await updateGoalCategory(props.goalCategory);
     if (status === 200) {
       enqueueSnackbar("Category updated!", { variant: "success" });
@@ -17,10 +21,7 @@ const EditGoalCategoryModal = (props: { open: boolean; handleClose: any, goalCat
     }
   };
   return (
-    <Modal
-      open={props.open}
-      onClose={props.handleClose}
-    >
+    <Modal open={props.open} onClose={props.handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -33,14 +34,23 @@ const EditGoalCategoryModal = (props: { open: boolean; handleClose: any, goalCat
               placeholder={"Name"}
               fullWidth
               value={props.goalCategory.title}
-              onChange={(event) => props.updateGoalCategory({ ...props.goalCategory, title: event.target.value })}
+              onChange={(event) =>
+                props.updateGoalCategory({
+                  ...props.goalCategory,
+                  title: event.target.value,
+                })
+              }
             />
           </Grid>
         </Grid>
-        <ActionsButtons cancel={props.handleClose} submit={handleEdit} submitText={"Edit"} />
+        <ActionsButtons
+          cancel={props.handleClose}
+          submit={handleEdit}
+          submitText={"Edit"}
+        />
       </Box>
     </Modal>
-  )
+  );
 };
 
 export default EditGoalCategoryModal;

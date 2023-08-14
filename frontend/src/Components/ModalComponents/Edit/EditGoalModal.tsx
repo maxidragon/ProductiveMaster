@@ -8,6 +8,7 @@ import {
   MenuItem,
   Modal,
   Select,
+  SelectChangeEvent,
   TextField,
   Typography,
 } from "@mui/material";
@@ -16,21 +17,26 @@ import { enqueueSnackbar } from "notistack";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { updateGoalById } from "../../../logic/goals";
-import { Goal, GoalCategory } from "../../../logic/interfaces";
+import { EditGoal, GoalCategory } from "../../../logic/interfaces";
 import { useState, useEffect } from "react";
 import { getAllGoalCategories } from "../../../logic/goalCategories";
 import ActionsButtons from "../ActionsButtons";
 
-const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, updateGoal: any }) => {
+const EditGoalModal = (props: {
+  open: boolean;
+  handleClose: () => void;
+  goal: EditGoal;
+  updateGoal: (goal: EditGoal) => void;
+}) => {
   const [goalCategories, setGoalCategories] = useState<GoalCategory[]>([]);
-  const [selected, setSelected] = useState<number>(props.goal.goal_category ? props.goal.goal_category.id : 0);
+  const [selected, setSelected] = useState<number>(
+    props.goal.goal_category ? props.goal.goal_category : 0,
+  );
 
-
-  const handleEdit = async (event: any) => {
-    event.preventDefault();
+  const handleEdit = async () => {
     props.updateGoal({ ...props.goal, goal_category: selected });
     if (selected === 0) {
-      props.updateGoal({ ...props.goal, goal_category: null });
+      props.updateGoal(props.goal);
     }
     const data = props.goal;
     const status = await updateGoalById(data);
@@ -49,12 +55,8 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
     fetchData();
   }, []);
   return (
-    <Modal
-      open={props.open}
-      onClose={props.handleClose}
-    >
+    <Modal open={props.open} onClose={props.handleClose}>
       <Box sx={style}>
-
         <Grid container sx={formStyle}>
           <Grid item>
             <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -66,7 +68,9 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
               placeholder={"Title"}
               fullWidth
               value={props.goal.title}
-              onChange={(event) => props.updateGoal({ ...props.goal, title: event.target.value })}
+              onChange={(event) =>
+                props.updateGoal({ ...props.goal, title: event.target.value })
+              }
             />
           </Grid>
           <Grid item>
@@ -76,7 +80,12 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
               placeholder={"Write description here..."}
               fullWidth
               value={props.goal.description}
-              onChange={(event) => props.updateGoal({ ...props.goal, description: event.target.value })}
+              onChange={(event) =>
+                props.updateGoal({
+                  ...props.goal,
+                  description: event.target.value,
+                })
+              }
             />
           </Grid>
           <Grid item>
@@ -89,8 +98,8 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
                 id="goal-category-select"
                 value={selected}
                 label="Goal Category"
-                onChange={(event: any) => {
-                  setSelected(event.target.value);
+                onChange={(event: SelectChangeEvent<number>) => {
+                  setSelected(+event.target.value);
                 }}
               >
                 <MenuItem key={0} value={0}>
@@ -108,17 +117,38 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
             <DatePicker
               label="End"
               value={dayjs(props.goal.deadline)}
-              onChange={(value) => props.updateGoal({ ...props.goal, deadline: value })}
+              onChange={(value) => {
+                if (!value) return;
+                const formattedDate = new Date(value.toISOString());
+                props.updateGoal({ ...props.goal, deadline: formattedDate });
+              }}
             />
           </Grid>
           <Grid item>
-            <FormControlLabel control={<Checkbox checked={props.goal.is_achieved} onChange={(event) => props.updateGoal({ ...props.goal, is_achieved: event.target.checked })} />} label="Is achieved" />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={props.goal.is_achieved}
+                  onChange={(event) =>
+                    props.updateGoal({
+                      ...props.goal,
+                      is_achieved: event.target.checked,
+                    })
+                  }
+                />
+              }
+              label="Is achieved"
+            />
           </Grid>
         </Grid>
-        <ActionsButtons cancel={props.handleClose} submit={handleEdit} submitText={"Edit"} />
+        <ActionsButtons
+          cancel={props.handleClose}
+          submit={handleEdit}
+          submitText={"Edit"}
+        />
       </Box>
     </Modal>
-  )
+  );
 };
 
 export default EditGoalModal;

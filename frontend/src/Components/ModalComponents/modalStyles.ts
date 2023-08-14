@@ -1,5 +1,5 @@
 export const style = {
-  position: "absolute" as "absolute",
+  position: "absolute" as const,
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -25,6 +25,5 @@ export const actionsButtons = {
 };
 
 export const buttonStyle = {
-  mr: 1, 
+  mr: 1,
 };
-

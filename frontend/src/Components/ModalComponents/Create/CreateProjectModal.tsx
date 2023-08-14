@@ -5,13 +5,22 @@ import { enqueueSnackbar } from "notistack";
 import { createProject } from "../../../logic/projects";
 import ActionsButtons from "../ActionsButtons";
 
-const CreateProjectModal = (props: { open: boolean; handleClose: any }) => {
-  const titleRef: any = useRef();
-  const descriptionRef: any = useRef();
-  const githubLinkRef: any = useRef();
+const CreateProjectModal = (props: {
+  open: boolean;
+  handleClose: () => void;
+}) => {
+  const titleRef: React.MutableRefObject<HTMLInputElement | null | undefined> =
+    useRef();
+  const descriptionRef: React.MutableRefObject<
+    HTMLInputElement | null | undefined
+  > = useRef();
+  const githubLinkRef: React.MutableRefObject<
+    HTMLInputElement | null | undefined
+  > = useRef();
 
-  const handleCreate = async (event: any) => {
-    event.preventDefault();
+  const handleCreate = async () => {
+    if (!titleRef.current || !descriptionRef.current || !githubLinkRef.current)
+      return;
     const title = titleRef.current.value;
     const description = descriptionRef.current.value;
     const github = githubLinkRef.current.value;
@@ -22,12 +31,9 @@ const CreateProjectModal = (props: { open: boolean; handleClose: any }) => {
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
-  }
+  };
   return (
-    <Modal
-      open={props.open}
-      onClose={props.handleClose}
-    >
+    <Modal open={props.open} onClose={props.handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -36,11 +42,7 @@ const CreateProjectModal = (props: { open: boolean; handleClose: any }) => {
             </Typography>
           </Grid>
           <Grid item>
-            <TextField
-              placeholder={"Title"}
-              fullWidth
-              inputRef={titleRef}
-            />
+            <TextField placeholder={"Title"} fullWidth inputRef={titleRef} />
           </Grid>
           <Grid item>
             <TextField
@@ -59,10 +61,14 @@ const CreateProjectModal = (props: { open: boolean; handleClose: any }) => {
             />
           </Grid>
         </Grid>
-        <ActionsButtons cancel={props.handleClose} submit={handleCreate} submitText={"Create"} />
+        <ActionsButtons
+          cancel={props.handleClose}
+          submit={handleCreate}
+          submitText={"Create"}
+        />
       </Box>
     </Modal>
-  )
+  );
 };
 
 export default CreateProjectModal;

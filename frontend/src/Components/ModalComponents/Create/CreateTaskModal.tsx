@@ -5,29 +5,41 @@ import { enqueueSnackbar } from "notistack";
 import { createTask } from "../../../logic/tasks";
 import ActionsButtons from "../ActionsButtons";
 
-const CreateTaskModal = (props: { open: boolean; handleClose: any, projectId: string }) => {
-  const titleRef: any = useRef();
-  const descriptionRef: any = useRef();
-  const githubLinkRef: any = useRef();
+const CreateTaskModal = (props: {
+  open: boolean;
+  handleClose: () => void;
+  projectId: string;
+}) => {
+  const titleRef: React.MutableRefObject<HTMLInputElement | null | undefined> =
+    useRef();
+  const descriptionRef: React.MutableRefObject<
+    HTMLInputElement | null | undefined
+  > = useRef();
+  const githubLinkRef: React.MutableRefObject<
+    HTMLInputElement | null | undefined
+  > = useRef();
 
-  const handleCreate = async (event: any) => {
-    event.preventDefault();
+  const handleCreate = async () => {
+    if (!titleRef.current || !descriptionRef.current || !githubLinkRef.current)
+      return;
     const title = titleRef.current.value;
     const description = descriptionRef.current.value;
     const github = githubLinkRef.current.value;
-    const status = await createTask(props.projectId, title, description, github);
+    const status = await createTask(
+      props.projectId,
+      title,
+      description,
+      github,
+    );
     if (status === 201) {
       enqueueSnackbar("Task created!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
-  }
+  };
   return (
-    <Modal
-      open={props.open}
-      onClose={props.handleClose}
-    >
+    <Modal open={props.open} onClose={props.handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -36,11 +48,7 @@ const CreateTaskModal = (props: { open: boolean; handleClose: any, projectId: st
             </Typography>
           </Grid>
           <Grid item>
-            <TextField
-              placeholder={"Title"}
-              fullWidth
-              inputRef={titleRef}
-            />
+            <TextField placeholder={"Title"} fullWidth inputRef={titleRef} />
           </Grid>
           <Grid item>
             <TextField
@@ -59,10 +67,14 @@ const CreateTaskModal = (props: { open: boolean; handleClose: any, projectId: st
             />
           </Grid>
         </Grid>
-        <ActionsButtons cancel={props.handleClose} submit={handleCreate} submitText={"Create"} />
+        <ActionsButtons
+          cancel={props.handleClose}
+          submit={handleCreate}
+          submitText={"Create"}
+        />
       </Box>
     </Modal>
-  )
+  );
 };
 
 export default CreateTaskModal;

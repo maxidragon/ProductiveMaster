@@ -15,9 +15,13 @@ import { updateProject } from "../../../logic/projects";
 import { Project } from "../../../logic/interfaces";
 import ActionsButtons from "../ActionsButtons";
 
-const EditProjectModal = (props: { open: boolean; handleClose: any, project: Project, updateProject: any }) => {
-  const handleEdit = async (event: any) => {
-    event.preventDefault();
+const EditProjectModal = (props: {
+  open: boolean;
+  handleClose: () => void;
+  project: Project;
+  updateProject: (project: Project) => void;
+}) => {
+  const handleEdit = async () => {
     const status = await updateProject(props.project);
     if (status === 200) {
       enqueueSnackbar("Project updated!", { variant: "success" });
@@ -27,10 +31,7 @@ const EditProjectModal = (props: { open: boolean; handleClose: any, project: Pro
     }
   };
   return (
-    <Modal
-      open={props.open}
-      onClose={props.handleClose}
-    >
+    <Modal open={props.open} onClose={props.handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -43,7 +44,12 @@ const EditProjectModal = (props: { open: boolean; handleClose: any, project: Pro
               placeholder={"Title"}
               fullWidth
               value={props.project.title}
-              onChange={(event) => props.updateProject({ ...props.project, title: event.target.value })}
+              onChange={(event) =>
+                props.updateProject({
+                  ...props.project,
+                  title: event.target.value,
+                })
+              }
             />
           </Grid>
           <Grid item>
@@ -51,7 +57,12 @@ const EditProjectModal = (props: { open: boolean; handleClose: any, project: Pro
               placeholder={"Github"}
               fullWidth
               value={props.project.github}
-              onChange={(event) => props.updateProject({ ...props.project, github: event.target.value })}
+              onChange={(event) =>
+                props.updateProject({
+                  ...props.project,
+                  github: event.target.value,
+                })
+              }
             />
           </Grid>
           <Grid item>
@@ -61,11 +72,15 @@ const EditProjectModal = (props: { open: boolean; handleClose: any, project: Pro
               placeholder={"Write project description here..."}
               fullWidth
               value={props.project.description}
-              onChange={(event) => props.updateProject({ ...props.project, description: event.target.value })}
+              onChange={(event) =>
+                props.updateProject({
+                  ...props.project,
+                  description: event.target.value,
+                })
+              }
             />
           </Grid>
           <Grid item>
-
             <FormControl fullWidth>
               <InputLabel id="status">Status</InputLabel>
               <Select
@@ -74,7 +89,12 @@ const EditProjectModal = (props: { open: boolean; handleClose: any, project: Pro
                 required
                 name="status"
                 value={props.project.status}
-                onChange={(event) => props.updateProject({ ...props.project, status: event.target.value })}
+                onChange={(event) =>
+                  props.updateProject({
+                    ...props.project,
+                    status: event.target.value,
+                  })
+                }
               >
                 <MenuItem value={"PLANNED"}>Planned</MenuItem>
                 <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
@@ -83,10 +103,14 @@ const EditProjectModal = (props: { open: boolean; handleClose: any, project: Pro
             </FormControl>
           </Grid>
         </Grid>
-        <ActionsButtons cancel={props.handleClose} submit={handleEdit} submitText={"Edit"} />
+        <ActionsButtons
+          cancel={props.handleClose}
+          submit={handleEdit}
+          submitText={"Edit"}
+        />
       </Box>
     </Modal>
-  )
+  );
 };
 
 export default EditProjectModal;

@@ -4,7 +4,7 @@ import { backendRequest } from "./request";
 export const registerUser = async (
   email: FormDataEntryValue | null,
   username: FormDataEntryValue | null,
-  password: FormDataEntryValue | null
+  password: FormDataEntryValue | null,
 ) => {
   try {
     const body = {
@@ -20,7 +20,7 @@ export const registerUser = async (
 };
 export const login = async (
   username: FormDataEntryValue | null,
-  password: FormDataEntryValue | null
+  password: FormDataEntryValue | null,
 ) => {
   try {
     const response = await backendRequest("get-token/", "POST", false, {
@@ -60,7 +60,7 @@ export const isUserLoggedIn = () => {
 
 export const changePassword = async (
   oldPassword: string,
-  newPassword: string
+  newPassword: string,
 ) => {
   const response = await backendRequest("auth/password/change/", "POST", true, {
     old_password: oldPassword,
@@ -76,7 +76,7 @@ export const updateSettings = async (settings: UserSettings) => {
 
 export const getUserData = async () => {
   const response = await backendRequest("auth/data/", "GET", true);
-  return await response.json(); 
+  return await response.json();
 };
 
 export const updateUserData = async (data: UserData) => {

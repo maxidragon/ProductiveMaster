@@ -5,11 +5,15 @@ import { enqueueSnackbar } from "notistack";
 import { createGoalCategory } from "../../../logic/goalCategories";
 import ActionsButtons from "../ActionsButtons";
 
-const CreateGoalCategoryModal = (props: { open: boolean; handleClose: any }) => {
-  const titleRef: any = useRef();
+const CreateGoalCategoryModal = (props: {
+  open: boolean;
+  handleClose: () => void;
+}) => {
+  const titleRef: React.MutableRefObject<HTMLInputElement | null | undefined> =
+    useRef();
 
-  const handleCreate = async (event: any) => {
-    event.preventDefault();
+  const handleCreate = async () => {
+    if (!titleRef.current) return;
     const title = titleRef.current.value;
     const status = await createGoalCategory(title);
     if (status === 201) {
@@ -18,13 +22,10 @@ const CreateGoalCategoryModal = (props: { open: boolean; handleClose: any }) => 
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
-  }
+  };
 
   return (
-    <Modal
-      open={props.open}
-      onClose={props.handleClose}
-    >
+    <Modal open={props.open} onClose={props.handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -33,17 +34,17 @@ const CreateGoalCategoryModal = (props: { open: boolean; handleClose: any }) => 
             </Typography>
           </Grid>
           <Grid item>
-            <TextField
-              placeholder={"Name"}
-              fullWidth
-              inputRef={titleRef}
-            />
+            <TextField placeholder={"Name"} fullWidth inputRef={titleRef} />
           </Grid>
         </Grid>
-        <ActionsButtons cancel={props.handleClose} submit={handleCreate} submitText={"Create"} />
+        <ActionsButtons
+          cancel={props.handleClose}
+          submit={handleCreate}
+          submitText={"Create"}
+        />
       </Box>
     </Modal>
-  )
+  );
 };
 
 export default CreateGoalCategoryModal;

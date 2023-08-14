@@ -15,14 +15,14 @@ import TasksForProject from "./Pages/Tasks/TasksForProject";
 import Tasks from "./Pages/Tasks/Tasks";
 import Activities from "./Pages/Activities/Activities";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import GoalCategories from "./Pages/GoalCategories/GoalCategories";
 import Settings from "./Pages/Settings/Settings";
 
 const router = createHashRouter([
   {
     path: "/",
-    element: <Layout children={<Dashboard />} />
+    element: <Layout children={<Dashboard />} />,
   },
   {
     path: "/auth/login",
@@ -34,49 +34,49 @@ const router = createHashRouter([
   },
   {
     path: "/notes",
-    element: <Layout children={<Notes />} />
+    element: <Layout children={<Notes />} />,
   },
   {
     path: "/note/:id",
-    element: <Layout children={<SingleNote />} />
+    element: <Layout children={<SingleNote />} />,
   },
   {
     path: "/goals",
-    element: <Layout children={<Goals />} />
+    element: <Layout children={<Goals />} />,
   },
   {
     path: "/projects",
-    element: <Layout children={<Projects />} />
+    element: <Layout children={<Projects />} />,
   },
   {
     path: "/tasks",
-    element: <Layout children={<Tasks />} />
+    element: <Layout children={<Tasks />} />,
   },
   {
     path: "/tasks/project/:projectId",
-    element: <Layout children={<TasksForProject />} />
+    element: <Layout children={<TasksForProject />} />,
   },
   {
     path: "/activities",
-    element: <Layout children={<Activities />} />
+    element: <Layout children={<Activities />} />,
   },
   {
     path: "/goals/categories",
-    element: <Layout children={<GoalCategories />} />
+    element: <Layout children={<GoalCategories />} />,
   },
   {
     path: "/settings",
-    element: <Layout children={<Settings />} />
+    element: <Layout children={<Settings />} />,
   },
   {
     path: "*",
-    element: <Layout children={<ErrorElement message="404 not found" />} />
-  }
+    element: <Layout children={<ErrorElement message="404 not found" />} />,
+  },
 ]);
 
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: "dark",
   },
 });
 

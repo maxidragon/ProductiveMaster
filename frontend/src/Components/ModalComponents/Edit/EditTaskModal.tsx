@@ -15,9 +15,13 @@ import { updateTask } from "../../../logic/tasks";
 import { Task } from "../../../logic/interfaces";
 import ActionsButtons from "../ActionsButtons";
 
-const EditTaskModal = (props: { open: boolean; handleClose: any, task: Task, updateTask: any }) => {
-  const handleEdit = async (event: any) => {
-    event.preventDefault();
+const EditTaskModal = (props: {
+  open: boolean;
+  handleClose: () => void;
+  task: Task;
+  updateTask: (task: Task) => void;
+}) => {
+  const handleEdit = async () => {
     const status = await updateTask(props.task);
     if (status === 200) {
       enqueueSnackbar("Task updated!", { variant: "success" });
@@ -27,10 +31,7 @@ const EditTaskModal = (props: { open: boolean; handleClose: any, task: Task, upd
     }
   };
   return (
-    <Modal
-      open={props.open}
-      onClose={props.handleClose}
-    >
+    <Modal open={props.open} onClose={props.handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -43,7 +44,9 @@ const EditTaskModal = (props: { open: boolean; handleClose: any, task: Task, upd
               placeholder={"Title"}
               fullWidth
               value={props.task.title}
-              onChange={(event) => props.updateTask({ ...props.task, title: event.target.value })}
+              onChange={(event) =>
+                props.updateTask({ ...props.task, title: event.target.value })
+              }
             />
           </Grid>
           <Grid item>
@@ -51,7 +54,9 @@ const EditTaskModal = (props: { open: boolean; handleClose: any, task: Task, upd
               placeholder={"Issue"}
               fullWidth
               value={props.task.issue}
-              onChange={(event) => props.updateTask({ ...props.task, issue: event.target.value })}
+              onChange={(event) =>
+                props.updateTask({ ...props.task, issue: event.target.value })
+              }
             />
           </Grid>
           <Grid item>
@@ -59,7 +64,12 @@ const EditTaskModal = (props: { open: boolean; handleClose: any, task: Task, upd
               placeholder={"Pull Request"}
               fullWidth
               value={props.task.pull_request}
-              onChange={(event) => props.updateTask({ ...props.task, pull_request: event.target.value })}
+              onChange={(event) =>
+                props.updateTask({
+                  ...props.task,
+                  pull_request: event.target.value,
+                })
+              }
             />
           </Grid>
           <Grid item>
@@ -69,7 +79,12 @@ const EditTaskModal = (props: { open: boolean; handleClose: any, task: Task, upd
               placeholder={"Write task description here..."}
               fullWidth
               value={props.task.description}
-              onChange={(event) => props.updateTask({ ...props.task, description: event.target.value })}
+              onChange={(event) =>
+                props.updateTask({
+                  ...props.task,
+                  description: event.target.value,
+                })
+              }
             />
           </Grid>
           <Grid item>
@@ -81,7 +96,12 @@ const EditTaskModal = (props: { open: boolean; handleClose: any, task: Task, upd
                 required
                 name="status"
                 value={props.task.status}
-                onChange={(event) => props.updateTask({ ...props.task, status: event.target.value })}
+                onChange={(event) =>
+                  props.updateTask({
+                    ...props.task,
+                    status: event.target.value,
+                  })
+                }
               >
                 <MenuItem value={"TODO"}>To do</MenuItem>
                 <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
@@ -90,10 +110,14 @@ const EditTaskModal = (props: { open: boolean; handleClose: any, task: Task, upd
             </FormControl>
           </Grid>
         </Grid>
-        <ActionsButtons cancel={props.handleClose} submit={handleEdit} submitText={"Edit"} />
+        <ActionsButtons
+          cancel={props.handleClose}
+          submit={handleEdit}
+          submitText={"Edit"}
+        />
       </Box>
     </Modal>
-  )
+  );
 };
 
 export default EditTaskModal;
