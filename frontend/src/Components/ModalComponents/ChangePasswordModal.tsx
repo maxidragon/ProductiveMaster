@@ -1,9 +1,9 @@
-import { Modal, Box, TextField, Typography, Grid } from '@mui/material';
-import { formStyle, style } from './modalStyles';
-import { useRef } from 'react';
-import { enqueueSnackbar } from 'notistack';
-import { changePassword } from '../../logic/auth';
-import ActionsButtons from './ActionsButtons';
+import { Modal, Box, TextField, Typography, Grid } from "@mui/material";
+import { formStyle, style } from "./modalStyles";
+import { useRef } from "react";
+import { enqueueSnackbar } from "notistack";
+import { changePassword } from "../../logic/auth";
+import ActionsButtons from "./ActionsButtons";
 
 const ChangePasswordModal = (props: { open: boolean; handleClose: any }) => {
   const oldPasswordRef: any = useRef();
@@ -15,15 +15,15 @@ const ChangePasswordModal = (props: { open: boolean; handleClose: any }) => {
     const newPassword = newPasswordRef.current.value;
     const newPasswordAgain = newPasswordAgainRef.current.value;
     if (newPassword !== newPasswordAgain) {
-      enqueueSnackbar('Passwords do not match', { variant: 'error' });
+      enqueueSnackbar("Passwords do not match", { variant: "error" });
       return;
     }
     const status = await changePassword(oldPassword, newPassword);
     if (status === 200) {
-      enqueueSnackbar('Password has been changed', { variant: 'success' });
+      enqueueSnackbar("Password has been changed", { variant: "success" });
       props.handleClose();
     } else {
-      enqueueSnackbar('Password change failed', { variant: 'error' });
+      enqueueSnackbar("Password change failed", { variant: "error" });
     }
   };
   return (
@@ -32,7 +32,9 @@ const ChangePasswordModal = (props: { open: boolean; handleClose: any }) => {
         <Box sx={style}>
           <Grid container sx={formStyle}>
             <Grid item>
-              <Typography variant="h4">Change password</Typography>
+              <Typography variant="h4">
+                Change password
+              </Typography>
             </Grid>
             <Grid item>
               <TextField
@@ -65,11 +67,7 @@ const ChangePasswordModal = (props: { open: boolean; handleClose: any }) => {
               />
             </Grid>
           </Grid>
-          <ActionsButtons
-            cancel={props.handleClose}
-            submit={handleSubmit}
-            submitText={'Change password'}
-          />
+          <ActionsButtons cancel={props.handleClose} submit={handleSubmit} submitText={"Change password"} />
         </Box>
       </Modal>
     </>

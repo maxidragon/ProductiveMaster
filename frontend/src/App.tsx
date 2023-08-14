@@ -1,83 +1,83 @@
-import { createHashRouter, RouterProvider } from 'react-router-dom';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Login from './Pages/Auth/Login/Login';
-import Register from './Pages/Auth/Register/Register';
-import { SnackbarProvider } from 'notistack';
-import { ConfirmProvider } from 'material-ui-confirm';
-import Dashboard from './Pages/Dashboard/Dashboard';
-import Layout from './Layout/Layout';
-import Notes from './Pages/Notes/Notes';
-import SingleNote from './Pages/Notes/SingleNote';
-import Goals from './Pages/Goals/Goals';
-import Projects from './Pages/Projects/Projects';
-import ErrorElement from './Pages/ErrorElement/ErrorElement';
-import TasksForProject from './Pages/Tasks/TasksForProject';
-import Tasks from './Pages/Tasks/Tasks';
-import Activities from './Pages/Activities/Activities';
-import { LocalizationProvider } from '@mui/x-date-pickers';
+import { createHashRouter, RouterProvider } from "react-router-dom";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Login from "./Pages/Auth/Login/Login";
+import Register from "./Pages/Auth/Register/Register";
+import { SnackbarProvider } from "notistack";
+import { ConfirmProvider } from "material-ui-confirm";
+import Dashboard from "./Pages/Dashboard/Dashboard";
+import Layout from "./Layout/Layout";
+import Notes from "./Pages/Notes/Notes";
+import SingleNote from "./Pages/Notes/SingleNote";
+import Goals from "./Pages/Goals/Goals";
+import Projects from "./Pages/Projects/Projects";
+import ErrorElement from "./Pages/ErrorElement/ErrorElement";
+import TasksForProject from "./Pages/Tasks/TasksForProject";
+import Tasks from "./Pages/Tasks/Tasks";
+import Activities from "./Pages/Activities/Activities";
+import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import GoalCategories from './Pages/GoalCategories/GoalCategories';
-import Settings from './Pages/Settings/Settings';
+import GoalCategories from "./Pages/GoalCategories/GoalCategories";
+import Settings from "./Pages/Settings/Settings";
 
 const router = createHashRouter([
   {
-    path: '/',
+    path: "/",
     element: <Layout children={<Dashboard />} />
   },
   {
-    path: '/auth/login',
-    element: <Login />
+    path: "/auth/login",
+    element: <Login />,
   },
   {
-    path: '/auth/register',
-    element: <Register />
+    path: "/auth/register",
+    element: <Register />,
   },
   {
-    path: '/notes',
+    path: "/notes",
     element: <Layout children={<Notes />} />
   },
   {
-    path: '/note/:id',
+    path: "/note/:id",
     element: <Layout children={<SingleNote />} />
   },
   {
-    path: '/goals',
+    path: "/goals",
     element: <Layout children={<Goals />} />
   },
   {
-    path: '/projects',
+    path: "/projects",
     element: <Layout children={<Projects />} />
   },
   {
-    path: '/tasks',
+    path: "/tasks",
     element: <Layout children={<Tasks />} />
   },
   {
-    path: '/tasks/project/:projectId',
+    path: "/tasks/project/:projectId",
     element: <Layout children={<TasksForProject />} />
   },
   {
-    path: '/activities',
+    path: "/activities",
     element: <Layout children={<Activities />} />
   },
   {
-    path: '/goals/categories',
+    path: "/goals/categories",
     element: <Layout children={<GoalCategories />} />
   },
   {
-    path: '/settings',
+    path: "/settings",
     element: <Layout children={<Settings />} />
   },
   {
-    path: '*',
+    path: "*",
     element: <Layout children={<ErrorElement message="404 not found" />} />
   }
 ]);
 
 const darkTheme = createTheme({
   palette: {
-    mode: 'dark'
-  }
+    mode: 'dark',
+  },
 });
 
 const App = () => {

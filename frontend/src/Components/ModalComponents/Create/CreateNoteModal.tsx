@@ -1,9 +1,9 @@
-import { Box, Grid, Modal, TextField, Typography } from '@mui/material';
-import { useRef } from 'react';
-import { formStyle, style } from '../modalStyles';
-import { createNote } from '../../../logic/notes';
-import { enqueueSnackbar } from 'notistack';
-import ActionsButtons from '../ActionsButtons';
+import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
+import { useRef } from "react";
+import { formStyle, style } from "../modalStyles";
+import { createNote } from "../../../logic/notes";
+import { enqueueSnackbar } from "notistack";
+import ActionsButtons from "../ActionsButtons";
 
 const CreateNoteModal = (props: { open: boolean; handleClose: any }) => {
   const titleRef: any = useRef();
@@ -15,14 +15,17 @@ const CreateNoteModal = (props: { open: boolean; handleClose: any }) => {
     const description = descriptionRef.current.value;
     const status = await createNote(title, description);
     if (status === 201) {
-      enqueueSnackbar('Note created!', { variant: 'success' });
+      enqueueSnackbar("Note created!", { variant: "success" });
       props.handleClose();
     } else {
-      enqueueSnackbar('Something went wrong!', { variant: 'error' });
+      enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
-  };
+  }
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal
+      open={props.open}
+      onClose={props.handleClose}
+    >
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -31,26 +34,26 @@ const CreateNoteModal = (props: { open: boolean; handleClose: any }) => {
             </Typography>
           </Grid>
           <Grid item>
-            <TextField placeholder={'Title'} fullWidth inputRef={titleRef} />
+            <TextField
+              placeholder={"Title"}
+              fullWidth
+              inputRef={titleRef}
+            />
           </Grid>
           <Grid item>
             <TextField
               multiline
               rows={15}
-              placeholder={'Write your note here...'}
+              placeholder={"Write your note here..."}
               fullWidth
               inputRef={descriptionRef}
             />
           </Grid>
         </Grid>
-        <ActionsButtons
-          cancel={props.handleClose}
-          submit={handleCreate}
-          submitText={'Create'}
-        />
+        <ActionsButtons cancel={props.handleClose} submit={handleCreate} submitText={"Create"} />
       </Box>
     </Modal>
-  );
+  )
 };
 
 export default CreateNoteModal;

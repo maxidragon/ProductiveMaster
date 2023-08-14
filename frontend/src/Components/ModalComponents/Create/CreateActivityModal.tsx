@@ -1,10 +1,11 @@
-import { Box, Grid, Modal, TextField, Typography } from '@mui/material';
-import { useRef } from 'react';
-import { formStyle, style } from '../modalStyles';
-import { enqueueSnackbar } from 'notistack';
-import { DateTimePicker } from '@mui/x-date-pickers';
-import { createActivity } from '../../../logic/activities';
-import ActionsButtons from '../ActionsButtons';
+import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
+import { useRef } from "react";
+import { formStyle, style } from "../modalStyles";
+import { enqueueSnackbar } from "notistack";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { createActivity } from "../../../logic/activities";
+import ActionsButtons from "../ActionsButtons";
+
 
 const CreateActivityModal = (props: { open: boolean; handleClose: any }) => {
   const titleRef: any = useRef();
@@ -15,21 +16,19 @@ const CreateActivityModal = (props: { open: boolean; handleClose: any }) => {
     event.preventDefault();
     const title = titleRef.current.value;
     const description = descriptionRef.current.value;
-    const status = await createActivity(
-      title,
-      description,
-      startTimeRef.current.value,
-      endTimeRef.current.value
-    );
+    const status = await createActivity(title, description, startTimeRef.current.value, endTimeRef.current.value);
     if (status === 201) {
-      enqueueSnackbar('Activity created!', { variant: 'success' });
+      enqueueSnackbar("Activity created!", { variant: "success" });
       props.handleClose();
     } else {
-      enqueueSnackbar('Something went wrong!', { variant: 'error' });
+      enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
-  };
+  }
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal
+      open={props.open}
+      onClose={props.handleClose}
+    >
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -38,32 +37,38 @@ const CreateActivityModal = (props: { open: boolean; handleClose: any }) => {
             </Typography>
           </Grid>
           <Grid item>
-            <DateTimePicker label="Start" inputRef={startTimeRef} />
+            <DateTimePicker
+              label="Start"
+              inputRef={startTimeRef}
+            />
           </Grid>
           <Grid item>
-            <DateTimePicker label="End" inputRef={endTimeRef} />
+            <DateTimePicker
+              label="End"
+              inputRef={endTimeRef}
+            />
           </Grid>
           <Grid item>
-            <TextField placeholder={'Title'} fullWidth inputRef={titleRef} />
+            <TextField
+              placeholder={"Title"}
+              fullWidth
+              inputRef={titleRef}
+            />
           </Grid>
           <Grid item>
             <TextField
               multiline
               rows={15}
-              placeholder={'Write description here...'}
+              placeholder={"Write description here..."}
               fullWidth
               inputRef={descriptionRef}
             />
           </Grid>
         </Grid>
-        <ActionsButtons
-          cancel={props.handleClose}
-          submit={handleCreate}
-          submitText={'Create'}
-        />
+        <ActionsButtons cancel={props.handleClose} submit={handleCreate} submitText={"Create"} />
       </Box>
     </Modal>
-  );
+  )
 };
 
 export default CreateActivityModal;
