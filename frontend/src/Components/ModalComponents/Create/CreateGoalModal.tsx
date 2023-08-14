@@ -7,16 +7,16 @@ import {
   Modal,
   Select,
   TextField,
-  Typography,
-} from "@mui/material";
-import { useEffect, useRef, useState } from "react";
-import { formStyle, style } from "../modalStyles";
-import { enqueueSnackbar } from "notistack";
-import { createGoal } from "../../../logic/goals";
-import { DatePicker } from "@mui/x-date-pickers";
-import { GoalCategory } from "../../../logic/interfaces";
-import { getAllGoalCategories } from "../../../logic/goalCategories";
-import ActionsButtons from "../ActionsButtons";
+  Typography
+} from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import { formStyle, style } from '../modalStyles';
+import { enqueueSnackbar } from 'notistack';
+import { createGoal } from '../../../logic/goals';
+import { DatePicker } from '@mui/x-date-pickers';
+import { GoalCategory } from '../../../logic/interfaces';
+import { getAllGoalCategories } from '../../../logic/goalCategories';
+import ActionsButtons from '../ActionsButtons';
 
 const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
   const [goalCategories, setGoalCategories] = useState<GoalCategory[]>([]);
@@ -33,19 +33,19 @@ const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
     const data: any = {
       title: title,
       description: description,
-      deadline: deadline,
+      deadline: deadline
     };
     if (selected !== 0) {
-      data["goal_category"] = selected;
+      data['goal_category'] = selected;
     }
     const status = await createGoal(data);
     if (status === 201) {
-      enqueueSnackbar("Goal created!", { variant: "success" });
+      enqueueSnackbar('Goal created!', { variant: 'success' });
       props.handleClose();
     } else {
-      enqueueSnackbar("Something went wrong!", { variant: "error" });
+      enqueueSnackbar('Something went wrong!', { variant: 'error' });
     }
-  }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,10 +55,7 @@ const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
     fetchData();
   }, []);
   return (
-    <Modal
-      open={props.open}
-      onClose={props.handleClose}
-    >
+    <Modal open={props.open} onClose={props.handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -67,26 +64,20 @@ const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
             </Typography>
           </Grid>
           <Grid item>
-            <TextField
-              placeholder={"Title"}
-              fullWidth
-              inputRef={titleRef}
-            />
+            <TextField placeholder={'Title'} fullWidth inputRef={titleRef} />
           </Grid>
           <Grid item>
             <TextField
               multiline
               rows={15}
-              placeholder={"Write description here..."}
+              placeholder={'Write description here...'}
               fullWidth
               inputRef={descriptionRef}
             />
           </Grid>
           <Grid item>
             <FormControl fullWidth>
-              <InputLabel id="goal-category-select-label">
-                Goal Category
-              </InputLabel>
+              <InputLabel id="goal-category-select-label">Goal Category</InputLabel>
               <Select
                 labelId="goal-category-select-label"
                 id="goal-category-select"
@@ -108,16 +99,17 @@ const CreateGoalModal = (props: { open: boolean; handleClose: any }) => {
             </FormControl>
           </Grid>
           <Grid item>
-            <DatePicker
-              label="End"
-              inputRef={deadlineRef}
-            />
+            <DatePicker label="End" inputRef={deadlineRef} />
           </Grid>
         </Grid>
-        <ActionsButtons cancel={props.handleClose} submit={handleCreate} submitText={"Create"} />
+        <ActionsButtons
+          cancel={props.handleClose}
+          submit={handleCreate}
+          submitText={'Create'}
+        />
       </Box>
     </Modal>
-  )
+  );
 };
 
 export default CreateGoalModal;

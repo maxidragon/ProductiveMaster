@@ -9,22 +9,28 @@ import {
   Modal,
   Select,
   TextField,
-  Typography,
-} from "@mui/material";
-import { formStyle, style } from "../modalStyles";
-import { enqueueSnackbar } from "notistack";
-import { DatePicker } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
-import { updateGoalById } from "../../../logic/goals";
-import { Goal, GoalCategory } from "../../../logic/interfaces";
-import { useState, useEffect } from "react";
-import { getAllGoalCategories } from "../../../logic/goalCategories";
-import ActionsButtons from "../ActionsButtons";
+  Typography
+} from '@mui/material';
+import { formStyle, style } from '../modalStyles';
+import { enqueueSnackbar } from 'notistack';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
+import { updateGoalById } from '../../../logic/goals';
+import { Goal, GoalCategory } from '../../../logic/interfaces';
+import { useState, useEffect } from 'react';
+import { getAllGoalCategories } from '../../../logic/goalCategories';
+import ActionsButtons from '../ActionsButtons';
 
-const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, updateGoal: any }) => {
+const EditGoalModal = (props: {
+  open: boolean;
+  handleClose: any;
+  goal: Goal;
+  updateGoal: any;
+}) => {
   const [goalCategories, setGoalCategories] = useState<GoalCategory[]>([]);
-  const [selected, setSelected] = useState<number>(props.goal.goal_category ? props.goal.goal_category.id : 0);
-
+  const [selected, setSelected] = useState<number>(
+    props.goal.goal_category ? props.goal.goal_category.id : 0
+  );
 
   const handleEdit = async (event: any) => {
     event.preventDefault();
@@ -35,10 +41,10 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
     const data = props.goal;
     const status = await updateGoalById(data);
     if (status === 200) {
-      enqueueSnackbar("Goal updated!", { variant: "success" });
+      enqueueSnackbar('Goal updated!', { variant: 'success' });
       props.handleClose();
     } else {
-      enqueueSnackbar("Something went wrong!", { variant: "error" });
+      enqueueSnackbar('Something went wrong!', { variant: 'error' });
     }
   };
   useEffect(() => {
@@ -49,12 +55,8 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
     fetchData();
   }, []);
   return (
-    <Modal
-      open={props.open}
-      onClose={props.handleClose}
-    >
+    <Modal open={props.open} onClose={props.handleClose}>
       <Box sx={style}>
-
         <Grid container sx={formStyle}>
           <Grid item>
             <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -63,27 +65,29 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
           </Grid>
           <Grid item>
             <TextField
-              placeholder={"Title"}
+              placeholder={'Title'}
               fullWidth
               value={props.goal.title}
-              onChange={(event) => props.updateGoal({ ...props.goal, title: event.target.value })}
+              onChange={(event) =>
+                props.updateGoal({ ...props.goal, title: event.target.value })
+              }
             />
           </Grid>
           <Grid item>
             <TextField
               multiline
               rows={15}
-              placeholder={"Write description here..."}
+              placeholder={'Write description here...'}
               fullWidth
               value={props.goal.description}
-              onChange={(event) => props.updateGoal({ ...props.goal, description: event.target.value })}
+              onChange={(event) =>
+                props.updateGoal({ ...props.goal, description: event.target.value })
+              }
             />
           </Grid>
           <Grid item>
             <FormControl fullWidth>
-              <InputLabel id="goal-category-select-label">
-                Goal Category
-              </InputLabel>
+              <InputLabel id="goal-category-select-label">Goal Category</InputLabel>
               <Select
                 labelId="goal-category-select-label"
                 id="goal-category-select"
@@ -108,17 +112,36 @@ const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, upd
             <DatePicker
               label="End"
               value={dayjs(props.goal.deadline)}
-              onChange={(value) => props.updateGoal({ ...props.goal, deadline: value })}
+              onChange={(value) =>
+                props.updateGoal({ ...props.goal, deadline: value })
+              }
             />
           </Grid>
           <Grid item>
-            <FormControlLabel control={<Checkbox checked={props.goal.is_achieved} onChange={(event) => props.updateGoal({ ...props.goal, is_achieved: event.target.checked })} />} label="Is achieved" />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={props.goal.is_achieved}
+                  onChange={(event) =>
+                    props.updateGoal({
+                      ...props.goal,
+                      is_achieved: event.target.checked
+                    })
+                  }
+                />
+              }
+              label="Is achieved"
+            />
           </Grid>
         </Grid>
-        <ActionsButtons cancel={props.handleClose} submit={handleEdit} submitText={"Edit"} />
+        <ActionsButtons
+          cancel={props.handleClose}
+          submit={handleEdit}
+          submitText={'Edit'}
+        />
       </Box>
     </Modal>
-  )
+  );
 };
 
 export default EditGoalModal;
