@@ -23,7 +23,7 @@ import ActionsButtons from "../ActionsButtons";
 
 const EditGoalModal = (props: { open: boolean; handleClose: any, goal: Goal, updateGoal: any }) => {
   const [goalCategories, setGoalCategories] = useState<GoalCategory[]>([]);
-  const [selected, setSelected] = useState<number>(props.goal.goal_category || 0);
+  const [selected, setSelected] = useState<number>(props.goal.goal_category ? props.goal.goal_category.id : 0);
 
 
   const handleEdit = async (event: any) => {

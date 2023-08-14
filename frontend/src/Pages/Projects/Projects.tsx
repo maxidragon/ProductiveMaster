@@ -37,6 +37,7 @@ const Projects = () => {
     };
     const handleCloseCreateModal = () => {
         setCreateModalOpen(false);
+        setStatus("");
         fetchData();
     };
     const handlePageChange = async (pageParam: number) => {

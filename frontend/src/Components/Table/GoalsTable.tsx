@@ -17,6 +17,7 @@ const GoalsTable = (props: {
           <TableRow>
             <TableCell>Titlte</TableCell>
             <TableCell>Description</TableCell>
+            <TableCell>Category</TableCell>
             <TableCell>Deadline</TableCell>
             <TableCell>Is achieved</TableCell>
             <TableCell>Actions</TableCell>

@@ -44,6 +44,7 @@ const GoalRow = ({ goal }: { goal: Goal }) => {
                         {editedGoal.title}
                     </TableCell>
                     <TableCell>{editedGoal.description}</TableCell>
+                    <TableCell>{editedGoal.goal_category ? editedGoal.goal_category.title : "Uncategorized"}</TableCell>
                     <TableCell>{formatDateTime(new Date(editedGoal.deadline))}</TableCell>
                     <TableCell>{new Date(editedGoal.deadline).getTime() < new Date().getTime() ? (
                         editedGoal.is_achieved ? "Achieved" : "Failed"

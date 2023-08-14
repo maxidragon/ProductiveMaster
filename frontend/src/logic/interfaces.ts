@@ -10,7 +10,7 @@ export interface Goal {
     description: string;
     deadline: Date;
     is_achieved: boolean;
-    goal_category?: number;
+    goal_category?: GoalCategory;
 };
 
 export interface Project {
