@@ -4,7 +4,8 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from . import views
 
 urlpatterns = [
-    path('', views.ListCreateGoal.as_view(), name='goals'),
+    path('', views.ListGoals.as_view(), name='goals-list'),
+    path('create/', views.CreateGoal.as_view(), name='create-goal'),
     path('<int:pk>/', views.GoalDetail.as_view(), name='goal-detail'),
     path('category/<int:category>/', views.GoalsByCategory.as_view(), name='goals-by-category'),
     path('categories/', views.ListCreateGoalCategory.as_view(), name='goal-categories'),

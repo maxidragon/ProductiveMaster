@@ -19,14 +19,14 @@ class ListCreateGoalTests(TestCase):
         return token
 
     def test_list_goals(self):
-        url = reverse('goals')
+        url = reverse('goals-list')
         token = self.authenticate()
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 0)
 
     def test_create_goal(self):
-        url = reverse('goals')
+        url = reverse('create-goal')
         data = {'title': 'Test Goal', 'description': 'Test Goal Description',
                 'deadline': '2023-08-10T12:00:00Z'}
         token = self.authenticate()
