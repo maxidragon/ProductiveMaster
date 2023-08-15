@@ -8,6 +8,8 @@ import {
   Select,
   MenuItem,
   Grid,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
@@ -108,6 +110,22 @@ const EditTaskModal = (props: {
                 <MenuItem value={"DONE"}>Done</MenuItem>
               </Select>
             </FormControl>
+          </Grid>
+          <Grid item>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={props.task.high_priority}
+                  onChange={(event) =>
+                    props.updateTask({
+                      ...props.task,
+                      high_priority: event.target.checked,
+                    })
+                  }
+                />
+              }
+              label="High priority"
+            />
           </Grid>
         </Grid>
         <ActionsButtons

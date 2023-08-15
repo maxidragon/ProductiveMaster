@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { TableRow, TableCell, IconButton, Link } from "@mui/material";
+import {
+  TableRow,
+  TableCell,
+  IconButton,
+  Link,
+  Chip,
+  Box,
+} from "@mui/material";
 import { Task } from "../../../logic/interfaces";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -59,6 +66,11 @@ const TaskRow = (props: { task: Task; multipleProjects?: boolean }) => {
         >
           <TableCell component="th" scope="row">
             {editedTask.title}
+            {editedTask.high_priority && (
+              <Box sx={{ display: "inline-block", ml: 1 }}>
+                <Chip label="High priority" color="error" />
+              </Box>
+            )}
           </TableCell>
           <TableCell>{editedTask.description}</TableCell>
           {props.multipleProjects && (

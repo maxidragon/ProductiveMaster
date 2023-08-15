@@ -12,6 +12,7 @@ class Task(models.Model):
         ('DONE', 'Done'),
     ]
     status = models.CharField(max_length=11, choices=STATUS_CHOICES, default='TODO')
+    high_priority = models.BooleanField(default=False)
     issue = models.URLField(null=True, blank=True)
     pull_request = models.URLField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

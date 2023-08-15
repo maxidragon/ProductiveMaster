@@ -29,6 +29,7 @@ export interface Task {
   title: string;
   description?: string;
   status: string;
+  high_priority: boolean;
   issue?: string;
   pull_request?: string;
   project: Project;

@@ -46,6 +46,15 @@ class CreateListTaskTest(TestCase):
             url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
     
+    def test_create_high_priority_task(self):
+        url = reverse('create-task')
+        data = {'title': 'New Task', 'project': self.project.id, 'high_priority': True}
+        token = self.authenticate()
+        response = self.client.post(
+            url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['high_priority'], True)
+
     def test_list_tasks(self):
         url = reverse('tasks', args=['TODO'])
         token = self.authenticate()

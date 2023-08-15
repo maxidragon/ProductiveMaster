@@ -1,5 +1,13 @@
 import { useRef } from "react";
-import { Box, Typography, Modal, TextField, Grid } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Modal,
+  TextField,
+  Grid,
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { createTask } from "../../../logic/tasks";
@@ -18,6 +26,8 @@ const CreateTaskModal = (props: {
   const githubLinkRef: React.MutableRefObject<
     HTMLInputElement | null | undefined
   > = useRef();
+  //eslint-disable-next-line
+  const highPriorityRef: any = useRef();
 
   const handleCreate = async () => {
     if (!titleRef.current || !descriptionRef.current || !githubLinkRef.current)
@@ -25,10 +35,12 @@ const CreateTaskModal = (props: {
     const title = titleRef.current.value;
     const description = descriptionRef.current.value;
     const github = githubLinkRef.current.value;
+    const highPriority = highPriorityRef.current.checked;
     const status = await createTask(
       props.projectId,
       title,
       description,
+      highPriority,
       github,
     );
     if (status === 201) {
@@ -64,6 +76,12 @@ const CreateTaskModal = (props: {
               placeholder={"Write task description  here..."}
               fullWidth
               inputRef={descriptionRef}
+            />
+          </Grid>
+          <Grid item>
+            <FormControlLabel
+              control={<Checkbox inputRef={highPriorityRef} />}
+              label="High priority"
             />
           </Grid>
         </Grid>
