@@ -6,6 +6,7 @@ import { enqueueSnackbar } from "notistack";
 import EditUserDataModal from "../../Components/ModalComponents/Edit/EditUserDataModal";
 
 const Settings = () => {
+  //eslint-disable-next-line
   const [settings, setSettings] = useState<any>(null);
   const [openChangePasswordModal, setOpenChangePasswordModal] =
     useState<boolean>(false);

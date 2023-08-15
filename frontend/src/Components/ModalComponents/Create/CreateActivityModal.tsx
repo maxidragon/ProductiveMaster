@@ -15,7 +15,9 @@ const CreateActivityModal = (props: {
   const descriptionRef: React.MutableRefObject<
     HTMLInputElement | null | undefined
   > = useRef();
+  //eslint-disable-next-line
   const startTimeRef: any = useRef();
+  //eslint-disable-next-line
   const endTimeRef: any = useRef();
   const handleCreate = async () => {
     if (!titleRef.current || !descriptionRef.current) return;

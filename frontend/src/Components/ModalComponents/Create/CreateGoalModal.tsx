@@ -27,6 +27,7 @@ const CreateGoalModal = (props: { open: boolean; handleClose: () => void }) => {
   const descriptionRef: React.MutableRefObject<
     HTMLInputElement | null | undefined
   > = useRef();
+  //eslint-disable-next-line
   const deadlineRef: any = useRef();
 
   const handleCreate = async () => {
