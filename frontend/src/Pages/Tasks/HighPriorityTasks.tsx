@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { Task } from "../../logic/interfaces";
 import { getHighPriorityTasks } from "../../logic/tasks";
-import { CircularProgress, LinearProgress } from "@mui/material";
+import { LinearProgress } from "@mui/material";
 import TasksTable from "../../Components/Table/TasksTable";
 import { calculateTotalPages } from "../../logic/other";
 
