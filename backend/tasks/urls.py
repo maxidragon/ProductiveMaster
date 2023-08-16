@@ -12,6 +12,7 @@ urlpatterns = [
     path('tasks/search/project/<int:project_id>/<str:search>/status/<str:status>/', views.SearchTaskFromProject.as_view(), name='search-task-from-project-with-status'),
     path('tasks/search/project/<int:project_id>/<str:search>/', views.SearchTaskFromProject.as_view(), name='search-task-from-project'),
     path('tasks/search/status/<str:search>/<str:status>/', views.SearchTask.as_view(), name='search-task'),
+    path('tasks/high-priority/', views.HighPriorityTasks.as_view(), name='high-priority-tasks'),
     path('projects/', views.ListCreateProject.as_view(), name='projects'),
     path('projects/search/<str:search>/status/<str:status>/', views.SearchProjectsByStatus.as_view(), name='search-projects-with-status'),
     path('projects/search/<str:search>/', views.SearchProjects.as_view(), name='search-projects'),

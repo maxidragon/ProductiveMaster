@@ -50,6 +50,13 @@ class TasksForProjectWithStatus(generics.ListAPIView):
             project=project_id, owner=self.request.user, status=status).order_by('-created_at')
         return queryset
 
+class HighPriorityTasks(generics.ListAPIView):
+    serializer_class = TaskListSerializer
+    permission_classes = [IsProjectOwner]
+    
+    def get_queryset(self):
+        queryset = Task.objects.filter(owner=self.request.user, high_priority=True).order_by('-created_at')
+        return queryset
 
 class SearchTask(generics.ListAPIView):
     serializer_class = TaskSerializer

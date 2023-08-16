@@ -5,6 +5,7 @@ import { UserData } from "../../logic/interfaces";
 import TimezonesTable from "../../Components/Table/TimezonesTable";
 import { timezones } from "../../logic/timezones";
 import TabPanel from "../../Components/TabPanel";
+import HighPriorityTasks from "../Tasks/HighPriorityTasks";
 
 const Dashboard = () => {
   const [value, setValue] = useState(0);
@@ -29,6 +30,7 @@ const Dashboard = () => {
           <Tabs value={value} onChange={handleChange}>
             <Tab label="Github stats" id="tab-0" />
             <Tab label="Time" id="tab-1" />
+            <Tab label="High priority tasks" id="tab-2" />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
@@ -54,6 +56,9 @@ const Dashboard = () => {
         </TabPanel>
         <TabPanel value={value} index={1}>
           <TimezonesTable timezones={timezones} />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <HighPriorityTasks />
         </TabPanel>
       </Box>
     </>

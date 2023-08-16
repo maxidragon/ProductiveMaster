@@ -50,6 +50,16 @@ export const searchTasksForProject = async (
   const response = await backendRequest(url, "GET", true);
   return await response.json();
 };
+
+export const getHighPriorityTasks = async (page = 1) => {
+  const response = await backendRequest(
+    `tasks/high-priority/?page=${page}`,
+    "GET",
+    true,
+  );
+  return await response.json();
+};
+
 export const createTask = async (
   projectId: string,
   title: string,
