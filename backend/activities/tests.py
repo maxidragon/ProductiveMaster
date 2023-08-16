@@ -29,6 +29,16 @@ class ActivitiesTests(TestCase):
             url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Activity.objects.count(), 2)
+        
+    def test_create_activity_without_description(self):
+        url = reverse('create-activity')
+        data = {'title': 'New Activity',
+                'start_time': '2023-08-01T14:00:00Z', 'end_time': '2023-08-01T16:00:00Z'}
+        token = self.authenticate()
+        response = self.client.post(
+            url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Activity.objects.count(), 2)
 
     def test_list_activities(self):
         url = reverse('activities', args=['2023-08-01'])
