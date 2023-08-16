@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { GoalCategory } from "../../logic/interfaces";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { CircularProgress, Box, IconButton } from "@mui/material";
+import { Box, IconButton, LinearProgress } from "@mui/material";
 import { getGoalCategories } from "../../logic/goalCategories";
 import CreateGoalCategoryModal from "../../Components/ModalComponents/Create/CreateGoalCategoryModal";
 import GoalCategoriesTable from "../../Components/Table/GoalCategoriesTable";
@@ -15,13 +15,14 @@ const GoalCategories = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [loading, setLoading] = useState(true);
   const fetchData = async (pageParam = 1) => {
-    setLoading(true);
     const data = await getGoalCategories(pageParam);
     const totalPagesNumber = calculateTotalPages(data.count, perPage);
     setTotalPages(totalPagesNumber);
     setPage(pageParam);
     setGoalCategories(data.results);
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 100);
   };
 
   const handleCloseCreateModal = () => {
@@ -39,7 +40,7 @@ const GoalCategories = () => {
   return (
     <>
       {loading ? (
-        <CircularProgress />
+        <LinearProgress />
       ) : (
         <>
           <Box>

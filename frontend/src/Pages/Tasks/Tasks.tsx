@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Task } from "../../logic/interfaces";
 import { getTasksByStatus, searchTasks } from "../../logic/tasks";
 import {
-  CircularProgress,
+  LinearProgress,
   FormControl,
   InputLabel,
   Select,
@@ -23,14 +23,18 @@ const Tasks = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(
-    async (statusParam: string, pageParam: number) => {
-      setLoading(true);
+    async (pageParam: number, statusParam?: string) => {
+      if (statusParam === undefined || statusParam === "") {
+        return;
+      }
       const data = await getTasksByStatus(statusParam, pageParam);
       const totalPagesNumber = calculateTotalPages(data.count, perPage);
       setTotalPages(totalPagesNumber);
       setPage(pageParam);
       setTasks(data.results);
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 100);
     },
     [],
   );
@@ -38,7 +42,7 @@ const Tasks = () => {
   useEffect(() => {
     setTotalPages(1);
     setPage(1);
-    fetchData(status, 1);
+    fetchData(1, status);
   }, [status, fetchData]);
 
   const handlePageChange = async (pageParam: number) => {
@@ -52,13 +56,13 @@ const Tasks = () => {
       );
       setTotalPages(totalPagesNumber);
     } else {
-      await fetchData(status, pageParam);
+      await fetchData(pageParam, status);
     }
   };
   const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
     if (event.target.value === "") {
-      fetchData(status, page);
+      fetchData(page, status);
       return;
     }
     const filteredTasks = await searchTasks(event.target.value, status);
@@ -94,7 +98,7 @@ const Tasks = () => {
         />
       </Box>
       {loading ? (
-        <CircularProgress />
+        <LinearProgress />
       ) : (
         <TasksTable
           tasks={tasks}
@@ -102,6 +106,8 @@ const Tasks = () => {
           page={page}
           totalPages={totalPages}
           handlePageChange={handlePageChange}
+          status={status}
+          fetchData={fetchData}
         />
       )}
     </>

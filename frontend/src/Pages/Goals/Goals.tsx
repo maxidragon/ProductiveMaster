@@ -5,7 +5,6 @@ import { getAllGoals, getGoalsByCategoryId } from "../../logic/goals";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CategoryIcon from "@mui/icons-material/Category";
 import {
-  CircularProgress,
   Box,
   IconButton,
   FormControl,
@@ -13,6 +12,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  LinearProgress,
 } from "@mui/material";
 import CreateGoalModal from "../../Components/ModalComponents/Create/CreateGoalModal";
 import { getAllGoalCategories } from "../../logic/goalCategories";
@@ -29,7 +29,6 @@ const Goals = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const fetchData = useCallback(async (category: number, pageParam = 1) => {
-    setLoading(true);
     const categories = await getAllGoalCategories();
     if (category === 0) {
       const data = await getAllGoals(pageParam);
@@ -45,7 +44,9 @@ const Goals = () => {
       setGoals(data.results);
     }
     setGoalCategories(categories);
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 100);
   }, []);
 
   const handleCloseCreateModal = () => {
@@ -72,7 +73,7 @@ const Goals = () => {
   return (
     <>
       {loading ? (
-        <CircularProgress />
+        <LinearProgress />
       ) : (
         <>
           <Box sx={{ display: "flex", flexDirection: "row", mb: 2 }}>

@@ -22,7 +22,9 @@ const Notes = () => {
     setTotalPages(totalPages);
     setPage(pageParam);
     setNotes(data.results);
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 100);
   };
   const handleCloseCreateModal = () => {
     setCreateModalOpen(false);

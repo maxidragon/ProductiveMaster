@@ -1,4 +1,4 @@
-import { Box, CircularProgress, IconButton } from "@mui/material";
+import { Box, IconButton, LinearProgress } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
 import { getActivitiesForDay } from "../../logic/activities";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -17,7 +17,9 @@ const Activities = () => {
     const formattedDate = dayjs(date).toISOString();
     const data = await getActivitiesForDay(new Date(formattedDate));
     setActivities(data);
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 100);
   }, [date]);
   const handleCloseCreateModal = () => {
     setCreateModalOpen(false);
@@ -29,7 +31,7 @@ const Activities = () => {
   return (
     <>
       {loading ? (
-        <CircularProgress />
+        <LinearProgress />
       ) : (
         <>
           <Box sx={{ display: "flex", flexDirection: "row" }}>

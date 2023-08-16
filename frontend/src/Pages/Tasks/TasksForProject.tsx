@@ -1,7 +1,6 @@
 import AddTaskIcon from "@mui/icons-material/AddTask";
 import { getTasksForProject, searchTasksForProject } from "../../logic/tasks";
 import {
-  CircularProgress,
   Box,
   IconButton,
   FormControl,
@@ -9,6 +8,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  LinearProgress,
 } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
@@ -32,7 +32,6 @@ const TasksForProject = () => {
       if (projectId === undefined) {
         return;
       }
-      setLoading(true);
       if (statusParam !== undefined && statusParam !== "") {
         const data = await getTasksForProject(
           projectId,
@@ -43,14 +42,18 @@ const TasksForProject = () => {
         setTotalPages(totalPagesNumber);
         setPage(pageParam);
         setTasks(data.results);
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 100);
       } else {
         const data = await getTasksForProject(projectId, pageParam);
         const totalPagesNumber = calculateTotalPages(data.count, perPage);
         setTotalPages(totalPagesNumber);
         setPage(pageParam);
         setTasks(data.results);
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 100);
       }
     },
     [projectId],
@@ -173,13 +176,15 @@ const TasksForProject = () => {
         </IconButton>
       </Box>
       {loading ? (
-        <CircularProgress />
+        <LinearProgress />
       ) : (
         <TasksTable
           tasks={tasks}
           page={page}
           totalPages={totalPages}
           handlePageChange={handlePageChange}
+          status={status}
+          fetchData={fetchData}
         />
       )}
       {createModalOpen && projectId && (

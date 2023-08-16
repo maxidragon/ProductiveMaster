@@ -7,6 +7,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  LinearProgress,
 } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
 import { Project } from "../../logic/interfaces";
@@ -31,21 +32,24 @@ const Projects = () => {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [loading, setLoading] = useState(true);
   const fetchData = async (pageParam = 1, status?: string) => {
-    setLoading(true);
     if (status !== undefined && status !== "") {
       const data = await getProjectsByStatus(status, pageParam);
       setProjects(data.results);
       const totalPagesNumber = calculateTotalPages(data.count, perPage);
       setTotalPages(totalPagesNumber);
       setPage(pageParam);
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 100);
     } else {
       const data = await getAllProjects(pageParam);
       setProjects(data.results);
       const totalPagesNumber = calculateTotalPages(data.count, perPage);
       setTotalPages(totalPagesNumber);
       setPage(pageParam);
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 100);
     }
   };
   const handleCloseCreateModal = () => {
@@ -151,7 +155,7 @@ const Projects = () => {
         </IconButton>
       </Box>
       {loading ? (
-        <CircularProgress />
+        <LinearProgress />
       ) : (
         <ProjectsTable
           projects={projects}

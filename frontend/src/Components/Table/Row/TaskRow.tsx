@@ -20,7 +20,11 @@ import EditTaskModal from "../../ModalComponents/Edit/EditTaskModal";
 import { Link as RouterLink } from "react-router-dom";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 
-const TaskRow = (props: { task: Task; multipleProjects?: boolean }) => {
+const TaskRow = (props: {
+  task: Task;
+  multipleProjects?: boolean;
+  handleStatusUpdate: (status: string) => void;
+}) => {
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -52,9 +56,15 @@ const TaskRow = (props: { task: Task; multipleProjects?: boolean }) => {
       enqueueSnackbar("Status is successfully changed to done!", {
         variant: "success",
       });
+      props.handleStatusUpdate("DONE");
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
+  };
+
+  const handleCloseEditModal = () => {
+    setEdit(false);
+    props.handleStatusUpdate(editedTask.status);
   };
 
   return (
@@ -125,7 +135,7 @@ const TaskRow = (props: { task: Task; multipleProjects?: boolean }) => {
       {edit && (
         <EditTaskModal
           open={edit}
-          handleClose={() => setEdit(false)}
+          handleClose={handleCloseEditModal}
           task={editedTask}
           updateTask={editTask}
         />

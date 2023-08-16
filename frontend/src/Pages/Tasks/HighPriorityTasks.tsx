@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { Task } from "../../logic/interfaces";
 import { getHighPriorityTasks } from "../../logic/tasks";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, LinearProgress } from "@mui/material";
 import TasksTable from "../../Components/Table/TasksTable";
 import { calculateTotalPages } from "../../logic/other";
 
@@ -13,13 +13,14 @@ const HighPriorityTasks = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async (pageParam: number) => {
-    setLoading(true);
     const data = await getHighPriorityTasks(pageParam);
     const totalPagesNumber = calculateTotalPages(data.count, perPage);
     setTotalPages(totalPagesNumber);
     setPage(pageParam);
     setTasks(data.results);
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 100);
   }, []);
 
   useEffect(() => {
@@ -35,7 +36,7 @@ const HighPriorityTasks = () => {
   return (
     <>
       {loading ? (
-        <CircularProgress />
+        <LinearProgress />
       ) : (
         <TasksTable
           tasks={tasks}
@@ -43,6 +44,7 @@ const HighPriorityTasks = () => {
           page={page}
           totalPages={totalPages}
           handlePageChange={handlePageChange}
+          fetchData={fetchData}
         />
       )}
     </>
