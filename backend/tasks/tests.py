@@ -126,6 +126,31 @@ class TaskDetailTests(TestCase):
         response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+class HighPriorityTasksTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.project = Project.objects.create(
+            title='Test Project', owner=self.user)
+        self.task = Task.objects.create(
+            title='Test Task', project=self.project, owner=self.user, high_priority=True)
+        self.task2 = Task.objects.create(
+            title='Test Task', project=self.project, owner=self.user, high_priority=True, status='DONE')
+
+    def authenticate(self):
+        response = self.client.post(reverse(
+            'get-token'), {'username': 'testuser', 'password': 'testpassword'}, format='json')
+        token = response.data['token']
+        return token
+    
+    def test_get_high_priority_tasks_and_exclude_done(self):
+        url = reverse('high-priority-tasks')
+        token = self.authenticate()
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['count'], 1)
 
 class ListCreateProjectTest(TestCase):
     def setUp(self):

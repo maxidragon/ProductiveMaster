@@ -55,7 +55,7 @@ class HighPriorityTasks(generics.ListAPIView):
     permission_classes = [IsProjectOwner]
     
     def get_queryset(self):
-        queryset = Task.objects.filter(owner=self.request.user, high_priority=True).order_by('-created_at')
+        queryset = Task.objects.filter(owner=self.request.user, high_priority=True).order_by('-created_at').exclude(status='DONE')
         return queryset
 
 class SearchTask(generics.ListAPIView):
