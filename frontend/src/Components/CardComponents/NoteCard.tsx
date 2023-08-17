@@ -8,6 +8,7 @@ const NoteCard = (props: { note: Note }) => {
   const navigate = useNavigate();
   return (
     <Card
+      role="card"
       sx={{
         width: 300,
         mr: 5,

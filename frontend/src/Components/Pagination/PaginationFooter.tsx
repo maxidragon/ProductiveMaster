@@ -40,13 +40,23 @@ const PaginationFooter = (props: {
           borderBottom: "none",
         }}
       >
-        <IconButton onClick={previousPage} disabled={isPreviousPageDisabled}>
+        <IconButton
+          onClick={previousPage}
+          disabled={isPreviousPageDisabled}
+          role="button"
+          aria-label="previousPageButton"
+        >
           <NavigateBeforeIcon />
         </IconButton>
         <Typography>
           Page {props.page} of {props.totalPages}
         </Typography>
-        <IconButton onClick={nextPage} disabled={isNextPageDisabled}>
+        <IconButton
+          onClick={nextPage}
+          disabled={isNextPageDisabled}
+          role="button"
+          aria-label="nextPageButton"
+        >
           <NavigateNextIcon />
         </IconButton>
       </TableCell>
