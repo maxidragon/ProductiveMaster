@@ -70,3 +70,9 @@ The server will be accessible at localhost:3000
 python manage.py test
 ```
 
+- Frontend tests (you must be in frontend directory)
+```
+npm test
+```
+  
+
