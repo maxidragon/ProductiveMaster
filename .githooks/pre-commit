@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Change to the frontend directory
+cd frontend
+
+# Run prettier
+npm run format
+
+# Run ESLint
+npm run lint
+
+# Capture the exit code of the previous command
+result=$?
+
+# If the exit code is non-zero, exit with that code to prevent the commit
+if [ $result -ne 0 ]; then
+  echo "Pre-commit checks failed. Commit aborted."
+  exit $result
+fi
