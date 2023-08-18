@@ -71,4 +71,31 @@ describe("TaskRow component", () => {
     const projectName = screen.getByText("Mock Project");
     expect(projectName).toBeInTheDocument();
   });
+
+  it("renders correctly for single project with high priority", () => {
+    render(
+      <MemoryRouter>
+        <Table>
+          <TableBody>
+            <TaskRow
+              task={{ ...mockTask, high_priority: true }}
+              multipleProjects={false}
+              handleStatusUpdate={(status) => {
+                return;
+              }}
+            />
+          </TableBody>
+        </Table>
+      </MemoryRouter>,
+    );
+
+    const title = screen.getByText("Mock Task");
+    expect(title).toBeInTheDocument();
+    const description = screen.getByText("Mock Description");
+    expect(description).toBeInTheDocument();
+    const status = screen.getByText("IN_PROGRESS");
+    expect(status).toBeInTheDocument();
+    const priority = screen.getByText("High priority");
+    expect(priority).toBeInTheDocument();
+  });
 });
