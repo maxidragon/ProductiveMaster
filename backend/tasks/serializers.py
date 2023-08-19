@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project, Task
+from .models import Document, Project, Task
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -41,4 +41,11 @@ class TaskListSerializer(serializers.ModelSerializer):
         model = Task
         fields = ('id', 'title', 'description', 'status', 'high_priority',
                   'created_at', 'owner', 'project', 'issue', 'pull_request')
+        read_only_fields = ('created_at', 'owner')
+
+class DocumentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Document
+        fields = ('id', 'title', 'url', 'owner', 'project', 'created_at')
         read_only_fields = ('created_at', 'owner')

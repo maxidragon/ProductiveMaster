@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404
 from .paginators import TasksPaginator
 from .permissions import IsOwner, IsProjectOwner
-from .serializers import ProjectSerializer, TaskListSerializer, TaskSerializer
+from .serializers import DocumentSerializer, ProjectSerializer, TaskListSerializer, TaskSerializer
 from rest_framework import generics
-from .models import Project, Task
+from .models import Document, Project, Task
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -125,3 +125,22 @@ class SearchProjectsByStatus(generics.ListAPIView):
         search = self.kwargs['search']
         status = self.kwargs['status']
         return Project.objects.filter(owner=self.request.user, title__icontains=search, status=status).order_by('title')
+    
+class ListDocumentForProject(generics.ListAPIView):
+    serializer_class = DocumentSerializer
+    permission_classes = [IsProjectOwner]
+
+    def get_queryset(self):
+        project_id = self.kwargs['project_id']
+        return Document.objects.filter(project=project_id).order_by('-created_at')
+    
+class CreateDocument(generics.CreateAPIView):
+    serializer_class = DocumentSerializer
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+class DocumentDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Document.objects.all()
+    serializer_class = DocumentSerializer
+    permission_classes = [IsOwner]

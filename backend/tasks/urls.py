@@ -18,6 +18,9 @@ urlpatterns = [
     path('projects/search/<str:search>/', views.SearchProjects.as_view(), name='search-projects'),
     path('projects/status/<str:status>/', views.ProjectsByStatus.as_view(), name='projects-by-status'),
     path('projects/detail/<int:pk>/', views.ProjectDetail.as_view(), name='project-detail'),
+    path('documents/<int:project_id>/', views.ListDocumentForProject.as_view(), name='documents-for-project'),
+    path('documents/create/', views.CreateDocument.as_view(), name='create-document'),
+    path('documents/<int:pk>/', views.DocumentDetail.as_view(), name='document-detail'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)           
