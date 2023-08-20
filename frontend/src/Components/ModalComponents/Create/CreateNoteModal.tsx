@@ -16,12 +16,22 @@ const CreateNoteModal = (props: { open: boolean; handleClose: () => void }) => {
     if (!titleRef.current || !descriptionRef.current) return;
     const title = titleRef.current.value;
     const description = descriptionRef.current.value;
-    const status = await createNote(title, description);
-    if (status === 201) {
+    const response = await createNote(title, description);
+    if (response.status === 201) {
       enqueueSnackbar("Note created!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
+      if (response.data.title) {
+        response.data.title.forEach((error: string) => {
+          enqueueSnackbar(`Title: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.description) {
+        response.data.description.forEach((error: string) => {
+          enqueueSnackbar(`Description: ${error}`, { variant: "error" });
+        });
+      }
     }
   };
   return (

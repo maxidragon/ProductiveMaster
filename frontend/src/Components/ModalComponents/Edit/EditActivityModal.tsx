@@ -14,12 +14,32 @@ const EditActivityModal = (props: {
   updateActivity: (activity: Activity) => void;
 }) => {
   const handleEdit = async () => {
-    const status = await updateActivity(props.activity);
-    if (status === 200) {
+    const response = await updateActivity(props.activity);
+    if (response.status === 200) {
       enqueueSnackbar("Activity updated!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
+      if (response.data.title) {
+        response.data.title.forEach((error: string) => {
+          enqueueSnackbar(`Title: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.description) {
+        response.data.description.forEach((error: string) => {
+          enqueueSnackbar(`Description: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.start_time) {
+        response.data.start_time.forEach((error: string) => {
+          enqueueSnackbar(`Start time: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.end_time) {
+        response.data.end_time.forEach((error: string) => {
+          enqueueSnackbar(`End time: ${error}`, { variant: "error" });
+        });
+      }
     }
   };
   return (

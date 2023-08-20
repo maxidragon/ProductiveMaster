@@ -23,17 +23,37 @@ const CreateActivityModal = (props: {
     if (!titleRef.current || !descriptionRef.current) return;
     const title = titleRef.current.value;
     const description = descriptionRef.current.value;
-    const status = await createActivity(
+    const response = await createActivity(
       title,
       description,
       startTimeRef.current.value,
       endTimeRef.current.value,
     );
-    if (status === 201) {
+    if (response.status === 201) {
       enqueueSnackbar("Activity created!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
+      if (response.data.title) {
+        response.data.title.forEach((error: string) => {
+          enqueueSnackbar(`Title: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.description) {
+        response.data.description.forEach((error: string) => {
+          enqueueSnackbar(`Description: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.start_time) {
+        response.data.start_time.forEach((error: string) => {
+          enqueueSnackbar(`Start time: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.end_time) {
+        response.data.end_time.forEach((error: string) => {
+          enqueueSnackbar(`End time: ${error}`, { variant: "error" });
+        });
+      }
     }
   };
   return (

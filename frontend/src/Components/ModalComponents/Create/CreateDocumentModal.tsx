@@ -20,12 +20,22 @@ const CreateDocumentModal = (props: {
     const title = titleRef.current.value;
     const url = urlRef.current.value;
     console.log(title, url, props.projectId);
-    const status = await createDocument(props.projectId, title, url);
-    if (status === 201) {
+    const response = await createDocument(props.projectId, title, url);
+    if (response.status === 201) {
       enqueueSnackbar("Document created!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
+      if (response.data.title) {
+        response.data.title.forEach((error: string) => {
+          enqueueSnackbar(`Title: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.url) {
+        response.data.url.forEach((error: string) => {
+          enqueueSnackbar(`URL: ${error}`, { variant: "error" });
+        });
+      }
     }
   };
   return (

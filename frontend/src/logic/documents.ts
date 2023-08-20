@@ -23,7 +23,10 @@ export const createDocument = async (
     title,
     url,
   });
-  return response.status;
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
 export const updateDocument = async (document: DocumentInterface) => {
@@ -33,7 +36,10 @@ export const updateDocument = async (document: DocumentInterface) => {
     true,
     document,
   );
-  return response.status;
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
 export const deleteDocument = async (documentId: number) => {

@@ -75,7 +75,10 @@ export const createTask = async (
     high_priority,
   };
   const response = await backendRequest(`tasks/create/`, "POST", true, body);
-  return response.status;
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
 export const updateTask = async (task: Task) => {
@@ -84,7 +87,10 @@ export const updateTask = async (task: Task) => {
     project: task.project.id,
   };
   const response = await backendRequest(`tasks/${task.id}/`, "PUT", true, data);
-  return response.status;
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
 export const deleteTask = async (taskId: string) => {

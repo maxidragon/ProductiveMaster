@@ -36,18 +36,38 @@ const CreateTaskModal = (props: {
     const description = descriptionRef.current.value;
     const github = githubLinkRef.current.value;
     const highPriority = highPriorityRef.current.checked;
-    const status = await createTask(
+    const response = await createTask(
       props.projectId,
       title,
       description,
       highPriority,
       github,
     );
-    if (status === 201) {
+    if (response.status === 201) {
       enqueueSnackbar("Task created!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
+      if (response.data.title) {
+        response.data.title.forEach((error: string) => {
+          enqueueSnackbar(`Title: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.description) {
+        response.data.description.forEach((error: string) => {
+          enqueueSnackbar(`Description: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.issue) {
+        response.data.issue.forEach((error: string) => {
+          enqueueSnackbar(`Issue: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.high_priority) {
+        response.data.high_priority.forEach((error: string) => {
+          enqueueSnackbar(`High priority: ${error}`, { variant: "error" });
+        });
+      }
     }
   };
   return (

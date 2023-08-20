@@ -12,12 +12,22 @@ const EditDocumentModal = (props: {
   updateDocument: (document: DocumentInterface) => void;
 }) => {
   const handleEdit = async () => {
-    const status = await updateDocument(props.document);
-    if (status === 200) {
+    const response = await updateDocument(props.document);
+    if (response.status === 200) {
       enqueueSnackbar("Document updated!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
+      if (response.data.title) {
+        response.data.title.forEach((error: string) => {
+          enqueueSnackbar(`Title: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.url) {
+        response.data.url.forEach((error: string) => {
+          enqueueSnackbar(`URL: ${error}`, { variant: "error" });
+        });
+      }
     }
   };
   return (

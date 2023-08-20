@@ -23,23 +23,29 @@ export const createProject = async (
   title: string,
   description: string,
   github?: string,
-): Promise<number> => {
+) => {
   const response = await backendRequest("projects/", "POST", true, {
     title,
     description,
     github,
   });
-  return response.status;
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
-export const updateProject = async (project: Project): Promise<number> => {
+export const updateProject = async (project: Project) => {
   const response = await backendRequest(
     `projects/detail/${project.id}/`,
     "PUT",
     true,
     project,
   );
-  return response.status;
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
 export const deleteProject = async (id: string): Promise<number> => {

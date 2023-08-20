@@ -24,12 +24,27 @@ const CreateProjectModal = (props: {
     const title = titleRef.current.value;
     const description = descriptionRef.current.value;
     const github = githubLinkRef.current.value;
-    const status = await createProject(title, description, github);
-    if (status === 201) {
+    const response = await createProject(title, description, github);
+    if (response.status === 201) {
       enqueueSnackbar("Project created!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
+      if (response.data.title) {
+        response.data.title.forEach((error: string) => {
+          enqueueSnackbar(`Title: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.description) {
+        response.data.description.forEach((error: string) => {
+          enqueueSnackbar(`Description: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.github) {
+        response.data.github.forEach((error: string) => {
+          enqueueSnackbar(`Github: ${error}`, { variant: "error" });
+        });
+      }
     }
   };
   return (

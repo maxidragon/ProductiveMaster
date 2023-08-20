@@ -14,23 +14,27 @@ export const getAllGoalCategories = async () => {
   const response = await backendRequest(`goals/categories/all/`, "GET", true);
   return await response.json();
 };
-export const createGoalCategory = async (title: string): Promise<number> => {
+export const createGoalCategory = async (title: string) => {
   const response = await backendRequest("goals/categories/", "POST", true, {
     title,
   });
-  return response.status;
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
-export const updateGoalCategory = async (
-  category: GoalCategory,
-): Promise<number> => {
+export const updateGoalCategory = async (category: GoalCategory) => {
   const response = await backendRequest(
     `goals/categories/${category.id}/`,
     "PUT",
     true,
     category,
   );
-  return response.status;
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
 export const deleteGoalCategory = async (id: number): Promise<number> => {

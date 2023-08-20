@@ -39,12 +39,32 @@ const EditGoalModal = (props: {
       props.updateGoal(props.goal);
     }
     const data = props.goal;
-    const status = await updateGoalById(data);
-    if (status === 200) {
+    const response = await updateGoalById(data);
+    if (response.status === 200) {
       enqueueSnackbar("Goal updated!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
+      if (response.data.title) {
+        response.data.title.forEach((error: string) => {
+          enqueueSnackbar(`Title: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.description) {
+        response.data.description.forEach((error: string) => {
+          enqueueSnackbar(`Description: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.goal_category) {
+        response.data.goal_category.forEach((error: string) => {
+          enqueueSnackbar(`Goal category: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.deadline) {
+        response.data.deadline.forEach((error: string) => {
+          enqueueSnackbar(`Deadline: ${error}`, { variant: "error" });
+        });
+      }
     }
   };
   useEffect(() => {

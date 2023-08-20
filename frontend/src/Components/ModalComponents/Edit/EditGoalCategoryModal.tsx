@@ -12,12 +12,17 @@ const EditGoalCategoryModal = (props: {
   updateGoalCategory: (goalCategory: GoalCategory) => void;
 }) => {
   const handleEdit = async () => {
-    const status = await updateGoalCategory(props.goalCategory);
-    if (status === 200) {
+    const response = await updateGoalCategory(props.goalCategory);
+    if (response.status === 200) {
       enqueueSnackbar("Category updated!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
+      if (response.data.title) {
+        response.data.title.forEach((error: string) => {
+          enqueueSnackbar(`Title: ${error}`, { variant: "error" });
+        });
+      }
     }
   };
   return (

@@ -15,12 +15,17 @@ const CreateGoalCategoryModal = (props: {
   const handleCreate = async () => {
     if (!titleRef.current) return;
     const title = titleRef.current.value;
-    const status = await createGoalCategory(title);
-    if (status === 201) {
+    const response = await createGoalCategory(title);
+    if (response.status === 201) {
       enqueueSnackbar("Category created!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
+      if (response.data.title) {
+        response.data.title.forEach((error: string) => {
+          enqueueSnackbar(`Title: ${error}`, { variant: "error" });
+        });
+      }
     }
   };
 

@@ -44,12 +44,32 @@ const CreateGoalModal = (props: { open: boolean; handleClose: () => void }) => {
     if (selected !== 0) {
       data["goal_category"] = selected;
     }
-    const status = await createGoal(data);
-    if (status === 201) {
+    const response = await createGoal(data);
+    if (response.status === 201) {
       enqueueSnackbar("Goal created!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
+      if (response.data.title) {
+        response.data.title.forEach((error: string) => {
+          enqueueSnackbar(`Title: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.description) {
+        response.data.description.forEach((error: string) => {
+          enqueueSnackbar(`Description: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.goal_category) {
+        response.data.goal_category.forEach((error: string) => {
+          enqueueSnackbar(`Goal category: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.deadline) {
+        response.data.deadline.forEach((error: string) => {
+          enqueueSnackbar(`Deadline: ${error}`, { variant: "error" });
+        });
+      }
     }
   };
 
@@ -107,7 +127,7 @@ const CreateGoalModal = (props: { open: boolean; handleClose: () => void }) => {
             </FormControl>
           </Grid>
           <Grid item>
-            <DatePicker label="End" inputRef={deadlineRef} />
+            <DatePicker label="Deadline" inputRef={deadlineRef} />
           </Grid>
         </Grid>
         <ActionsButtons

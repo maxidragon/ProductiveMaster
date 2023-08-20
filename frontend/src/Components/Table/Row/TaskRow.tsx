@@ -51,8 +51,8 @@ const TaskRow = (props: {
   const handleComplete = async () => {
     const task = { ...editedTask, status: "DONE" };
     setEditedTask(task);
-    const status = await updateTask(task);
-    if (status === 200) {
+    const response = await updateTask(task);
+    if (response.status === 200) {
       enqueueSnackbar("Status is successfully changed to done!", {
         variant: "success",
       });

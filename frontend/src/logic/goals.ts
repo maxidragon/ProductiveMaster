@@ -15,11 +15,14 @@ export const getGoalsByCategoryId = async (id: number, page = 1) => {
   return await response.json();
 };
 
-export const createGoal = async (data: CreateGoal): Promise<number> => {
+export const createGoal = async (data: CreateGoal) => {
   const deadlineDate = new Date(data.deadline_string);
   data.deadline = deadlineDate;
   const response = await backendRequest("goals/create/", "POST", true, data);
-  return response.status;
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
 export const getGoalById = async (id: number): Promise<Goal> => {
@@ -27,9 +30,12 @@ export const getGoalById = async (id: number): Promise<Goal> => {
   return await response.json();
 };
 
-export const updateGoalById = async (goal: EditGoal): Promise<number> => {
+export const updateGoalById = async (goal: EditGoal) => {
   const response = await backendRequest(`goals/${goal.id}/`, "PUT", true, goal);
-  return response.status;
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
 export const deleteGoalById = async (id: number): Promise<number> => {

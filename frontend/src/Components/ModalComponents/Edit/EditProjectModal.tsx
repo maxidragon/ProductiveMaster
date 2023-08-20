@@ -22,12 +22,27 @@ const EditProjectModal = (props: {
   updateProject: (project: Project) => void;
 }) => {
   const handleEdit = async () => {
-    const status = await updateProject(props.project);
-    if (status === 200) {
+    const response = await updateProject(props.project);
+    if (response.status === 200) {
       enqueueSnackbar("Project updated!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
+      if (response.data.title) {
+        response.data.title.forEach((error: string) => {
+          enqueueSnackbar(`Title: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.description) {
+        response.data.description.forEach((error: string) => {
+          enqueueSnackbar(`Description: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.github) {
+        response.data.github.forEach((error: string) => {
+          enqueueSnackbar(`Github: ${error}`, { variant: "error" });
+        });
+      }
     }
   };
   return (

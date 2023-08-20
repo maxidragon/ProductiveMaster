@@ -6,15 +6,15 @@ export const getNotes = async (page = 1) => {
   return await response.json();
 };
 
-export const createNote = async (
-  title: string,
-  description: string,
-): Promise<number> => {
+export const createNote = async (title: string, description: string) => {
   const response = await backendRequest("notes/", "POST", true, {
     title,
     description,
   });
-  return response.status;
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
 export const updateNoteById = async (note: Note): Promise<number> => {

@@ -24,12 +24,37 @@ const EditTaskModal = (props: {
   updateTask: (task: Task) => void;
 }) => {
   const handleEdit = async () => {
-    const status = await updateTask(props.task);
-    if (status === 200) {
+    const response = await updateTask(props.task);
+    if (response.status === 201) {
       enqueueSnackbar("Task updated!", { variant: "success" });
       props.handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
+      if (response.data.title) {
+        response.data.title.forEach((error: string) => {
+          enqueueSnackbar(`Title: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.description) {
+        response.data.description.forEach((error: string) => {
+          enqueueSnackbar(`Description: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.issue) {
+        response.data.issue.forEach((error: string) => {
+          enqueueSnackbar(`Issue: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.pull_request) {
+        response.data.pull_request.forEach((error: string) => {
+          enqueueSnackbar(`Pull request: ${error}`, { variant: "error" });
+        });
+      }
+      if (response.data.high_priority) {
+        response.data.high_priority.forEach((error: string) => {
+          enqueueSnackbar(`High priority: ${error}`, { variant: "error" });
+        });
+      }
     }
   };
   return (

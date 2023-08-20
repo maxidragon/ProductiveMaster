@@ -16,7 +16,7 @@ export const createActivity = async (
   description: string,
   start_time: string,
   end_time: string,
-): Promise<number> => {
+) => {
   const startDate = new Date(start_time);
   const endDate = new Date(end_time);
   const response = await backendRequest("activities/create/", "POST", true, {
@@ -25,10 +25,13 @@ export const createActivity = async (
     start_time: startDate,
     end_time: endDate,
   });
-  return response.status;
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
-export const updateActivity = async (activity: Activity): Promise<number> => {
+export const updateActivity = async (activity: Activity) => {
   const startDate = new Date(activity.start_time);
   const endDate = new Date(activity.end_time);
   const response = await backendRequest(
@@ -41,7 +44,10 @@ export const updateActivity = async (activity: Activity): Promise<number> => {
       end_time: endDate,
     },
   );
-  return response.status;
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
 export const deleteActivity = async (id: number): Promise<number> => {
