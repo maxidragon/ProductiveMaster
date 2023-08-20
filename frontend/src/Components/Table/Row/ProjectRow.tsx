@@ -5,6 +5,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import DescriptionIcon from "@mui/icons-material/Description";
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
 import { deleteProject } from "../../../logic/projects";
@@ -71,6 +72,12 @@ const ProjectRow = ({ project }: { project: Project }) => {
               to={`/tasks/project/${editedProject.id}`}
             >
               <AssignmentIcon />
+            </IconButton>
+            <IconButton
+              component={RouterLink}
+              to={`/documents/${editedProject.id}`}
+            >
+              <DescriptionIcon />
             </IconButton>
             <IconButton onClick={() => setEdit(true)}>
               <EditIcon />

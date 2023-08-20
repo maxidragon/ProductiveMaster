@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from rest_framework import status
-from .models import Task, Project
+from .models import Document, Task, Project
 from django.contrib.auth.models import User
 
 
@@ -474,3 +474,107 @@ class TestSearchProjectsWithStatus(TestCase):
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 0)
+
+class TestListDocumentsForProject(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.project = Project.objects.create(
+            title='Test Project', owner=self.user)
+        self.document = Document.objects.create(
+            title='Test Document', url='https://docs.google.com', project=self.project, owner=self.user)
+
+    def authenticate(self):
+        response = self.client.post(reverse(
+            'get-token'), {'username': 'testuser', 'password': 'testpassword'}, format='json')
+        token = response.data['token']
+        return token
+    
+    def test_get_documents_for_project(self):
+        url = reverse('documents-for-project', args=[self.project.id])
+        token = self.authenticate()
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['count'], 1)
+
+
+class TestCreateDocument(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.project = Project.objects.create(
+            title='Test Project', owner=self.user)
+
+    def authenticate(self):
+        response = self.client.post(reverse(
+            'get-token'), {'username': 'testuser', 'password': 'testpassword'}, format='json')
+        token = response.data['token']
+        return token
+    
+    def test_create_document(self):
+        url = reverse('create-document')
+        data = {'title': 'New Document', 'url': 'https://docs.google.com', 'project': self.project.id}
+        token = self.authenticate()
+        response = self.client.post(url, data, HTTP_AUTHORIZATION=f'Token {token}', format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Document.objects.count(), 1)
+
+class TestDocumentDetail(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.user2 = User.objects.create_user(
+            username="noowner", password="nopassword")
+        self.project = Project.objects.create(
+            title='Test Project', description='Test Project Description', owner=self.user)
+        self.document = Document.objects.create(
+            title='Test Document', url='https://docs.google.com', project=self.project, owner=self.user)
+
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password}, format='json')
+        token = response.data['token']
+        return token
+
+    def test_get_document(self):
+        url = reverse('document-detail', args=[self.document.id])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], self.document.title)
+
+    def test_get_document_forbidden(self):
+        url = reverse('document-detail', args=[self.document.id])
+        token = self.authenticate('noowner', 'nopassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_document(self):
+        url = reverse('document-detail', args=[self.document.id])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.put(url, {'title': 'New Title', 'url': 'https://docs.google.com', 'project': self.project.id, 'owner': self.user.id},
+                                   HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_update_document_forbidden(self):
+        url = reverse('document-detail', args=[self.document.id])
+        token = self.authenticate('noowner', 'nopassword')
+        response = self.client.put(url, {'title': 'New Title', 'url': 'https://docs.google.com', 'project': self.project.id, 'owner': self.user.id},
+                                   HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')   
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_document(self):
+        url = reverse('document-detail', args=[self.document.id])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_document_forbidden(self):
+        url = reverse('document-detail', args=[self.document.id])
+        token = self.authenticate('noowner', 'nopassword')
+        response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)   

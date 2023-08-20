@@ -1,0 +1,46 @@
+import { backendRequest } from "./request";
+import { Document as DocumentInterface } from "./interfaces";
+
+export const getDocumentsForProject = async (
+  projectId: number,
+  page: number,
+) => {
+  const response = await backendRequest(
+    `documents/project/${projectId}?page=${page}`,
+    "GET",
+    true,
+  );
+  return await response.json();
+};
+
+export const createDocument = async (
+  projectId: number,
+  title: string,
+  url: string,
+) => {
+  const response = await backendRequest(`documents/create/`, "POST", true, {
+    project: projectId,
+    title,
+    url,
+  });
+  return response.status;
+};
+
+export const updateDocument = async (document: DocumentInterface) => {
+  const response = await backendRequest(
+    `documents/${document.id}/`,
+    "PUT",
+    true,
+    document,
+  );
+  return response.status;
+};
+
+export const deleteDocument = async (documentId: number) => {
+  const response = await backendRequest(
+    `documents/${documentId}/`,
+    "DELETE",
+    true,
+  );
+  return response.status;
+};
