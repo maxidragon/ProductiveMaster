@@ -1,4 +1,4 @@
-import AddTaskIcon from "@mui/icons-material/AddTask";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Box, IconButton, LinearProgress } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
@@ -53,7 +53,7 @@ const DocumentsForProject = () => {
     <>
       <Box sx={{ display: "flex", flexDirection: "row", mb: 2 }}>
         <IconButton onClick={() => setCreateModalOpen(true)}>
-          <AddTaskIcon />
+          <AddCircleIcon />
         </IconButton>
       </Box>
       {loading ? (
