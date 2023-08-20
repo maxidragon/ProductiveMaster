@@ -84,3 +84,10 @@ export interface EditGoal {
   deadline: Date;
   goal_category?: number;
 }
+
+export interface Document {
+  id: number;
+  title: string;
+  url: string;
+  project: number;
+}

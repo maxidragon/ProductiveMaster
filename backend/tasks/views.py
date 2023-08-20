@@ -39,24 +39,28 @@ class TasksForProject(generics.ListAPIView):
             project=project_id, owner=self.request.user).order_by('-created_at')
         return queryset
 
+
 class TasksForProjectWithStatus(generics.ListAPIView):
     serializer_class = TaskListSerializer
     permission_classes = [IsProjectOwner]
 
     def get_queryset(self):
         project_id = self.kwargs['project_id']
-        status = self.kwargs.get('status') 
+        status = self.kwargs.get('status')
         queryset = Task.objects.filter(
             project=project_id, owner=self.request.user, status=status).order_by('-created_at')
         return queryset
 
+
 class HighPriorityTasks(generics.ListAPIView):
     serializer_class = TaskListSerializer
     permission_classes = [IsProjectOwner]
-    
+
     def get_queryset(self):
-        queryset = Task.objects.filter(owner=self.request.user, high_priority=True).order_by('-created_at').exclude(status='DONE')
+        queryset = Task.objects.filter(owner=self.request.user, high_priority=True).order_by(
+            '-created_at').exclude(status='DONE')
         return queryset
+
 
 class SearchTask(generics.ListAPIView):
     serializer_class = TaskSerializer
@@ -103,13 +107,15 @@ class ProjectsByStatus(generics.ListAPIView):
     serializer_class = ProjectSerializer
 
     def get_queryset(self):
-        status = self.kwargs['status']  
+        status = self.kwargs['status']
         return Project.objects.filter(owner=self.request.user, status=status).order_by('title')
+
 
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
     permission_classes = [IsOwner]
+
 
 class SearchProjects(generics.ListAPIView):
     serializer_class = ProjectSerializer
@@ -117,28 +123,38 @@ class SearchProjects(generics.ListAPIView):
     def get_queryset(self):
         search = self.kwargs['search']
         return Project.objects.filter(owner=self.request.user, title__icontains=search).order_by('title')
-    
+
+
 class SearchProjectsByStatus(generics.ListAPIView):
     serializer_class = ProjectSerializer
-    
+
     def get_queryset(self):
         search = self.kwargs['search']
         status = self.kwargs['status']
         return Project.objects.filter(owner=self.request.user, title__icontains=search, status=status).order_by('title')
-    
+
+
 class ListDocumentForProject(generics.ListAPIView):
     serializer_class = DocumentSerializer
     permission_classes = [IsProjectOwner]
 
     def get_queryset(self):
         project_id = self.kwargs['project_id']
+        print(Document.objects.filter(project=project_id))
         return Document.objects.filter(project=project_id).order_by('-created_at')
-    
-class CreateDocument(generics.CreateAPIView):
-    serializer_class = DocumentSerializer
-    
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+
+
+class CreateDocument(APIView):
+    def post(self, request):
+        serializer = DocumentSerializer(data=request.data)
+        project = Project.objects.get(pk=request.data['project'])
+        if project.owner != request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class DocumentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Document.objects.all()

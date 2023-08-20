@@ -1,10 +1,12 @@
 import { createHashRouter, RouterProvider } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Login from "./Pages/Auth/Login/Login";
-import Register from "./Pages/Auth/Register/Register";
 import { SnackbarProvider } from "notistack";
 import { ConfirmProvider } from "material-ui-confirm";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Dashboard from "./Pages/Dashboard/Dashboard";
+import Login from "./Pages/Auth/Login/Login";
+import Register from "./Pages/Auth/Register/Register";
 import Layout from "./Layout/Layout";
 import Notes from "./Pages/Notes/Notes";
 import SingleNote from "./Pages/Notes/SingleNote";
@@ -14,10 +16,9 @@ import ErrorElement from "./Pages/ErrorElement/ErrorElement";
 import TasksForProject from "./Pages/Tasks/TasksForProject";
 import Tasks from "./Pages/Tasks/Tasks";
 import Activities from "./Pages/Activities/Activities";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import GoalCategories from "./Pages/GoalCategories/GoalCategories";
 import Settings from "./Pages/Settings/Settings";
+import DocumentsForProject from "./Pages/Documents/DocumentsForProject";
 
 const router = createHashRouter([
   {
@@ -55,6 +56,10 @@ const router = createHashRouter([
   {
     path: "/tasks/project/:projectId",
     element: <Layout children={<TasksForProject />} />,
+  },
+  {
+    path: "documents/:projectId",
+    element: <Layout children={<DocumentsForProject />} />,
   },
   {
     path: "/activities",
