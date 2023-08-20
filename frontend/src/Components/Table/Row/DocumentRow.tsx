@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TableRow, TableCell, IconButton } from "@mui/material";
+import { TableRow, TableCell, IconButton, Link } from "@mui/material";
 import { Document as DocumentInterface } from "../../../logic/interfaces";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -44,7 +44,7 @@ const DocumentRow = ({ document }: { document: DocumentInterface }) => {
           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         >
           <TableCell component="th" scope="row">
-            {editedDocument.title}
+            <Link href={editedDocument.url}>{editedDocument.title}</Link>
           </TableCell>
 
           <TableCell>
