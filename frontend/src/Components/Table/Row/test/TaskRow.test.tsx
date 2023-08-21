@@ -30,7 +30,8 @@ describe("TaskRow component", () => {
               task={mockTask}
               multipleProjects={false}
               handleStatusUpdate={(status) => {
-                return;
+                status = "IN_PROGRESS";
+                return status;
               }}
             />
           </TableBody>
@@ -54,7 +55,8 @@ describe("TaskRow component", () => {
               task={mockTask}
               multipleProjects={true}
               handleStatusUpdate={(status) => {
-                return;
+                status = "IN_PROGRESS";
+                return status;
               }}
             />
           </TableBody>
@@ -81,7 +83,8 @@ describe("TaskRow component", () => {
               task={{ ...mockTask, high_priority: true }}
               multipleProjects={false}
               handleStatusUpdate={(status) => {
-                return;
+                status = "IN_PROGRESS";
+                return status;
               }}
             />
           </TableBody>

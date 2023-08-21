@@ -1,8 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import LoginPartial from "../LoginPartial";
+import { vi } from "vitest";
 
-jest.mock("../../logic/auth", () => ({
+vi.mock("../../logic/auth", () => ({
   getUsername: () => "mockUser",
   logout: () => {
     return;

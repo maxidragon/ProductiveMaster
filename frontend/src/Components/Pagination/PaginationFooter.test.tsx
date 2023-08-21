@@ -1,9 +1,10 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { vi } from "vitest";
 import PaginationFooter from "./PaginationFooter";
 import { Table, TableFooter } from "@mui/material";
 
 describe("PaginationFooter component", () => {
-  const mockHandlePageChange = jest.fn();
+  const mockHandlePageChange = vi.fn();
 
   afterEach(() => {
     mockHandlePageChange.mockClear();
