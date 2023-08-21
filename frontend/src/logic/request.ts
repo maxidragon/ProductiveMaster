@@ -4,8 +4,7 @@ export const backendRequest = (
   useAuth: boolean,
   body?: unknown,
 ) => {
-  const apiUrl =
-    process.env.NODE_ENV === "production" ? "/api" : "http://localhost:8000";
+  const apiUrl = import.meta.env.PROD ? "/api" : "http://localhost:8000";
   const token = localStorage.getItem("token");
   const headers = new Headers();
   headers.append("Content-Type", "application/json");

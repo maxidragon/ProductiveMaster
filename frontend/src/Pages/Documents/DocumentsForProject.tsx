@@ -18,7 +18,7 @@ const DocumentsForProject = () => {
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(
-    async (pageParam: number, statusParam?: string) => {
+    async (pageParam: number) => {
       if (projectId === undefined) {
         return;
       }

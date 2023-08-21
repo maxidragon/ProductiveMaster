@@ -26,7 +26,7 @@ const EditTaskModal = (props: {
 }) => {
   const handleEdit = async () => {
     const response = await updateTask(props.task);
-    if (response.status === 201) {
+    if (response.status === 200) {
       enqueueSnackbar("Task updated!", { variant: "success" });
       props.handleClose();
     } else {
