@@ -5,6 +5,7 @@ import { enqueueSnackbar } from "notistack";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { createActivity } from "../../../logic/activities";
 import ActionsButtons from "../ActionsButtons";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const CreateActivityModal = (props: {
   open: boolean;
@@ -88,6 +89,7 @@ const CreateActivityModal = (props: {
           cancel={props.handleClose}
           submit={handleCreate}
           submitText={"Create"}
+          submitIcon={<AddCircleIcon />}
         />
       </Box>
     </Modal>

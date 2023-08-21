@@ -4,6 +4,7 @@ import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { createGoalCategory } from "../../../logic/goalCategories";
 import ActionsButtons from "../ActionsButtons";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const CreateGoalCategoryModal = (props: {
   open: boolean;
@@ -46,6 +47,7 @@ const CreateGoalCategoryModal = (props: {
           cancel={props.handleClose}
           submit={handleCreate}
           submitText={"Create"}
+          submitIcon={<AddCircleIcon />}
         />
       </Box>
     </Modal>

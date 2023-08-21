@@ -21,6 +21,7 @@ import { EditGoal, GoalCategory } from "../../../logic/interfaces";
 import { useState, useEffect } from "react";
 import { getAllGoalCategories } from "../../../logic/goalCategories";
 import ActionsButtons from "../ActionsButtons";
+import EditIcon from "@mui/icons-material/Edit";
 
 const EditGoalModal = (props: {
   open: boolean;
@@ -165,6 +166,7 @@ const EditGoalModal = (props: {
           cancel={props.handleClose}
           submit={handleEdit}
           submitText={"Edit"}
+          submitIcon={<EditIcon />}
         />
       </Box>
     </Modal>

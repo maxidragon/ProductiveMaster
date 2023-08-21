@@ -6,6 +6,7 @@ import { Activity } from "../../../logic/interfaces";
 import { updateActivity } from "../../../logic/activities";
 import dayjs from "dayjs";
 import ActionsButtons from "../ActionsButtons";
+import EditIcon from "@mui/icons-material/Edit";
 
 const EditActivityModal = (props: {
   open: boolean;
@@ -108,6 +109,7 @@ const EditActivityModal = (props: {
           cancel={props.handleClose}
           submit={handleEdit}
           submitText={"Edit"}
+          submitIcon={<EditIcon />}
         />
       </Box>
     </Modal>

@@ -4,6 +4,7 @@ import { style, formStyle } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { createProject } from "../../../logic/projects";
 import ActionsButtons from "../ActionsButtons";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const CreateProjectModal = (props: {
   open: boolean;
@@ -80,6 +81,7 @@ const CreateProjectModal = (props: {
           cancel={props.handleClose}
           submit={handleCreate}
           submitText={"Create"}
+          submitIcon={<AddCircleIcon />}
         />
       </Box>
     </Modal>

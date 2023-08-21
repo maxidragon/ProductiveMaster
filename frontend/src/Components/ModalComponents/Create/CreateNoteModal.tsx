@@ -4,6 +4,7 @@ import { formStyle, style } from "../modalStyles";
 import { createNote } from "../../../logic/notes";
 import { enqueueSnackbar } from "notistack";
 import ActionsButtons from "../ActionsButtons";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const CreateNoteModal = (props: { open: boolean; handleClose: () => void }) => {
   const titleRef: React.MutableRefObject<HTMLInputElement | null | undefined> =
@@ -60,6 +61,7 @@ const CreateNoteModal = (props: { open: boolean; handleClose: () => void }) => {
           cancel={props.handleClose}
           submit={handleCreate}
           submitText={"Create"}
+          submitIcon={<AddCircleIcon />}
         />
       </Box>
     </Modal>

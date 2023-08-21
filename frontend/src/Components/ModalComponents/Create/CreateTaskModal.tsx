@@ -12,6 +12,7 @@ import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { createTask } from "../../../logic/tasks";
 import ActionsButtons from "../ActionsButtons";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const CreateTaskModal = (props: {
   open: boolean;
@@ -109,6 +110,7 @@ const CreateTaskModal = (props: {
           cancel={props.handleClose}
           submit={handleCreate}
           submitText={"Create"}
+          submitIcon={<AddCircleIcon />}
         />
       </Box>
     </Modal>

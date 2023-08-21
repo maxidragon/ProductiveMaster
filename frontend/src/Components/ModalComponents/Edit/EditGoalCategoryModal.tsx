@@ -4,6 +4,7 @@ import { enqueueSnackbar } from "notistack";
 import { GoalCategory } from "../../../logic/interfaces";
 import { updateGoalCategory } from "../../../logic/goalCategories";
 import ActionsButtons from "../ActionsButtons";
+import EditIcon from "@mui/icons-material/Edit";
 
 const EditGoalCategoryModal = (props: {
   open: boolean;
@@ -52,6 +53,7 @@ const EditGoalCategoryModal = (props: {
           cancel={props.handleClose}
           submit={handleEdit}
           submitText={"Edit"}
+          submitIcon={<EditIcon />}
         />
       </Box>
     </Modal>

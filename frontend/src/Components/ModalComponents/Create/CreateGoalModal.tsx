@@ -18,6 +18,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { CreateGoal, GoalCategory } from "../../../logic/interfaces";
 import { getAllGoalCategories } from "../../../logic/goalCategories";
 import ActionsButtons from "../ActionsButtons";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const CreateGoalModal = (props: { open: boolean; handleClose: () => void }) => {
   const [goalCategories, setGoalCategories] = useState<GoalCategory[]>([]);
@@ -134,6 +135,7 @@ const CreateGoalModal = (props: { open: boolean; handleClose: () => void }) => {
           cancel={props.handleClose}
           submit={handleCreate}
           submitText={"Create"}
+          submitIcon={<AddCircleIcon />}
         />
       </Box>
     </Modal>

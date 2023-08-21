@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getUserData, updateUserData } from "../../../logic/auth";
 import ActionsButtons from "../ActionsButtons";
 import { UserData } from "../../../logic/interfaces";
+import EditIcon from "@mui/icons-material/Edit";
 
 const EditUserDataModal = (props: {
   open: boolean;
@@ -106,6 +107,7 @@ const EditUserDataModal = (props: {
             cancel={props.handleClose}
             submit={handleEdit}
             submitText={"Edit"}
+            submitIcon={<EditIcon />}
           />
         </Box>
       </Modal>

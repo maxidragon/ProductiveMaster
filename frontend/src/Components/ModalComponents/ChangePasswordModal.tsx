@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { enqueueSnackbar } from "notistack";
 import { changePassword } from "../../logic/auth";
 import ActionsButtons from "./ActionsButtons";
+import EditIcon from "@mui/icons-material/Edit";
 
 const ChangePasswordModal = (props: {
   open: boolean;
@@ -83,6 +84,7 @@ const ChangePasswordModal = (props: {
             cancel={props.handleClose}
             submit={handleSubmit}
             submitText={"Change password"}
+            submitIcon={<EditIcon />}
           />
         </Box>
       </Modal>

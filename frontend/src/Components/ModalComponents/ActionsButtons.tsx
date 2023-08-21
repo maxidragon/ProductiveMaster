@@ -1,12 +1,13 @@
+import { ReactElement } from "react";
 import { Box, Button } from "@mui/material";
 import { actionsButtons, buttonStyle } from "./modalStyles";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 const ActionsButtons = (props: {
   cancel: () => void;
   submit: () => void;
   submitText: string;
+  submitIcon: ReactElement;
 }) => {
   return (
     <Box sx={actionsButtons}>
@@ -21,7 +22,7 @@ const ActionsButtons = (props: {
       <Button
         variant="contained"
         color="success"
-        endIcon={<AddCircleIcon />}
+        endIcon={props.submitIcon}
         onClick={props.submit}
       >
         {props.submitText}

@@ -16,6 +16,7 @@ import { enqueueSnackbar } from "notistack";
 import { updateTask } from "../../../logic/tasks";
 import { Task } from "../../../logic/interfaces";
 import ActionsButtons from "../ActionsButtons";
+import EditIcon from "@mui/icons-material/Edit";
 
 const EditTaskModal = (props: {
   open: boolean;
@@ -157,6 +158,7 @@ const EditTaskModal = (props: {
           cancel={props.handleClose}
           submit={handleEdit}
           submitText={"Edit"}
+          submitIcon={<EditIcon />}
         />
       </Box>
     </Modal>
