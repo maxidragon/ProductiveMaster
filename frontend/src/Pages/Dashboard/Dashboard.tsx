@@ -18,6 +18,7 @@ const Dashboard = () => {
   useEffect(() => {
     const getData = async () => {
       const userData = await getUserData();
+      console.log(userData);
       setData(userData);
     };
     getData();
