@@ -1,20 +1,16 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Frontend CI
-
+name: Test
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
-
+  push:
+    branches:
+      - main
 jobs:
-  build:
+  test_frontend:
+    name: Frontend
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [19.x]
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -37,3 +33,27 @@ jobs:
       - name: Run tests
         working-directory: 'frontend'
         run: npm run test:no-watch
+
+  test_backend:
+    name: Backend
+  runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.9]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install Dependencies
+      working-directory: 'backend' 
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run Tests
+      working-directory: 'backend' 
+      run: |
+        python manage.py test
