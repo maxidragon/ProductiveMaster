@@ -21,11 +21,16 @@ export const timezones = [
   },
   {
     id: 5,
+    display_name: "India",
+    name: "Asia/Calcutta",
+  },
+  {
+    id: 6,
     display_name: "Tokyo, Seoul",
     name: "Asia/Tokyo",
   },
   {
-    id: 6,
+    id: 7,
     display_name: "Sydney",
     name: "Australia/Sydney",
   },
