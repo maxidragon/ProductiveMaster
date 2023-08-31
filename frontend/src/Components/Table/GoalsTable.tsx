@@ -40,6 +40,7 @@ const GoalsTable = (props: {
               <PaginationFooter
                 page={props.page}
                 totalPages={props.totalPages}
+                totalItems={props.goals.length}
                 handlePageChange={props.handlePageChange}
               />
             </TableFooter>

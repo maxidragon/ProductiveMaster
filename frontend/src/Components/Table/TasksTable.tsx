@@ -56,6 +56,7 @@ const TasksTable = (props: {
             <PaginationFooter
               page={props.page}
               totalPages={props.totalPages}
+              totalItems={props.tasks.length}
               handlePageChange={props.handlePageChange}
             />
           </TableFooter>

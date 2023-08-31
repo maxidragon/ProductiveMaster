@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 const PaginationFooter = (props: {
   page: number;
   totalPages: number;
+  totalItems: number;
   handlePageChange: (page: number) => void;
 }) => {
   const [isPreviousPageDisabled, setIsPreviousPageDisabled] =
@@ -59,6 +60,7 @@ const PaginationFooter = (props: {
         >
           <NavigateNextIcon />
         </IconButton>
+        <Typography>Total items: {props.totalItems}</Typography>
       </TableCell>
     </TableRow>
   );

@@ -17,6 +17,7 @@ describe("PaginationFooter component", () => {
           <PaginationFooter
             page={1}
             totalPages={5}
+            totalItems={10}
             handlePageChange={mockHandlePageChange}
           />
         </TableFooter>
@@ -42,6 +43,7 @@ describe("PaginationFooter component", () => {
           <PaginationFooter
             page={1}
             totalPages={5}
+            totalItems={10}
             handlePageChange={mockHandlePageChange}
           />
         </TableFooter>
@@ -64,6 +66,7 @@ describe("PaginationFooter component", () => {
           <PaginationFooter
             page={1}
             totalPages={5}
+            totalItems={10}
             handlePageChange={mockHandlePageChange}
           />
         </TableFooter>
@@ -86,6 +89,7 @@ describe("PaginationFooter component", () => {
           <PaginationFooter
             page={1}
             totalPages={5}
+            totalItems={10}
             handlePageChange={mockHandlePageChange}
           />
         </TableFooter>
@@ -105,6 +109,7 @@ describe("PaginationFooter component", () => {
           <PaginationFooter
             page={2}
             totalPages={5}
+            totalItems={10}
             handlePageChange={mockHandlePageChange}
           />
         </TableFooter>
@@ -117,5 +122,23 @@ describe("PaginationFooter component", () => {
     fireEvent.click(previousButton);
 
     expect(mockHandlePageChange).toHaveBeenCalledWith(1);
+  });
+
+  it("should display the correct total items", () => {
+    render(
+      <Table>
+        <TableFooter>
+          <PaginationFooter
+            page={1}
+            totalPages={5}
+            totalItems={10}
+            handlePageChange={mockHandlePageChange}
+          />
+        </TableFooter>
+      </Table>,
+    );
+
+    const totalItems = screen.getByText("Total items: 10");
+    expect(totalItems).toBeInTheDocument();
   });
 });

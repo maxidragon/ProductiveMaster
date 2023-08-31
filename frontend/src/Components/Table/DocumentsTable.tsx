@@ -37,6 +37,7 @@ const DocumentsTable = (props: {
             <PaginationFooter
               page={props.page}
               totalPages={props.totalPages}
+              totalItems={props.documents.length}
               handlePageChange={props.handlePageChange}
             />
           </TableFooter>

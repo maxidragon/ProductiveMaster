@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { getNotes, searchNotes } from "../../logic/notes";
 import { Note } from "../../logic/interfaces";
-import { Box, CircularProgress, IconButton, TextField } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  IconButton,
+  TextField,
+  Table,
+} from "@mui/material";
 import NoteCard from "../../Components/CardComponents/NoteCard";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CreateNoteModal from "../../Components/ModalComponents/Create/CreateNoteModal";
@@ -90,11 +96,14 @@ const Notes = () => {
             ))}
           </Box>
           {notes.length > 0 && (
-            <PaginationFooter
-              page={page}
-              totalPages={totalPages}
-              handlePageChange={handlePageChange}
-            />
+            <Table>
+              <PaginationFooter
+                page={page}
+                totalPages={totalPages}
+                handlePageChange={handlePageChange}
+                totalItems={notes.length}
+              />
+            </Table>
           )}
         </>
       )}
