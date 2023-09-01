@@ -13,19 +13,22 @@ import { Link as RouterLink } from "react-router-dom";
 import EditProjectModal from "../../ModalComponents/Edit/EditProjectModal";
 import { statusPretyName } from "../../../logic/other";
 
-const ProjectRow = ({ project }: { project: Project }) => {
+const ProjectRow = (props: {
+  project: Project;
+  handleStatusUpdate: (status: string) => void;
+}) => {
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [editedProject, setEditedProject] = useState<Project>(project);
+  const [editedProject, setEditedProject] = useState<Project>(props.project);
   const handleDelete = async () => {
-    if (project === null) return;
+    if (props.project === null) return;
     confirm({
       description:
         "Are you sure you want to delete this project and all tasks?",
     })
       .then(async () => {
-        const status = await deleteProject(project.id.toString());
+        const status = await deleteProject(props.project.id.toString());
         if (status === 204) {
           enqueueSnackbar("Project deleted!", { variant: "success" });
           setHide(true);
@@ -39,6 +42,11 @@ const ProjectRow = ({ project }: { project: Project }) => {
   };
   const updateProject = (project: Project) => {
     setEditedProject(project);
+  };
+
+  const handleCloseEditModal = () => {
+    setEdit(false);
+    props.handleStatusUpdate(editedProject.status);
   };
 
   return (
@@ -92,7 +100,7 @@ const ProjectRow = ({ project }: { project: Project }) => {
       {edit && (
         <EditProjectModal
           open={edit}
-          handleClose={() => setEdit(false)}
+          handleClose={handleCloseEditModal}
           project={editedProject}
           updateProject={updateProject}
         />

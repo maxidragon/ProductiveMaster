@@ -18,7 +18,14 @@ const ProjectsTable = (props: {
   page: number;
   totalPages: number;
   handlePageChange: (page: number) => void;
+  status?: string;
+  fetchData: (pageParam: number, statusParam?: string) => void;
 }) => {
+  const handleStatusUpdate = (status: string) => {
+    if (props.status === status) return;
+    props.fetchData(props.page, props.status);
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -33,7 +40,11 @@ const ProjectsTable = (props: {
         </TableHead>
         <TableBody>
           {props.projects.map((project: Project) => (
-            <ProjectRow key={project.id} project={project} />
+            <ProjectRow
+              key={project.id}
+              project={project}
+              handleStatusUpdate={handleStatusUpdate}
+            />
           ))}
         </TableBody>
         {props.totalPages > 0 && (

@@ -20,7 +20,13 @@ describe("ProjectRow component", () => {
       <MemoryRouter>
         <Table>
           <TableBody>
-            <ProjectRow project={mockProject} />
+            <ProjectRow
+              project={mockProject}
+              handleStatusUpdate={(status) => {
+                status = "IN_PROGRESS";
+                return status;
+              }}
+            />
           </TableBody>
         </Table>
       </MemoryRouter>,

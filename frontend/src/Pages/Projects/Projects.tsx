@@ -161,6 +161,8 @@ const Projects = () => {
           page={page}
           totalPages={totalPages}
           handlePageChange={handlePageChange}
+          status={status}
+          fetchData={fetchData}
         />
       )}
       {createModalOpen && (
