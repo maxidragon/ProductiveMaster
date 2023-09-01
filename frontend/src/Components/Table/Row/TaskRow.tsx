@@ -19,6 +19,7 @@ import { deleteTask, updateTask } from "../../../logic/tasks";
 import EditTaskModal from "../../ModalComponents/Edit/EditTaskModal";
 import { Link as RouterLink } from "react-router-dom";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import { statusPretyName } from "../../../logic/other";
 
 const TaskRow = (props: {
   task: Task;
@@ -96,7 +97,7 @@ const TaskRow = (props: {
               </IconButton>
             </TableCell>
           )}
-          <TableCell>{editedTask.status}</TableCell>
+          <TableCell>{statusPretyName(editedTask.status)}</TableCell>
           <TableCell>
             {editedTask.issue && (
               <IconButton

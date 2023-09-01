@@ -3,6 +3,7 @@ import {
   formatDate,
   formatDateTime,
   formatTime,
+  statusPretyName,
 } from "../other";
 
 describe("formatDate", () => {
@@ -48,5 +49,20 @@ describe("calculateTotalPages", () => {
   });
   it("calculates the total number of pages with a remainder", () => {
     expect(calculateTotalPages(101, 10)).toEqual(11);
+  });
+});
+
+describe("statusPretyName", () => {
+  it("returns the pretty name for a status", () => {
+    expect(statusPretyName("TODO")).toEqual("To do");
+  });
+  it("returns the pretty name for a status", () => {
+    expect(statusPretyName("IN_PROGRESS")).toEqual("In progress");
+  });
+  it("returns the pretty name for a status", () => {
+    expect(statusPretyName("DONE")).toEqual("Done");
+  });
+  it("returns an empty string for an unknown status", () => {
+    expect(statusPretyName("UNKNOWN")).toEqual("");
   });
 });

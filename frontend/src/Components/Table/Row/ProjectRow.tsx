@@ -11,6 +11,7 @@ import { enqueueSnackbar } from "notistack";
 import { deleteProject } from "../../../logic/projects";
 import { Link as RouterLink } from "react-router-dom";
 import EditProjectModal from "../../ModalComponents/Edit/EditProjectModal";
+import { statusPretyName } from "../../../logic/other";
 
 const ProjectRow = ({ project }: { project: Project }) => {
   const confirm = useConfirm();
@@ -51,7 +52,7 @@ const ProjectRow = ({ project }: { project: Project }) => {
             {editedProject.title}
           </TableCell>
           <TableCell>{editedProject.description}</TableCell>
-          <TableCell>{editedProject.status}</TableCell>
+          <TableCell>{statusPretyName(editedProject.status)}</TableCell>
           <TableCell>
             {editedProject.num_tasks_todo},{" "}
             {editedProject.num_tasks_in_progress},{" "}

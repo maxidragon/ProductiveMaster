@@ -30,7 +30,7 @@ describe("ProjectRow component", () => {
     expect(title).toBeInTheDocument();
     const description = screen.getByText("Mock Description");
     expect(description).toBeInTheDocument();
-    const status = screen.getByText("IN_PROGRESS");
+    const status = screen.getByText("In progress");
     expect(status).toBeInTheDocument();
   });
 });

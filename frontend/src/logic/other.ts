@@ -18,3 +18,16 @@ export const formatDateTime = (date: Date): string => {
 export const calculateTotalPages = (count: number, perPage: number): number => {
   return Math.ceil(count / perPage);
 };
+
+export const statusPretyName = (status: string): string => {
+  switch (status) {
+    case "TODO":
+      return "To do";
+    case "IN_PROGRESS":
+      return "In progress";
+    case "DONE":
+      return "Done";
+    default:
+      return "";
+  }
+};
