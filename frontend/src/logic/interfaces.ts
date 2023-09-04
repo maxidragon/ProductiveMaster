@@ -22,6 +22,8 @@ export interface Project {
   num_tasks_todo?: number;
   num_tasks_in_progress?: number;
   num_tasks_done?: number;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface Task {
@@ -33,6 +35,8 @@ export interface Task {
   issue?: string;
   pull_request?: string;
   project: Project;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface Activity {

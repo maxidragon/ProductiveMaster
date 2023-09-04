@@ -11,9 +11,9 @@ class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = ('id', 'title', 'description', 'status', 'github', 'owner',
-                  'num_tasks_todo', 'num_tasks_in_progress', 'num_tasks_done')
+                  'num_tasks_todo', 'num_tasks_in_progress', 'num_tasks_done', 'created_at', 'updated_at')
         read_only_fields = ('owner', 'num_tasks_todo',
-                            'num_tasks_in_progress', 'num_tasks_done')
+                            'num_tasks_in_progress', 'num_tasks_done', 'created_at', 'updated_at')
 
     def get_num_tasks_todo(self, obj):
         return obj.tasks.filter(status='TODO').count()
@@ -30,8 +30,8 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ('id', 'title', 'description', 'status', 'high_priority',
-                  'created_at', 'owner', 'project', 'issue', 'pull_request')
-        read_only_fields = ('created_at', 'owner')
+                  'created_at', 'updated_at', 'owner', 'project', 'issue', 'pull_request')
+        read_only_fields = ('created_at', 'updated_at', 'owner')
 
 
 class TaskListSerializer(serializers.ModelSerializer):
@@ -40,8 +40,8 @@ class TaskListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ('id', 'title', 'description', 'status', 'high_priority',
-                  'created_at', 'owner', 'project', 'issue', 'pull_request')
-        read_only_fields = ('created_at', 'owner')
+                  'created_at', 'updated_at', 'owner', 'project', 'issue', 'pull_request')
+        read_only_fields = ('created_at', 'updated_at', 'owner')
 
 class DocumentSerializer(serializers.ModelSerializer):
 

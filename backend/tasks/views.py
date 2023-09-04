@@ -26,7 +26,7 @@ class ListTask(generics.ListAPIView):
 
     def get_queryset(self):
         status = self.kwargs.get('status', 'TODO')
-        return Task.objects.filter(owner=self.request.user, status=status).order_by('-created_at')
+        return Task.objects.filter(owner=self.request.user, status=status).order_by('-updated_at')
 
 
 class TasksForProject(generics.ListAPIView):
@@ -36,7 +36,7 @@ class TasksForProject(generics.ListAPIView):
     def get_queryset(self):
         project_id = self.kwargs['project_id']
         queryset = Task.objects.filter(
-            project=project_id, owner=self.request.user).order_by('-created_at')
+            project=project_id, owner=self.request.user).order_by('-updated_at')
         return queryset
 
 
@@ -48,7 +48,7 @@ class TasksForProjectWithStatus(generics.ListAPIView):
         project_id = self.kwargs['project_id']
         status = self.kwargs.get('status')
         queryset = Task.objects.filter(
-            project=project_id, owner=self.request.user, status=status).order_by('-created_at')
+            project=project_id, owner=self.request.user, status=status).order_by('-updated_at')
         return queryset
 
 
@@ -58,7 +58,7 @@ class HighPriorityTasks(generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Task.objects.filter(owner=self.request.user, high_priority=True).order_by(
-            '-created_at').exclude(status='DONE')
+            '-updated_at').exclude(status='DONE')
         return queryset
 
 
@@ -69,7 +69,7 @@ class SearchTask(generics.ListAPIView):
         search = self.kwargs.get('search')
         status = self.kwargs.get('status')
         queryset = Task.objects.filter(
-            owner=self.request.user, title__icontains=search, status=status).order_by('-created_at')
+            owner=self.request.user, title__icontains=search, status=status).order_by('-updated_at')
         return queryset
 
 
@@ -81,7 +81,7 @@ class SearchTaskFromProject(generics.ListAPIView):
         search = self.kwargs.get('search')
         status = self.kwargs.get('status')
         queryset = Task.objects.filter(
-            owner=self.request.user, title__icontains=search, project=project_id).order_by('-created_at')
+            owner=self.request.user, title__icontains=search, project=project_id).order_by('-updated_at')
         if status is not None:
             queryset = queryset.filter(status=status)
         return queryset
@@ -97,7 +97,7 @@ class ListCreateProject(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
 
     def get_queryset(self):
-        return Project.objects.filter(owner=self.request.user).order_by('title')
+        return Project.objects.filter(owner=self.request.user).order_by('-updated_at')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -108,7 +108,7 @@ class ProjectsByStatus(generics.ListAPIView):
 
     def get_queryset(self):
         status = self.kwargs['status']
-        return Project.objects.filter(owner=self.request.user, status=status).order_by('title')
+        return Project.objects.filter(owner=self.request.user, status=status).order_by('-updated_at')
 
 
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -122,7 +122,7 @@ class SearchProjects(generics.ListAPIView):
 
     def get_queryset(self):
         search = self.kwargs['search']
-        return Project.objects.filter(owner=self.request.user, title__icontains=search).order_by('title')
+        return Project.objects.filter(owner=self.request.user, title__icontains=search).order_by('-updated_at')
 
 
 class SearchProjectsByStatus(generics.ListAPIView):
@@ -131,7 +131,7 @@ class SearchProjectsByStatus(generics.ListAPIView):
     def get_queryset(self):
         search = self.kwargs['search']
         status = self.kwargs['status']
-        return Project.objects.filter(owner=self.request.user, title__icontains=search, status=status).order_by('title')
+        return Project.objects.filter(owner=self.request.user, title__icontains=search, status=status).order_by('-updated_at')
 
 
 class ListDocumentForProject(generics.ListAPIView):
@@ -141,7 +141,7 @@ class ListDocumentForProject(generics.ListAPIView):
     def get_queryset(self):
         project_id = self.kwargs['project_id']
         print(Document.objects.filter(project=project_id))
-        return Document.objects.filter(project=project_id).order_by('-created_at')
+        return Document.objects.filter(project=project_id).order_by('-updated_at')
 
 
 class CreateDocument(APIView):
