@@ -12,6 +12,8 @@ const mockProject = {
   num_tasks_todo: 1,
   num_tasks_in_progress: 1,
   num_tasks_completed: 0,
+  created_at: new Date("2021-10-10T10:10:10.000Z"),
+  updated_at: new Date("2021-10-10T10:10:10.000Z"),
 };
 
 describe("ProjectRow component", () => {

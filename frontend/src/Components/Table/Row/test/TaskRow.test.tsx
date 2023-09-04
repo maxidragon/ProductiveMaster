@@ -17,7 +17,11 @@ const mockTask = {
     description: "Mock Description",
     status: "IN_PROGRESS",
     github: "https://github.com",
+    created_at: new Date("2021-10-10T10:10:10.000Z"),
+    updated_at: new Date("2021-10-10T10:10:10.000Z"),
   },
+  created_at: new Date("2021-10-10T10:10:10.000Z"),
+  updated_at: new Date("2021-10-10T10:10:10.000Z"),
 };
 
 describe("TaskRow component", () => {

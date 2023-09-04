@@ -26,7 +26,6 @@ describe("Dashboard component", () => {
         <Dashboard />
       </MemoryRouter>,
     );
-
     const githubStats = screen.getByText("Github stats");
     const time = screen.getByText("Time");
     const highPriorityTasks = screen.getByText("High priority tasks");
