@@ -94,4 +94,6 @@ export interface Document {
   title: string;
   url: string;
   project: number;
+  created_at: Date;
+  updated_at: Date;
 }
