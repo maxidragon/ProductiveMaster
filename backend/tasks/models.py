@@ -17,6 +17,7 @@ class Task(models.Model):
     pull_request = models.URLField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    completed_at = models.DateTimeField(null=True, blank=True) 
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
     project = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
     

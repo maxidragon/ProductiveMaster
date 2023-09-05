@@ -30,7 +30,7 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ('id', 'title', 'description', 'status', 'high_priority',
-                  'created_at', 'updated_at', 'owner', 'project', 'issue', 'pull_request')
+                  'created_at', 'updated_at', 'completed_at', 'owner', 'project', 'issue', 'pull_request')
         read_only_fields = ('created_at', 'updated_at', 'owner')
 
 
@@ -40,7 +40,7 @@ class TaskListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ('id', 'title', 'description', 'status', 'high_priority',
-                  'created_at', 'updated_at', 'owner', 'project', 'issue', 'pull_request')
+                  'created_at', 'updated_at', 'completed_at', 'owner', 'project', 'issue', 'pull_request')
         read_only_fields = ('created_at', 'updated_at', 'owner')
 
 class DocumentSerializer(serializers.ModelSerializer):

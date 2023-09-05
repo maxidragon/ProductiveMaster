@@ -37,6 +37,7 @@ export interface Task {
   project: Project;
   created_at: Date;
   updated_at: Date;
+  completed_at?: Date;
 }
 
 export interface Activity {

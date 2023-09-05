@@ -50,7 +50,7 @@ const TaskRow = (props: {
     setEditedTask(task);
   };
   const handleComplete = async () => {
-    const task = { ...editedTask, status: "DONE" };
+    const task = { ...editedTask, status: "DONE", completed_at: new Date() };
     setEditedTask(task);
     const response = await updateTask(task);
     if (response.status === 200) {
