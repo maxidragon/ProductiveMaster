@@ -21,6 +21,8 @@ export const calculateTotalPages = (count: number, perPage: number): number => {
 
 export const statusPretyName = (status: string): string => {
   switch (status) {
+    case "PLANNED":
+      return "Planned";
     case "TODO":
       return "To do";
     case "IN_PROGRESS":
