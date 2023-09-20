@@ -34,4 +34,14 @@ export const timezones = [
     display_name: "Sydney",
     name: "Australia/Sydney",
   },
+  {
+    id: 8,
+    display_name: "London",
+    name: "Europe/London",
+  },
+  {
+    id: 9,
+    display_name: "Turkey",
+    name: "Europe/Istanbul",
+  },
 ];
