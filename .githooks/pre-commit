@@ -3,17 +3,29 @@
 # Change to the frontend directory
 cd frontend
 
-# Run prettier
-npm run format
+format_output=$(npm run format-check 2>&1)
+
+# Check the exit code of the previous command
+format_exit_code=$?
 
 # Run ESLint
 npm run lint
 
-# Capture the exit code of the previous command
-result=$?
+# Capture the exit code of the ESLint command
+lint_exit_code=$?
 
-# If the exit code is non-zero, exit with that code to prevent the commit
-if [ $result -ne 0 ]; then
-  echo "Pre-commit checks failed. Commit aborted."
-  exit $result
+# If the format check produced any output (warnings or errors), exit with an error
+if [ $format_exit_code -ne 0 ]; then
+  echo "Prettier format check failed. Commit aborted."
+  echo "$format_output" # Print the format check output
+  exit $format_exit_code
 fi
+
+# If ESLint produced any errors, exit with an error
+if [ $lint_exit_code -ne 0 ]; then
+  echo "ESLint found errors. Commit aborted."
+  exit $lint_exit_code
+fi
+
+# If we reached this point, both checks passed, so the commit can proceed
+exit 0
