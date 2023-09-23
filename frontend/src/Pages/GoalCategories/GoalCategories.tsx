@@ -13,11 +13,13 @@ const GoalCategories = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const fetchData = async (pageParam = 1) => {
     const data = await getGoalCategories(pageParam);
     const totalPagesNumber = calculateTotalPages(data.count, perPage);
     setTotalPages(totalPagesNumber);
+    setTotalItems(data.count);
     setPage(pageParam);
     setGoalCategories(data.results);
     setTimeout(() => {
@@ -52,6 +54,7 @@ const GoalCategories = () => {
             goalCategories={goalCategories}
             page={page}
             totalPages={totalPages}
+            totalItems={totalItems}
             handlePageChange={handlePageChange}
           />
         </>

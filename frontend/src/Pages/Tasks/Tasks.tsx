@@ -20,6 +20,7 @@ const Tasks = () => {
   const [status, setStatus] = useState<string>("TODO");
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(
@@ -30,6 +31,7 @@ const Tasks = () => {
       const data = await getTasksByStatus(statusParam, pageParam);
       const totalPagesNumber = calculateTotalPages(data.count, perPage);
       setTotalPages(totalPagesNumber);
+      setTotalItems(data.count);
       setPage(pageParam);
       setTasks(data.results);
       setTimeout(() => {
@@ -55,6 +57,7 @@ const Tasks = () => {
         perPage,
       );
       setTotalPages(totalPagesNumber);
+      setTotalItems(filteredTasks.count);
     } else {
       await fetchData(pageParam, status);
     }
@@ -70,6 +73,7 @@ const Tasks = () => {
     setPage(1);
     const totalPagesNumber = calculateTotalPages(filteredTasks.count, perPage);
     setTotalPages(totalPagesNumber);
+    setTotalItems(filteredTasks.count);
   };
   return (
     <>
@@ -105,6 +109,7 @@ const Tasks = () => {
           multipleProjects={true}
           page={page}
           totalPages={totalPages}
+          totalItems={totalItems}
           handlePageChange={handlePageChange}
           status={status}
           fetchData={fetchData}

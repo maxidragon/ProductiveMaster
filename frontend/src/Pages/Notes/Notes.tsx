@@ -20,12 +20,14 @@ const Notes = () => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [search, setSearch] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const fetchData = async (pageParam = 1) => {
     const data = await getNotes(pageParam);
     const totalPages = calculateTotalPages(data.count, perPage);
     setTotalPages(totalPages);
+    setTotalItems(data.count);
     setPage(pageParam);
     setNotes(data.results);
     setTimeout(() => {
@@ -46,6 +48,7 @@ const Notes = () => {
       setPage(pageParam);
       const totalPages = calculateTotalPages(filteredNotes.count, perPage);
       setTotalPages(totalPages);
+      setTotalItems(filteredNotes.count);
     }
   };
 
@@ -59,6 +62,7 @@ const Notes = () => {
     setNotes(filteredNotes.results);
     const totalPages = calculateTotalPages(filteredNotes.count, perPage);
     setTotalPages(totalPages);
+    setTotalItems(filteredNotes.count);
     setPage(1);
   };
 
@@ -101,7 +105,7 @@ const Notes = () => {
                 page={page}
                 totalPages={totalPages}
                 handlePageChange={handlePageChange}
-                totalItems={notes.length}
+                totalItems={totalItems}
               />
             </Table>
           )}

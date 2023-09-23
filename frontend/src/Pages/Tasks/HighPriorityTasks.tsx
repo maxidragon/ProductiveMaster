@@ -10,12 +10,14 @@ const HighPriorityTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(async (pageParam: number) => {
     const data = await getHighPriorityTasks(pageParam);
     const totalPagesNumber = calculateTotalPages(data.count, perPage);
     setTotalPages(totalPagesNumber);
+    setTotalItems(data.count);
     setPage(pageParam);
     setTasks(data.results);
     setTimeout(() => {
@@ -43,6 +45,7 @@ const HighPriorityTasks = () => {
           multipleProjects={true}
           page={page}
           totalPages={totalPages}
+          totalItems={totalItems}
           handlePageChange={handlePageChange}
           fetchData={fetchData}
         />

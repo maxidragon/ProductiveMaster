@@ -29,6 +29,7 @@ const Projects = () => {
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const fetchData = async (pageParam = 1, status?: string) => {
     if (status !== undefined && status !== "") {
@@ -36,6 +37,7 @@ const Projects = () => {
       setProjects(data.results);
       const totalPagesNumber = calculateTotalPages(data.count, perPage);
       setTotalPages(totalPagesNumber);
+      setTotalItems(data.count);
       setPage(pageParam);
       setTimeout(() => {
         setLoading(false);
@@ -45,6 +47,7 @@ const Projects = () => {
       setProjects(data.results);
       const totalPagesNumber = calculateTotalPages(data.count, perPage);
       setTotalPages(totalPagesNumber);
+      setTotalItems(data.count);
       setPage(pageParam);
       setTimeout(() => {
         setLoading(false);
@@ -109,6 +112,7 @@ const Projects = () => {
         perPage,
       );
       setTotalPages(totalPagesNumber);
+      setTotalItems(filteredProjects.count);
     },
     [status],
   );
@@ -160,6 +164,7 @@ const Projects = () => {
           projects={projects}
           page={page}
           totalPages={totalPages}
+          totalItems={totalItems}
           handlePageChange={handlePageChange}
           status={status}
           fetchData={fetchData}

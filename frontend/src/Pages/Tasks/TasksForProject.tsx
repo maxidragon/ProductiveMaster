@@ -26,6 +26,7 @@ const TasksForProject = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const fetchData = useCallback(
     async (pageParam: number, statusParam?: string) => {
@@ -40,6 +41,7 @@ const TasksForProject = () => {
         );
         const totalPagesNumber = calculateTotalPages(data.count, perPage);
         setTotalPages(totalPagesNumber);
+        setTotalItems(data.count);
         setPage(pageParam);
         setTasks(data.results);
         setTimeout(() => {
@@ -49,6 +51,7 @@ const TasksForProject = () => {
         const data = await getTasksForProject(projectId, pageParam);
         const totalPagesNumber = calculateTotalPages(data.count, perPage);
         setTotalPages(totalPagesNumber);
+        setTotalItems(data.count);
         setPage(pageParam);
         setTasks(data.results);
         setTimeout(() => {
@@ -90,6 +93,7 @@ const TasksForProject = () => {
     setPage(pageParam);
     const totalPagesNumber = calculateTotalPages(filteredTasks.count, perPage);
     setTotalPages(totalPagesNumber);
+    setTotalItems(filteredTasks.count);
   };
 
   const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,6 +118,7 @@ const TasksForProject = () => {
         perPage,
       );
       setTotalPages(totalPagesNumber);
+      setTotalItems(filteredTasks.count);
     } else {
       if (event.target.value === "") {
         fetchData(1, status);
@@ -132,6 +137,7 @@ const TasksForProject = () => {
         perPage,
       );
       setTotalPages(totalPagesNumber);
+      setTotalItems(filteredTasks.count);
     }
     if (event.target.value === "") {
       fetchData(1, status);
@@ -182,6 +188,7 @@ const TasksForProject = () => {
           tasks={tasks}
           page={page}
           totalPages={totalPages}
+          totalItems={totalItems}
           handlePageChange={handlePageChange}
           status={status}
           fetchData={fetchData}

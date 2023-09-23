@@ -16,6 +16,7 @@ const DocumentsTable = (props: {
   documents: DocumentInterface[];
   page: number;
   totalPages: number;
+  totalItems: number;
   handlePageChange: (page: number) => void;
 }) => {
   return (
@@ -37,7 +38,7 @@ const DocumentsTable = (props: {
             <PaginationFooter
               page={props.page}
               totalPages={props.totalPages}
-              totalItems={props.documents.length}
+              totalItems={props.totalItems}
               handlePageChange={props.handlePageChange}
             />
           </TableFooter>

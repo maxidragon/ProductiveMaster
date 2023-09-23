@@ -17,6 +17,7 @@ const ProjectsTable = (props: {
   projects: Project[];
   page: number;
   totalPages: number;
+  totalItems: number;
   handlePageChange: (page: number) => void;
   status?: string;
   fetchData: (pageParam: number, statusParam?: string) => void;
@@ -52,7 +53,7 @@ const ProjectsTable = (props: {
             <PaginationFooter
               page={props.page}
               totalPages={props.totalPages}
-              totalItems={props.projects.length}
+              totalItems={props.totalItems}
               handlePageChange={props.handlePageChange}
             />
           </TableFooter>

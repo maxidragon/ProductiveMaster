@@ -16,6 +16,7 @@ const GoalsTable = (props: {
   goals: Goal[];
   page: number;
   totalPages: number;
+  totalItems: number;
   handlePageChange: (page: number) => void;
 }) => {
   return (
@@ -40,7 +41,7 @@ const GoalsTable = (props: {
               <PaginationFooter
                 page={props.page}
                 totalPages={props.totalPages}
-                totalItems={props.goals.length}
+                totalItems={props.totalItems}
                 handlePageChange={props.handlePageChange}
               />
             </TableFooter>

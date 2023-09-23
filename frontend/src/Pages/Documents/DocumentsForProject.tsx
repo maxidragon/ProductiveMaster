@@ -15,6 +15,7 @@ const DocumentsForProject = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
   const [loading, setLoading] = useState(true);
 
   const fetchData = useCallback(
@@ -24,6 +25,7 @@ const DocumentsForProject = () => {
       }
       const data = await getDocumentsForProject(+projectId, pageParam);
       const totalPagesNumber = calculateTotalPages(data.count, perPage);
+      setTotalItems(data.count);
       setTotalPages(totalPagesNumber);
       setPage(pageParam);
       setDocuments(data.results);
@@ -63,6 +65,7 @@ const DocumentsForProject = () => {
           documents={documents}
           page={page}
           totalPages={totalPages}
+          totalItems={totalItems}
           handlePageChange={handlePageChange}
         />
       )}
