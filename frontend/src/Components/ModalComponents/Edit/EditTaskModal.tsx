@@ -64,7 +64,7 @@ const EditTaskModal = (props: {
         <Grid container sx={formStyle}>
           <Grid item>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Edit project
+              Edit task
             </Typography>
           </Grid>
           <Grid item>
