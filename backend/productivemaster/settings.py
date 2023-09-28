@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'goals',
     'tasks',
     'user_auth',
+    'learning',
 ]
 
 MIDDLEWARE = [
