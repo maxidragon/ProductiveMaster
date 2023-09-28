@@ -140,7 +140,6 @@ class ListDocumentForProject(generics.ListAPIView):
 
     def get_queryset(self):
         project_id = self.kwargs['project_id']
-        print(Document.objects.filter(project=project_id))
         return Document.objects.filter(project=project_id).order_by('-updated_at')
 
 
