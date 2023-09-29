@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import LearningCategorySerializer, LearningResourceSerializer
+from .serializers import LearningCategorySerializer, LearningResourceSerializer, LearningSerializer
 from .models import Learning, LearningCategory, LearningResource
 from .permissions import IsOwner
 
@@ -42,4 +42,18 @@ class CreateLearningResource(APIView):
 class LearningResourceDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = LearningResource.objects.all()
     serializer_class = LearningResourceSerializer
+    permission_classes = [IsOwner]
+    
+class ListCreateLearnings(generics.ListCreateAPIView):
+    serializer_class = LearningSerializer
+
+    def get_queryset(self):
+        return Learning.objects.filter(owner=self.request.user).order_by('-updated_at')
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+        
+class LearningDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Learning.objects.all()
+    serializer_class = LearningSerializer
     permission_classes = [IsOwner]
