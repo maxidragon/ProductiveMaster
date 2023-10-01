@@ -10,8 +10,8 @@ class LearningCategorySerializer(serializers.ModelSerializer):
 class LearningResourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = LearningResource
-        fields = ('id', 'title', 'owner')
-        read_only_fields = ('owner',)
+        fields = ('id', 'title', 'description', 'url', 'learning', 'owner', 'created_at', 'updated_at')
+        read_only_fields = ('owner', 'created_at', 'updated_at')
     
 class LearningSerializer(serializers.ModelSerializer):
     class Meta:

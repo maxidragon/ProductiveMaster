@@ -35,7 +35,7 @@ class CreateLearningResource(APIView):
         if learning.owner != request.user:
             return Response(status=status.HTTP_403_FORBIDDEN)
         if serializer.is_valid():
-            serializer.save(owner=request.user)
+            serializer.save(owner=request.user, learning=learning)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
