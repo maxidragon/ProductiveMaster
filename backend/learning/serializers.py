@@ -16,5 +16,5 @@ class LearningResourceSerializer(serializers.ModelSerializer):
 class LearningSerializer(serializers.ModelSerializer):
     class Meta:
         model = Learning
-        fields = ('id', 'title', 'owner')
-        read_only_fields = ('owner',)
+        fields = ('id', 'title', 'owner', 'description', 'status', 'learning_category', 'created_at', 'updated_at')
+        read_only_fields = ('owner', 'created_at', 'updated_at')
