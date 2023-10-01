@@ -9,7 +9,7 @@ class ListCreateLearningCategory(generics.ListCreateAPIView):
     serializer_class = LearningCategorySerializer
 
     def get_queryset(self):
-        return LearningCategory.objects.filter(owner=self.request.user).order_by('title')
+        return LearningCategory.objects.filter(owner=self.request.user).order_by('name')
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -57,3 +57,12 @@ class LearningDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Learning.objects.all()
     serializer_class = LearningSerializer
     permission_classes = [IsOwner]
+    
+class SearchLearnings(generics.ListAPIView):
+    serializer_class = LearningSerializer
+
+    def get_queryset(self):
+        search = self.kwargs.get('search')
+        queryset = Learning.objects.filter(
+            owner=self.request.user, title__icontains=search).order_by('-updated_at')
+        return queryset
