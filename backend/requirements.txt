@@ -3,7 +3,7 @@ autopep8==2.0.4
 Django==4.2.5
 django-cors-headers==4.2.0
 djangorestframework==3.14.0
-packaging==23.1
+packaging==23.2
 psycopg2==2.9.8
 pycodestyle==2.11.0
 python-dotenv==1.0.0
