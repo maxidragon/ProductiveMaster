@@ -12,7 +12,7 @@ class CreateListLearningCategoryTest(TestCase):
         self.user = User.objects.create_user(
             username='testuser', password='testpassword')
         self.learning_category = LearningCategory.objects.create(
-            name='Test Learning Category', description='Test Learning Category Description', owner=self.user)
+            name='Test Learning Category', owner=self.user)
 
     def authenticate(self):
         response = self.client.post(reverse(
@@ -29,8 +29,7 @@ class CreateListLearningCategoryTest(TestCase):
 
     def test_create_learning_category(self):
         url = reverse('learning-categories')
-        data = {'name': 'Test Learning Category 2',
-                'description': 'Test Learning Category Description 2'}
+        data = {'name': 'Test Learning Category Updated'}
         token = self.authenticate()
         response = self.client.post(
             url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
@@ -46,9 +45,9 @@ class LearningCategoryDetailTest(TestCase):
         self.user2 = User.objects.create_user(
             username='nonowner', password='nonownerpassword')
         self.learning_category = LearningCategory.objects.create(
-            name='Test Learning Category', description='Test Learning Category Description', owner=self.user)
+            name='Test Learning Category', owner=self.user)
         self.learning_category2 = LearningCategory.objects.create(
-            name='Test Learning Category 2', description='Test Learning Category Description 2', owner=self.user2)
+            name='Test Learning Category 2', owner=self.user2)
 
     def authenticate(self, username, password):
         response = self.client.post(reverse(
@@ -74,8 +73,7 @@ class LearningCategoryDetailTest(TestCase):
     def test_update_learning_category_as_owner(self):
         url = reverse('category-detail',
                       kwargs={'pk': self.learning_category.id})
-        data = {'name': 'Test Learning Category Updated',
-                'description': 'Test Learning Category Description Updated'}
+        data = {'name': 'Test Learning Category Updated'}
         token = self.authenticate('testuser', 'testpassword')
         response = self.client.put(
             url, data, HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')
@@ -85,8 +83,7 @@ class LearningCategoryDetailTest(TestCase):
     def test_update_learning_category_as_non_owner(self):
         url = reverse('category-detail',
                       kwargs={'pk': self.learning_category.id})
-        data = {'name': 'Test Learning Category Updated',
-                'description': 'Test Learning Category Description Updated'}
+        data = {'name': 'Test Learning Category Updated'}
         token = self.authenticate('nonowner', 'nonownerpassword')
         response = self.client.put(
             url, data, HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')
@@ -113,7 +110,7 @@ class ListLearningResourcesTest(TestCase):
         self.user = User.objects.create_user(
             username='testuser', password='testpassword')
         self.learning_category = LearningCategory.objects.create(
-            name='Test Learning Category', description='Test Learning Category Description', owner=self.user)
+            name='Test Learning Category', owner=self.user)
         self.learning = Learning.objects.create(
             title='Test Learning', description='Test Learning Description', learning_category=self.learning_category, owner=self.user)
         self.learning_resource = LearningResource.objects.create(
@@ -140,7 +137,7 @@ class CreateLearningResourceTest(TestCase):
         self.user = User.objects.create_user(
             username='testuser', password='testpassword')
         self.learning_category = LearningCategory.objects.create(
-            name='Test Learning Category', description='Test Learning Category Description', owner=self.user)
+            name='Test Learning Category', owner=self.user)
         self.learning = Learning.objects.create(
             title='Test Learning', description='Test Learning Description', learning_category=self.learning_category, owner=self.user)
         self.learning_resource = LearningResource.objects.create(
@@ -173,7 +170,7 @@ class LearningResourceTest(TestCase):
         self.user2 = User.objects.create_user(
             username='nonowner', password='nonownerpassword')
         self.learning_category = LearningCategory.objects.create(
-            name='Test Learning Category', description='Test Learning Category Description', owner=self.user)
+            name='Test Learning Category', owner=self.user)
         self.learning = Learning.objects.create(
             title='Test Learning', description='Test Learning Description', learning_category=self.learning_category, owner=self.user)
         self.learning_resource = LearningResource.objects.create(
@@ -240,7 +237,7 @@ class ListLearningsTest(TestCase):
         self.user = User.objects.create_user(
             username='testuser', password='testpassword')
         self.learning_category = LearningCategory.objects.create(
-            name='Test Learning Category', description='Test Learning Category Description', owner=self.user)
+            name='Test Learning Category', owner=self.user)
         self.learning = Learning.objects.create(
             title='Test Learning', description='Test Learning Description', learning_category=self.learning_category, owner=self.user)
         
@@ -263,7 +260,7 @@ class CreateLearningTest(TestCase):
         self.user = User.objects.create_user(
             username='testuser', password='testpassword')
         self.learning_category = LearningCategory.objects.create(
-            name='Test Learning Category', description='Test Learning Category Description', owner=self.user)
+            name='Test Learning Category', owner=self.user)
         self.learning = Learning.objects.create(
             title='Test Learning', description='Test Learning Description', learning_category=self.learning_category, owner=self.user)
         
@@ -289,7 +286,7 @@ class LearningDetailTest(TestCase):
         self.user2 = User.objects.create_user(
             username='nonowner', password='nonownerpassword')
         self.learning_category = LearningCategory.objects.create(
-            name='Test Learning Category', description='Test Learning Category Description', owner=self.user)
+            name='Test Learning Category', owner=self.user)
         self.learning = Learning.objects.create(
             title='Test Learning', description='Test Learning Description', learning_category=self.learning_category, owner=self.user)
    
@@ -346,9 +343,9 @@ class SearchLearningsTest(TestCase):
         self.user2 = User.objects.create_user(
             username='nonowner', password='nonownerpassword')
         self.learning_category = LearningCategory.objects.create(
-            name='Test Learning Category', description='Test Learning Category Description', owner=self.user)
+            name='Test Learning Category', owner=self.user)
         self.learning = Learning.objects.create(
-            title='Test Learning', description='Test Learning Description', learning_category=self.learning_category, owner=self.user)
+            title='Test Learning', description='Test Learning Description', learning_category=self.learning_category, owner=self.user, status='TO_LEARN')
    
     def authenticate(self, username, password):
         response = self.client.post(reverse(
@@ -357,14 +354,14 @@ class SearchLearningsTest(TestCase):
         return token
     
     def test_search_learnings(self):
-        url = reverse('search-learnings', kwargs={'search': 'Test'})
+        url = reverse('search-learnings', kwargs={'search': 'Test', 'status': 'TO_LEARN'})
         token = self.authenticate('testuser', 'testpassword')
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['results']), 1)
         
     def test_search_learnings_as_non_owner(self):
-        url = reverse('search-learnings', kwargs={'search': 'Test'})
+        url = reverse('search-learnings', kwargs={'search': 'Test', 'status': 'TO_LEARN'})
         token = self.authenticate('nonowner', 'nonownerpassword')
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, 200)
