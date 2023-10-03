@@ -7,6 +7,8 @@ import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
 import { statusPretyName } from "../../../logic/other";
 import { deleteLearning } from "../../../logic/learning";
+import { Link as RouterLink } from "react-router-dom";
+import DescriptionIcon from "@mui/icons-material/Description";
 import EditLearningModal from "../../ModalComponents/Edit/EditLearningModal";
 
 const LearningRow = (props: {
@@ -57,6 +59,12 @@ const LearningRow = (props: {
           <TableCell>{editedLearning.description}</TableCell>
           <TableCell>{statusPretyName(editedLearning.status)}</TableCell>
           <TableCell>
+            <IconButton
+              component={RouterLink}
+              to={`/learning/${editedLearning.id}/resources`}
+            >
+              <DescriptionIcon />
+            </IconButton>
             <IconButton onClick={() => setEdit(true)}>
               <EditIcon />
             </IconButton>

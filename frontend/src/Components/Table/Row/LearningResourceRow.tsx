@@ -1,50 +1,50 @@
 import { useState } from "react";
 import { TableRow, TableCell, IconButton, Link } from "@mui/material";
-import { Document as DocumentInterface } from "../../../logic/interfaces";
+import { LearningResource } from "../../../logic/interfaces";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
-import EditDocumentModal from "../../ModalComponents/Edit/EditDocumentModal";
-import { deleteDocument } from "../../../logic/documents";
+import EditLearningResourceModal from "../../ModalComponents/Edit/EditLearningResource";
+import { deleteLearningResource } from "../../../logic/learningResources";
 
-const DocumentRow = ({ document }: { document: DocumentInterface }) => {
+const LearningResourceRow = ({ resource }: { resource: LearningResource }) => {
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [editedDocument, setEditedDocument] =
-    useState<DocumentInterface>(document);
+  const [editedResource, setEditedResource] =
+    useState<LearningResource>(resource);
   const handleDelete = async () => {
-    if (document === null) return;
+    if (resource === null) return;
     confirm({
-      description: "Are you sure you want to delete this document?",
+      description: "Are you sure you want to delete this resource?",
     })
       .then(async () => {
-        const status = await deleteDocument(document.id);
+        const status = await deleteLearningResource(resource.id);
         if (status === 204) {
-          enqueueSnackbar("Document deleted!", { variant: "success" });
+          enqueueSnackbar("Resource deleted!", { variant: "success" });
           setHide(true);
         } else {
           enqueueSnackbar("Something went wrong!", { variant: "error" });
         }
       })
       .catch(() => {
-        enqueueSnackbar("Document not deleted!", { variant: "info" });
+        enqueueSnackbar("Resource not deleted!", { variant: "info" });
       });
   };
-  const updateDocument = (documentParam: DocumentInterface) => {
-    setEditedDocument(documentParam);
+  const updateResource = (resourceParam: LearningResource) => {
+    setEditedResource(resourceParam);
   };
 
   return (
     <>
       {!hide && (
         <TableRow
-          key={editedDocument.id}
+          key={editedResource.id}
           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         >
           <TableCell component="th" scope="row">
-            <Link href={editedDocument.url}>{editedDocument.title}</Link>
+            <Link href={editedResource.url}>{editedResource.title}</Link>
           </TableCell>
 
           <TableCell>
@@ -58,15 +58,15 @@ const DocumentRow = ({ document }: { document: DocumentInterface }) => {
         </TableRow>
       )}
       {edit && (
-        <EditDocumentModal
+        <EditLearningResourceModal
           open={edit}
           handleClose={() => setEdit(false)}
-          document={editedDocument}
-          updateDocument={updateDocument}
+          resource={editedResource}
+          updateResource={updateResource}
         />
       )}
     </>
   );
 };
 
-export default DocumentRow;
+export default LearningResourceRow;

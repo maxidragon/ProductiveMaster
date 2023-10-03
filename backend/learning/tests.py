@@ -114,7 +114,7 @@ class ListLearningResourcesTest(TestCase):
         self.learning = Learning.objects.create(
             title='Test Learning', description='Test Learning Description', learning_category=self.learning_category, owner=self.user)
         self.learning_resource = LearningResource.objects.create(
-            title='Test Learning Resource', description='Test Learning Resource Description', url='http://www.test.com', learning=self.learning, owner=self.user)
+            title='Test Learning Resource', url='http://www.test.com', learning=self.learning, owner=self.user)
 
     def authenticate(self):
         response = self.client.post(reverse(
@@ -141,7 +141,7 @@ class CreateLearningResourceTest(TestCase):
         self.learning = Learning.objects.create(
             title='Test Learning', description='Test Learning Description', learning_category=self.learning_category, owner=self.user)
         self.learning_resource = LearningResource.objects.create(
-            title='Test Learning Resource', description='Test Learning Resource Description', url='http://www.test.com', learning=self.learning, owner=self.user)
+            title='Test Learning Resource', url='http://www.test.com', learning=self.learning, owner=self.user)
 
     def authenticate(self):
         response = self.client.post(reverse(
@@ -152,7 +152,6 @@ class CreateLearningResourceTest(TestCase):
     def test_create_learning_resource(self):
         url = reverse('create-learning-resource')
         data = {'title': 'Test Learning Resource 2',
-                'description': 'Test Learning Resource Description 2',
                 'url': 'http://www.test2.com',
                 'learning': self.learning.id}
         token = self.authenticate()
@@ -174,7 +173,7 @@ class LearningResourceTest(TestCase):
         self.learning = Learning.objects.create(
             title='Test Learning', description='Test Learning Description', learning_category=self.learning_category, owner=self.user)
         self.learning_resource = LearningResource.objects.create(
-            title='Test Learning Resource', description='Test Learning Resource Description', url='http://www.test.com', learning=self.learning, owner=self.user)
+            title='Test Learning Resource', url='http://www.test.com', learning=self.learning, owner=self.user)
 
     def authenticate(self, username, password):
         response = self.client.post(reverse(
@@ -199,7 +198,6 @@ class LearningResourceTest(TestCase):
     def test_update_learning_resource_as_owner(self):
         url = reverse('learning-resource-detail', kwargs={'pk': self.learning_resource.id})
         data = {'title': 'Test Learning Resource Updated',
-                'description': 'Test Learning Resource Description Updated',
                 'url': 'http://www.test.com/updated',
                 'learning': self.learning.id}
         token = self.authenticate('testuser', 'testpassword')
@@ -211,7 +209,6 @@ class LearningResourceTest(TestCase):
     def test_update_learning_resource_as_non_owner(self):
         url = reverse('learning-resource-detail', kwargs={'pk': self.learning_resource.id})
         data = {'title': 'Test Learning Resource Updated',
-                'description': 'Test Learning Resource Description Updated',
                 'url': 'http://www.test.com/updated',
                 'learning': self.learning.id}
         token = self.authenticate('nonowner', 'nonownerpassword')

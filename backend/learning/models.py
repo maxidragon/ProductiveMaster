@@ -23,7 +23,6 @@ class LearningCategory(models.Model):
     
 class LearningResource(models.Model):
     title = models.CharField(max_length=100)
-    description = models.TextField()
     url = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

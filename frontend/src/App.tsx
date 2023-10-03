@@ -21,6 +21,7 @@ import Settings from "./Pages/Settings/Settings";
 import DocumentsForProject from "./Pages/Documents/DocumentsForProject";
 import Learning from "./Pages/Learning/Learning";
 import LearningCategories from "./Pages/LearningCategories/LearningCategories";
+import LearningResources from "./Pages/LearningResources/LearningResources";
 
 const router = createHashRouter([
   {
@@ -82,6 +83,10 @@ const router = createHashRouter([
   {
     path: "/learning/categories",
     element: <Layout children={<LearningCategories />} />,
+  },
+  {
+    path: "learning/:learningId/resources",
+    element: <Layout children={<LearningResources />} />,
   },
   {
     path: "*",

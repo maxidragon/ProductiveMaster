@@ -23,5 +23,5 @@
   },
   "include": [
     "src"
-  ]
+, "src/Components/Table/Row/LearningResourceRow.tsx"  ]
 }
