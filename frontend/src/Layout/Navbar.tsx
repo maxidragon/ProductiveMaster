@@ -12,6 +12,7 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 import NoteAltIcon from "@mui/icons-material/NoteAlt";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import SettingsIcon from "@mui/icons-material/Settings";
+import BookIcon from "@mui/icons-material/Book";
 
 const Navbar = () => {
   return (
@@ -45,6 +46,12 @@ const Navbar = () => {
           <NoteAltIcon />
         </ListItemIcon>
         <ListItemText primary="Notes" />
+      </ListItemButton>
+      <ListItemButton component={Link} to={"/learning"}>
+        <ListItemIcon>
+          <BookIcon />
+        </ListItemIcon>
+        <ListItemText primary="Learning" />
       </ListItemButton>
       <ListItemButton component={Link} to={"/goals"}>
         <ListItemIcon>

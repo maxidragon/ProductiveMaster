@@ -98,3 +98,32 @@ export interface Document {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface LearningType {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+  created_at: Date;
+  updated_at: Date;
+  learning_category: LearningCategory;
+  owner: number;
+}
+export interface LearningCategory {
+  id: number;
+  name: string;
+  description: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface LearningResource {
+  id: number;
+  title: string;
+  description: string;
+  url: string;
+  created_at: Date;
+  updated_at: Date;
+  learning: number;
+  owner: number;
+}

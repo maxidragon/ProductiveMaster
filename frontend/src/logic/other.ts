@@ -23,6 +23,8 @@ export const statusPretyName = (status: string): string => {
   switch (status) {
     case "PLANNED":
       return "Planned";
+    case "TO_LEARN":
+      return "To learn";
     case "TODO":
       return "To do";
     case "IN_PROGRESS":

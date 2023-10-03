@@ -1,3 +1,4 @@
+import { LearningCategory } from "../../logic/interfaces";
 import {
   TableContainer,
   Paper,
@@ -8,45 +9,34 @@ import {
   TableBody,
   TableFooter,
 } from "@mui/material";
-import { Project } from "../../logic/interfaces";
-
-import ProjectRow from "./Row/ProjectRow";
 import PaginationFooter from "../Pagination/PaginationFooter";
+import LearningCategoryRow from "./Row/LearningCategoryRow";
 
-const ProjectsTable = (props: {
-  projects: Project[];
+const LearningCategoriesTable = (props: {
+  learningCategories: LearningCategory[];
   page: number;
   totalPages: number;
   totalItems: number;
   handlePageChange: (page: number) => void;
-  status?: string;
-  fetchData: (pageParam: number, statusParam?: string) => void;
 }) => {
-  const handleStatusUpdate = (status: string) => {
-    if (props.status === status) return;
-    props.fetchData(props.page, props.status);
-  };
-
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }}>
         <TableHead>
           <TableRow>
             <TableCell>Titlte</TableCell>
-            <TableCell>Description</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Tasks (TODO, in progress, done)</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.projects.map((project: Project) => (
-            <ProjectRow
-              key={project.id}
-              project={project}
-              handleStatusUpdate={handleStatusUpdate}
-            />
-          ))}
+          {props.learningCategories.map(
+            (learningCategory: LearningCategory) => (
+              <LearningCategoryRow
+                key={learningCategory.id}
+                learningCategory={learningCategory}
+              />
+            ),
+          )}
         </TableBody>
         {props.totalPages > 0 && (
           <TableFooter>
@@ -63,4 +53,4 @@ const ProjectsTable = (props: {
   );
 };
 
-export default ProjectsTable;
+export default LearningCategoriesTable;

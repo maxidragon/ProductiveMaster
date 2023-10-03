@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import LearningCategorySerializer, LearningResourceSerializer, LearningSerializer
+from .serializers import LearningCategorySerializer, LearningListSerializer, LearningResourceSerializer, LearningSerializer
 from .models import Learning, LearningCategory, LearningResource
 from .permissions import IsOwner
 
@@ -44,15 +44,20 @@ class LearningResourceDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LearningResourceSerializer
     permission_classes = [IsOwner]
     
-class ListCreateLearnings(generics.ListCreateAPIView):
-    serializer_class = LearningSerializer
+class ListLearnings(generics.ListAPIView):
+    serializer_class = LearningListSerializer
 
     def get_queryset(self):
-        return Learning.objects.filter(owner=self.request.user).order_by('-updated_at')
+        status = self.kwargs.get('status')
+        return Learning.objects.filter(owner=self.request.user, status=status).order_by('-updated_at')
 
+
+class CreateLearning(generics.CreateAPIView):
+    serializer_class = LearningSerializer
+    queryset = Learning.objects.all()
+    
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-        
 class LearningDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Learning.objects.all()
     serializer_class = LearningSerializer
@@ -62,7 +67,14 @@ class SearchLearnings(generics.ListAPIView):
     serializer_class = LearningSerializer
 
     def get_queryset(self):
+        status = self.kwargs.get('status')
         search = self.kwargs.get('search')
         queryset = Learning.objects.filter(
-            owner=self.request.user, title__icontains=search).order_by('-updated_at')
+            owner=self.request.user, title__icontains=search, status=status).order_by('-updated_at')
         return queryset
+    
+class ListAllLearningCategories(APIView):
+    def get(self, request):
+        categories = LearningCategory.objects.filter(owner=self.request.user).order_by('name')
+        serializer = LearningCategorySerializer(categories, many=True)
+        return Response(serializer.data)

@@ -8,13 +8,12 @@ import {
   TableBody,
   TableFooter,
 } from "@mui/material";
-import { Project } from "../../logic/interfaces";
-
-import ProjectRow from "./Row/ProjectRow";
+import { LearningType } from "../../logic/interfaces";
 import PaginationFooter from "../Pagination/PaginationFooter";
+import LearningRow from "./Row/LearningRow";
 
-const ProjectsTable = (props: {
-  projects: Project[];
+const LearningsTable = (props: {
+  learnings: LearningType[];
   page: number;
   totalPages: number;
   totalItems: number;
@@ -32,18 +31,18 @@ const ProjectsTable = (props: {
       <Table sx={{ minWidth: 650 }}>
         <TableHead>
           <TableRow>
-            <TableCell>Titlte</TableCell>
+            <TableCell>Title</TableCell>
             <TableCell>Description</TableCell>
+            <TableCell>Category</TableCell>
             <TableCell>Status</TableCell>
-            <TableCell>Tasks (TODO, in progress, done)</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.projects.map((project: Project) => (
-            <ProjectRow
-              key={project.id}
-              project={project}
+          {props.learnings.map((learning: LearningType) => (
+            <LearningRow
+              key={learning.id}
+              learning={learning}
               handleStatusUpdate={handleStatusUpdate}
             />
           ))}
@@ -63,4 +62,4 @@ const ProjectsTable = (props: {
   );
 };
 
-export default ProjectsTable;
+export default LearningsTable;

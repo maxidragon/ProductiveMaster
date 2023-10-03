@@ -6,7 +6,7 @@ import viteTsconfigPaths from "vite-tsconfig-paths";
 import svgrPlugin from "vite-plugin-svgr";
 import checker from "vite-plugin-checker";
 import handlebars from "vite-plugin-handlebars";
-import eslint from 'vite-plugin-eslint';
+import eslint from "vite-plugin-eslint";
 
 // https://vitejs.dev/config/
 export default defineConfig({

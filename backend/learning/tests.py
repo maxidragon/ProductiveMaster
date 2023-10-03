@@ -234,7 +234,7 @@ class LearningResourceTest(TestCase):
         response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, 403)
 
-class ListCreateLearningsTest(TestCase):
+class ListLearningsTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(
@@ -251,14 +251,30 @@ class ListCreateLearningsTest(TestCase):
         return token
     
     def test_list_learnings(self):
-        url = reverse('learnings')
+        url = reverse('list-learnings', kwargs={'status': 'TO_LEARN'})
         token = self.authenticate('testuser', 'testpassword')
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['results']), 1)
+                
+class CreateLearningTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.learning_category = LearningCategory.objects.create(
+            name='Test Learning Category', description='Test Learning Category Description', owner=self.user)
+        self.learning = Learning.objects.create(
+            title='Test Learning', description='Test Learning Description', learning_category=self.learning_category, owner=self.user)
         
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password}, format='json')
+        token = response.data['token']
+        return token
+    
     def test_create_learning(self):
-        url = reverse('learnings')
+        url = reverse('create-learning')
         data = {'title': 'Test Learning 2', 'description': 'Test Learning Description 2', 'learning_category': self.learning_category.id}
         token = self.authenticate('testuser', 'testpassword')
         response = self.client.post(url, data, format='json', HTTP_AUTHORIZATION=f'Token {token}')
