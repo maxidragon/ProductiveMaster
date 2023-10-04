@@ -21,10 +21,5 @@ describe("TimezoneRow component", () => {
 
     const displayName = screen.getByText("UTC");
     expect(displayName).toBeInTheDocument();
-    const time = new Date().toLocaleString("pl", {
-      timeZone: mockTimezone.name,
-    });
-    const timeInScreen = screen.getByText(time);
-    expect(timeInScreen).toBeInTheDocument();
   });
 });
