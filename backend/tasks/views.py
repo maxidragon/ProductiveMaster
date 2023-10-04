@@ -144,7 +144,7 @@ class SearchProjectsByStatus(generics.ListAPIView):
 class RecentProjects(APIView):
     
     def get(self, request):
-        projects = Project.objects.filter(owner=request.user).order_by('-updated_at')[:3]
+        projects = Project.objects.filter(owner=request.user, status="IN_PROGRESS").order_by('-updated_at')[:3]
         serializer = RecentProjectSerializer(projects, many=True)
         return Response(serializer.data)
 
