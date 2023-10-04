@@ -1,7 +1,5 @@
-from django.shortcuts import get_object_or_404
-from .paginators import TasksPaginator
 from .permissions import IsOwner, IsProjectOwner
-from .serializers import DocumentSerializer, ProjectSerializer, RecentProjectSerializer, TaskListSerializer, TaskSerializer
+from .serializers import DocumentSerializer, ProjectSerializer, ProjectStatsSerializer, RecentProjectSerializer, TaskListSerializer, TaskSerializer
 from rest_framework import generics
 from .models import Document, Project, Task
 from rest_framework.views import APIView
@@ -93,13 +91,13 @@ class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     permission_classes = [IsOwner]
-    
+
     def perform_update(self, serializer):
         serializer.save(owner=self.request.user)
-        project = Project.objects.get(pk=serializer.data['project'])     
+        project = Project.objects.get(pk=serializer.data['project'])
         project.updated_at = serializer.data['updated_at']
         project.save()
-        
+
 
 class ListCreateProject(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
@@ -141,12 +139,22 @@ class SearchProjectsByStatus(generics.ListAPIView):
         status = self.kwargs['status']
         return Project.objects.filter(owner=self.request.user, title__icontains=search, status=status).order_by('-updated_at')
 
+
 class RecentProjects(APIView):
-    
+
     def get(self, request):
-        projects = Project.objects.filter(owner=request.user, status="IN_PROGRESS").order_by('-updated_at')[:3]
+        projects = Project.objects.filter(
+            owner=request.user, status="IN_PROGRESS").order_by('-updated_at')[:3]
         serializer = RecentProjectSerializer(projects, many=True)
         return Response(serializer.data)
+
+
+class ProjectStats(APIView):
+
+    def get(self, request, pk):
+        project = Project.objects.get(pk=pk)
+        serializer = ProjectStatsSerializer(project)
+        Response(serializer.data)
 
 class ListDocumentForProject(generics.ListAPIView):
     serializer_class = DocumentSerializer
