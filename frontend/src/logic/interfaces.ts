@@ -112,7 +112,6 @@ export interface LearningType {
 export interface LearningCategory {
   id: number;
   name: string;
-  description: string;
   created_at: Date;
   updated_at: Date;
 }
@@ -120,7 +119,6 @@ export interface LearningCategory {
 export interface LearningResource {
   id: number;
   title: string;
-  description: string;
   url: string;
   created_at: Date;
   updated_at: Date;
