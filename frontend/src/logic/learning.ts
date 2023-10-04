@@ -3,7 +3,7 @@ import { backendRequest } from "./request";
 
 export const getLearningsByStatus = async (status: string, page = 1) => {
   const response = await backendRequest(
-    `/learnings/status/${status}?page=${page}`,
+    `learnings/status/${status}?page=${page}`,
     "GET",
     true,
   );
@@ -16,7 +16,7 @@ export const searchLearnings = async (
   page = 1,
 ) => {
   const response = await backendRequest(
-    `/learnings/search/${query}/status/${status}?page=${page}`,
+    `learnings/search/${query}/status/${status}?page=${page}`,
     "GET",
     true,
   );
@@ -28,7 +28,7 @@ export const createLearning = async (
   description: string,
   category: number,
 ) => {
-  const response = await backendRequest(`/learnings/create/ `, "POST", true, {
+  const response = await backendRequest(`learnings/create/ `, "POST", true, {
     title: name,
     description,
     learning_category: category,
@@ -62,6 +62,6 @@ export const editLearning = async (item: LearningType) => {
 };
 
 export const deleteLearning = async (id: string) => {
-  const response = await backendRequest(`/learnings/${id}`, "DELETE", true);
+  const response = await backendRequest(`learnings/${id}`, "DELETE", true);
   return response.status;
 };
