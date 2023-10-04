@@ -58,6 +58,7 @@ class CreateLearning(generics.CreateAPIView):
     
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
 class LearningDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Learning.objects.all()
     serializer_class = LearningSerializer

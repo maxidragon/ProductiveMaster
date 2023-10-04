@@ -57,6 +57,7 @@ const LearningRow = (props: {
             {editedLearning.title}
           </TableCell>
           <TableCell>{editedLearning.description}</TableCell>
+          <TableCell>{editedLearning.learning_category.name}</TableCell>
           <TableCell>{statusPretyName(editedLearning.status)}</TableCell>
           <TableCell>
             <IconButton

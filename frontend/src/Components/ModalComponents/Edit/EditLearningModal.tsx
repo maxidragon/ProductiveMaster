@@ -111,7 +111,7 @@ const EditLearningModal = (props: {
                   })
                 }
               >
-                <MenuItem value={"TO_LEARAN"}>To learn</MenuItem>
+                <MenuItem value={"TO_LEARN"}>To learn</MenuItem>
                 <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
                 <MenuItem value={"DONE"}>Done</MenuItem>
               </Select>

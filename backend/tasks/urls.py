@@ -14,6 +14,7 @@ urlpatterns = [
     path('tasks/search/status/<str:search>/<str:status>/', views.SearchTask.as_view(), name='search-task'),
     path('tasks/high-priority/', views.HighPriorityTasks.as_view(), name='high-priority-tasks'),
     path('projects/', views.ListCreateProject.as_view(), name='projects'),
+    path('projects/recent/', views.RecentProjects.as_view(), name='recent-projects'),
     path('projects/search/<str:search>/status/<str:status>/', views.SearchProjectsByStatus.as_view(), name='search-projects-with-status'),
     path('projects/search/<str:search>/', views.SearchProjects.as_view(), name='search-projects'),
     path('projects/status/<str:status>/', views.ProjectsByStatus.as_view(), name='projects-by-status'),

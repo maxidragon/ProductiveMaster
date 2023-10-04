@@ -24,6 +24,11 @@ class ProjectSerializer(serializers.ModelSerializer):
     def get_num_tasks_done(self, obj):
         return obj.tasks.filter(status='DONE').count()
 
+class RecentProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ('id', 'title', 'updated_at')
+        read_only_fields = ('updated_at',)
 
 class TaskSerializer(serializers.ModelSerializer):
 

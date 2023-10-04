@@ -14,8 +14,8 @@ export const getProjectsByStatus = async (status: string, page = 1) => {
   return await response.json();
 };
 
-export const getProjectById = async (id: string): Promise<Project> => {
-  const response = await backendRequest(`projects/detail/${id}/`, "GET", true);
+export const getRecentProjects = async () => {
+  const response = await backendRequest("projects/recent/", "GET", true);
   return await response.json();
 };
 

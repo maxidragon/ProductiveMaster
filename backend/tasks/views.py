@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from .paginators import TasksPaginator
 from .permissions import IsOwner, IsProjectOwner
-from .serializers import DocumentSerializer, ProjectSerializer, TaskListSerializer, TaskSerializer
+from .serializers import DocumentSerializer, ProjectSerializer, RecentProjectSerializer, TaskListSerializer, TaskSerializer
 from rest_framework import generics
 from .models import Document, Project, Task
 from rest_framework.views import APIView
@@ -17,6 +17,8 @@ class CreateTask(APIView):
             return Response(status=status.HTTP_403_FORBIDDEN)
         if serializer.is_valid():
             serializer.save(owner=request.user)
+            project.updated_at = serializer.data['updated_at']
+            project.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -91,7 +93,13 @@ class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
     permission_classes = [IsOwner]
-
+    
+    def perform_update(self, serializer):
+        serializer.save(owner=self.request.user)
+        project = Project.objects.get(pk=serializer.data['project'])     
+        project.updated_at = serializer.data['updated_at']
+        project.save()
+        
 
 class ListCreateProject(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
@@ -133,6 +141,12 @@ class SearchProjectsByStatus(generics.ListAPIView):
         status = self.kwargs['status']
         return Project.objects.filter(owner=self.request.user, title__icontains=search, status=status).order_by('-updated_at')
 
+class RecentProjects(APIView):
+    
+    def get(self, request):
+        projects = Project.objects.filter(owner=request.user).order_by('-updated_at')[:3]
+        serializer = RecentProjectSerializer(projects, many=True)
+        return Response(serializer.data)
 
 class ListDocumentForProject(generics.ListAPIView):
     serializer_class = DocumentSerializer

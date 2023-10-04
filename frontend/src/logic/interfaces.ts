@@ -125,3 +125,9 @@ export interface LearningResource {
   learning: number;
   owner: number;
 }
+
+export interface RecentProject {
+  id: number;
+  title: string;
+  updated_at: Date;
+}

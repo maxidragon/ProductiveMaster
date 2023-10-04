@@ -1,10 +1,15 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
+  Collapse,
+  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { RecentProject } from "../logic/interfaces";
+import { getRecentProjects } from "../logic/projects";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FolderCopyIcon from "@mui/icons-material/FolderCopy";
 import PeopleIcon from "@mui/icons-material/People";
@@ -13,8 +18,22 @@ import NoteAltIcon from "@mui/icons-material/NoteAlt";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import SettingsIcon from "@mui/icons-material/Settings";
 import BookIcon from "@mui/icons-material/Book";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import TopicIcon from "@mui/icons-material/Topic";
 
 const Navbar = () => {
+  const [recentProjects, setRecentProjects] = useState<RecentProject[]>([]);
+  const [openProjectNav, setOpenProjectNav] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getRecentProjects();
+      setRecentProjects(data);
+    };
+    fetchData();
+  }, []);
+
   return (
     <List component="nav">
       <ListItemButton component={Link} to={"/"}>
@@ -28,7 +47,31 @@ const Navbar = () => {
           <FolderCopyIcon />
         </ListItemIcon>
         <ListItemText primary="Projects" />
+        <IconButton
+          onClick={() => {
+            setOpenProjectNav(!openProjectNav);
+          }}
+        >
+          {" "}
+          {openProjectNav ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </IconButton>
       </ListItemButton>
+      <Collapse in={openProjectNav} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          {recentProjects.map((project: RecentProject) => (
+            <ListItemButton
+              sx={{ pl: 4 }}
+              component={Link}
+              to={`/tasks/project/${project.id}`}
+            >
+              <ListItemIcon>
+                <TopicIcon />
+              </ListItemIcon>
+              <ListItemText primary={project.title} />
+            </ListItemButton>
+          ))}
+        </List>
+      </Collapse>
       <ListItemButton component={Link} to={"/tasks"}>
         <ListItemIcon>
           <PeopleIcon />
