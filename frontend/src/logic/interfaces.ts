@@ -131,3 +131,9 @@ export interface RecentProject {
   title: string;
   updated_at: Date;
 }
+
+export interface RecentLearning {
+  id: number;
+  title: string;
+  updated_at: Date;
+}

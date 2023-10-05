@@ -25,3 +25,9 @@ class LearningListSerializer(serializers.ModelSerializer):
         model = Learning
         fields = ('id', 'title', 'owner', 'description', 'status', 'learning_category', 'created_at', 'updated_at')
         read_only_fields = ('owner', 'created_at', 'updated_at')
+        
+class RecentLearningsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Learning
+        fields = ('id', 'title', 'updated_at')
+        read_only_fields = ('updated_at',)

@@ -44,7 +44,9 @@ const LearningResourceRow = ({ resource }: { resource: LearningResource }) => {
           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         >
           <TableCell component="th" scope="row">
-            <Link href={editedResource.url}>{editedResource.title}</Link>
+            <Link href={editedResource.url} target="_blank">
+              {editedResource.title}
+            </Link>
           </TableCell>
 
           <TableCell>

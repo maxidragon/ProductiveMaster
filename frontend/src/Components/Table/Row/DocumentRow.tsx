@@ -44,7 +44,9 @@ const DocumentRow = ({ document }: { document: DocumentInterface }) => {
           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         >
           <TableCell component="th" scope="row">
-            <Link href={editedDocument.url}>{editedDocument.title}</Link>
+            <Link href={editedDocument.url} target="_blank">
+              {editedDocument.title}
+            </Link>
           </TableCell>
 
           <TableCell>

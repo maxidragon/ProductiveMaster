@@ -8,7 +8,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { RecentProject } from "../logic/interfaces";
+import { RecentLearning, RecentProject } from "../logic/interfaces";
 import { getRecentProjects } from "../logic/projects";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FolderCopyIcon from "@mui/icons-material/FolderCopy";
@@ -21,15 +21,20 @@ import BookIcon from "@mui/icons-material/Book";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TopicIcon from "@mui/icons-material/Topic";
+import { getRecentLearnings } from "../logic/learning";
 
 const Navbar = () => {
   const [recentProjects, setRecentProjects] = useState<RecentProject[]>([]);
+  const [recentLearnings, setRecentLearnings] = useState<RecentLearning[]>([]);
   const [openProjectNav, setOpenProjectNav] = useState<boolean>(true);
+  const [openLearningNav, setOpenLearningNav] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getRecentProjects();
-      setRecentProjects(data);
+      const projects = await getRecentProjects();
+      const learnings = await getRecentLearnings();
+      setRecentProjects(projects);
+      setRecentLearnings(learnings);
     };
     fetchData();
   }, []);
@@ -63,6 +68,7 @@ const Navbar = () => {
               sx={{ pl: 4 }}
               component={Link}
               to={`/tasks/project/${project.id}`}
+              key={project.id}
             >
               <ListItemIcon>
                 <TopicIcon />
@@ -95,7 +101,32 @@ const Navbar = () => {
           <BookIcon />
         </ListItemIcon>
         <ListItemText primary="Learning" />
+        <IconButton
+          onClick={() => {
+            setOpenLearningNav(!openLearningNav);
+          }}
+        >
+          {" "}
+          {openProjectNav ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </IconButton>
       </ListItemButton>
+      <Collapse in={openLearningNav} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          {recentLearnings.map((learning: RecentLearning) => (
+            <ListItemButton
+              sx={{ pl: 4 }}
+              component={Link}
+              to={`/learning/${learning.id}/resources`}
+              key={learning.id}
+            >
+              <ListItemIcon>
+                <TopicIcon />
+              </ListItemIcon>
+              <ListItemText primary={learning.title} />
+            </ListItemButton>
+          ))}
+        </List>
+      </Collapse>
       <ListItemButton component={Link} to={"/goals"}>
         <ListItemIcon>
           <BarChartIcon />

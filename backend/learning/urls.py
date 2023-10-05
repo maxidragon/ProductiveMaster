@@ -13,6 +13,7 @@ urlpatterns = [
     path('search/<str:search>/status/<str:status>/', views.SearchLearnings.as_view(), name='search-learnings'),
     path('status/<str:status>/', views.ListLearnings.as_view(), name='list-learnings'),
     path('create/', views.CreateLearning.as_view(), name='create-learning'),
+    path('recent/', views.ListRecentLearnings.as_view(), name='recent-learnings'),
     path('<int:pk>/', views.LearningDetail.as_view(), name='learning-detail'),
 ]
 

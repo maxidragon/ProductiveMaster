@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import LearningCategorySerializer, LearningListSerializer, LearningResourceSerializer, LearningSerializer
+from .serializers import LearningCategorySerializer, LearningListSerializer, LearningResourceSerializer, LearningSerializer, RecentLearningsSerializer
 from .models import Learning, LearningCategory, LearningResource
 from .permissions import IsOwner
 
@@ -36,6 +36,8 @@ class CreateLearningResource(APIView):
             return Response(status=status.HTTP_403_FORBIDDEN)
         if serializer.is_valid():
             serializer.save(owner=request.user, learning=learning)
+            learning.updated_at = serializer.data['updated_at']
+            learning.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -44,6 +46,11 @@ class LearningResourceDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LearningResourceSerializer
     permission_classes = [IsOwner]
     
+    def perform_update(self, serializer):
+        serializer.save(owner=self.request.user)
+        learning = Learning.objects.get(pk=serializer.data['learning'])
+        learning.updated_at = serializer.data['updated_at']
+        learning.save()
 class ListLearnings(generics.ListAPIView):
     serializer_class = LearningListSerializer
 
@@ -78,4 +85,12 @@ class ListAllLearningCategories(APIView):
     def get(self, request):
         categories = LearningCategory.objects.filter(owner=self.request.user).order_by('name')
         serializer = LearningCategorySerializer(categories, many=True)
+        return Response(serializer.data)
+    
+    
+class ListRecentLearnings(APIView):
+    def get(self, request):
+        learnings = Learning.objects.filter(
+            owner=request.user, status="IN_PROGRESS").order_by('-updated_at')[:3]
+        serializer = RecentLearningsSerializer(learnings, many=True)
         return Response(serializer.data)
