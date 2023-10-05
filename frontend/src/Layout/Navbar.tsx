@@ -107,7 +107,7 @@ const Navbar = () => {
           }}
         >
           {" "}
-          {openProjectNav ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          {openLearningNav ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </IconButton>
       </ListItemButton>
       <Collapse in={openLearningNav} timeout="auto" unmountOnExit>
