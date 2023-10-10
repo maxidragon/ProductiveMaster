@@ -13,11 +13,12 @@ const ProjectStatsModal = (props: {
 
   useEffect(() => {
     const getStats = async () => {
+      if (!props.open) return;
       const data = await getProjectStatistics(props.id);
       setStats(data);
     };
     getStats();
-  });
+  }, [props.id, props.open]);
 
   return (
     <>
