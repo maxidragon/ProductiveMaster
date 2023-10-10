@@ -154,7 +154,7 @@ class ProjectStats(APIView):
     def get(self, request, pk):
         project = Project.objects.get(pk=pk)
         serializer = ProjectStatsSerializer(project)
-        Response(serializer.data)
+        return Response(serializer.data)
 
 class ListDocumentForProject(generics.ListAPIView):
     serializer_class = DocumentSerializer

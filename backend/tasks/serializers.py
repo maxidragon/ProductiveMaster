@@ -34,7 +34,7 @@ class ProjectStatsSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Project
-        fields = ('id', 'title', 'description', 'status', 'github', 'owner',
+        fields = ('id', 'title', 'owner',
                   'num_tasks_todo', 'num_tasks_in_progress', 'num_tasks_done', 'num_tasks_done_last_week', 'num_tasks_done_last_month', 'created_at', 'updated_at')
         read_only_fields = ('owner', 'num_tasks_todo',
                             'num_tasks_in_progress', 'num_tasks_done', 'num_tasks_done_last_week', 'num_tasks_done_last_month', 'created_at', 'updated_at')

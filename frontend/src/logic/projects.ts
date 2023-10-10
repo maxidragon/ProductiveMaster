@@ -70,3 +70,8 @@ export const searchProjects = async (
   const response = await backendRequest(url, "GET", true);
   return await response.json();
 };
+
+export const getProjectStatistics = async (id: number) => {
+  const response = await backendRequest(`projects/stats/${id}/`, "GET", true);
+  return await response.json();
+};

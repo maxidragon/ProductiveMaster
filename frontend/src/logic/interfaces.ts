@@ -137,3 +137,16 @@ export interface RecentLearning {
   title: string;
   updated_at: Date;
 }
+
+export interface ProjectStats {
+  id: number;
+  title: string;
+  owner: number;
+  num_tasks_todo: number;
+  num_tasks_in_progress: number;
+  num_tasks_done: number;
+  num_tasks_done_last_week: number;
+  num_tasks_done_last_month: number;
+  created_at: Date;
+  updated_at: Date;
+}

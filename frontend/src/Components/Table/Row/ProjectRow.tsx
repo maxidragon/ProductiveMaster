@@ -12,6 +12,8 @@ import { deleteProject } from "../../../logic/projects";
 import { Link as RouterLink } from "react-router-dom";
 import EditProjectModal from "../../ModalComponents/Edit/EditProjectModal";
 import { statusPretyName } from "../../../logic/other";
+import BarChartIcon from "@mui/icons-material/BarChart";
+import ProjectStatsModal from "../../ModalComponents/ProjectStatsModal";
 
 const ProjectRow = (props: {
   project: Project;
@@ -21,6 +23,7 @@ const ProjectRow = (props: {
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editedProject, setEditedProject] = useState<Project>(props.project);
+  const [openStatsModal, setOpenStatsModal] = useState(false);
   const handleDelete = async () => {
     if (props.project === null) return;
     confirm({
@@ -62,11 +65,6 @@ const ProjectRow = (props: {
           <TableCell>{editedProject.description}</TableCell>
           <TableCell>{statusPretyName(editedProject.status)}</TableCell>
           <TableCell>
-            {editedProject.num_tasks_todo},{" "}
-            {editedProject.num_tasks_in_progress},{" "}
-            {editedProject.num_tasks_done}
-          </TableCell>
-          <TableCell>
             {editedProject.github && (
               <IconButton
                 component={Link}
@@ -88,6 +86,9 @@ const ProjectRow = (props: {
             >
               <DescriptionIcon />
             </IconButton>
+            <IconButton onClick={() => setOpenStatsModal(true)}>
+              <BarChartIcon />
+            </IconButton>
             <IconButton onClick={() => setEdit(true)}>
               <EditIcon />
             </IconButton>
@@ -97,6 +98,11 @@ const ProjectRow = (props: {
           </TableCell>
         </TableRow>
       )}
+      <ProjectStatsModal
+        open={openStatsModal}
+        handleClose={() => setOpenStatsModal(false)}
+        id={editedProject.id}
+      />
       {edit && (
         <EditProjectModal
           open={edit}

@@ -35,7 +35,6 @@ const ProjectsTable = (props: {
             <TableCell>Titlte</TableCell>
             <TableCell>Description</TableCell>
             <TableCell>Status</TableCell>
-            <TableCell>Tasks (TODO, in progress, done)</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
