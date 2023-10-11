@@ -83,3 +83,26 @@ export const updateUserData = async (data: UserData) => {
   const response = await backendRequest("auth/data/", "PUT", true, data);
   return response.status;
 };
+
+export const forgotPassword = async (email: string) => {
+  const response = await backendRequest("auth/password/reset/", "POST", false, {
+    email: email,
+  });
+  return response.status;
+};
+
+export const resetPassword = async (token: string, newPassword: string) => {
+  const response = await backendRequest(
+    "auth/password/reset/confirm/",
+    "POST",
+    false,
+    {
+      token: token,
+      password: newPassword,
+    },
+  );
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
+};

@@ -1,7 +1,13 @@
+import os
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.mail import EmailMultiAlternatives
+from django.dispatch import receiver
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django_rest_passwordreset.signals import reset_password_token_created
 from rest_framework.authtoken.models import Token
 
 class UserData(models.Model):
@@ -22,3 +28,24 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 def create_user_data(sender, instance=None, created=False, **kwargs):
     if created:
         UserData.objects.create(user=instance)
+        
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+    context = {
+        'current_user': reset_password_token.user,
+        'username': reset_password_token.user.username,
+        'email': reset_password_token.user.email,
+        'reset_password_url': os.environ.get('FRONTEND_URL') + "/#/auth/password/reset/{token}".format(token=reset_password_token.key),
+    }
+
+    email_html_message = render_to_string('email/user_reset_password.html', context)
+    email_plaintext_message = render_to_string('email/user_reset_password.txt', context)
+
+    msg = EmailMultiAlternatives(
+        "Password Reset for ProductiveMaster",
+        email_plaintext_message,
+        os.environ.get('EMAIL_HOST_USER'),
+        [reset_password_token.user.email]
+    )
+    msg.attach_alternative(email_html_message, "text/html")
+    msg.send()

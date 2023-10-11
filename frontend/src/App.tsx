@@ -22,6 +22,8 @@ import DocumentsForProject from "./Pages/Documents/DocumentsForProject";
 import Learning from "./Pages/Learning/Learning";
 import LearningCategories from "./Pages/LearningCategories/LearningCategories";
 import LearningResources from "./Pages/LearningResources/LearningResources";
+import ForgotPassword from "./Pages/Auth/ForgotPassword/ForgotPassword";
+import ResetPassword from "./Pages/Auth/ResetPassword/ResetPassword";
 
 const router = createHashRouter([
   {
@@ -35,6 +37,14 @@ const router = createHashRouter([
   {
     path: "/auth/register",
     element: <Register />,
+  },
+  {
+    path: "/auth/password/forgot",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/auth/password/reset/:resetId",
+    element: <ResetPassword />,
   },
   {
     path: "/notes",
