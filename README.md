@@ -32,6 +32,21 @@ source venv/bin/activate
 ```
 pip install -r requirements.txt
 ```
+- For production version or if you want to be able to send emails from app (password reset or other) you have to create .env file in /backend directory
+```
+DEBUG=False 
+PGDATABASE=your_database_name
+PGUSER=your_pg_user
+PGPASSWORD=your_db_password
+PGHOST=your_pg_host
+PGPORT=your_pg_port
+SECRET_KEY=your_secret
+EMAIL_HOST=your_smtp_host
+EMAIL_PORT=your_smtp_port
+EMAIL_USER=your_email_user
+EMAIL_HOST_PASSWORD=your_email_password
+FRONTEND_URL=your_frontend_url
+```
 
 - Run migrations & setup dev database
 ```
