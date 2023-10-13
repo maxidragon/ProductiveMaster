@@ -21,6 +21,8 @@ import Copyright from "./Copyright";
 const Layout = (props: { children: ReactElement }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
+  const [openProjectNav, setOpenProjectNav] = useState<boolean>(true);
+  const [openLearningNav, setOpenLearningNav] = useState<boolean>(true);
   const userLoggedIn = isUserLoggedIn();
 
   useEffect(() => {
@@ -31,7 +33,23 @@ const Layout = (props: { children: ReactElement }) => {
 
   const toggleDrawer = () => {
     setOpen(!open);
+    if (open) {
+      setOpenProjectNav(false);
+      setOpenLearningNav(false);
+    } else {
+      setOpenProjectNav(true);
+      setOpenLearningNav(true);
+    }
   };
+
+  const toggleProjectNav = () => {
+    setOpenProjectNav(!openProjectNav);
+  };
+
+  const toggleLearningNav = () => {
+    setOpenLearningNav(!openLearningNav);
+  };
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -82,7 +100,12 @@ const Layout = (props: { children: ReactElement }) => {
           </IconButton>
         </Toolbar>
         <Divider />
-        <Navbar />
+        <Navbar
+          openProjectNav={openProjectNav}
+          toggleProjectNav={toggleProjectNav}
+          openLearningNav={openLearningNav}
+          toggleLearningNav={toggleLearningNav}
+        />
       </Drawer>
       <Box
         component="main"

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { RecentLearning, RecentProject } from "../logic/interfaces";
 import { getRecentProjects } from "../logic/projects";
+import { getRecentLearnings } from "../logic/learning";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import FolderCopyIcon from "@mui/icons-material/FolderCopy";
 import PeopleIcon from "@mui/icons-material/People";
@@ -21,13 +22,15 @@ import BookIcon from "@mui/icons-material/Book";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TopicIcon from "@mui/icons-material/Topic";
-import { getRecentLearnings } from "../logic/learning";
 
-const Navbar = () => {
+const Navbar = (props: {
+  openProjectNav: boolean;
+  toggleProjectNav: () => void;
+  openLearningNav: boolean;
+  toggleLearningNav: () => void;
+}) => {
   const [recentProjects, setRecentProjects] = useState<RecentProject[]>([]);
   const [recentLearnings, setRecentLearnings] = useState<RecentLearning[]>([]);
-  const [openProjectNav, setOpenProjectNav] = useState<boolean>(true);
-  const [openLearningNav, setOpenLearningNav] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,16 +55,12 @@ const Navbar = () => {
           <FolderCopyIcon />
         </ListItemIcon>
         <ListItemText primary="Projects" />
-        <IconButton
-          onClick={() => {
-            setOpenProjectNav(!openProjectNav);
-          }}
-        >
+        <IconButton onClick={props.toggleProjectNav}>
           {" "}
-          {openProjectNav ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          {props.openProjectNav ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </IconButton>
       </ListItemButton>
-      <Collapse in={openProjectNav} timeout="auto" unmountOnExit>
+      <Collapse in={props.openProjectNav} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {recentProjects.map((project: RecentProject) => (
             <ListItemButton
@@ -101,16 +100,12 @@ const Navbar = () => {
           <BookIcon />
         </ListItemIcon>
         <ListItemText primary="Learning" />
-        <IconButton
-          onClick={() => {
-            setOpenLearningNav(!openLearningNav);
-          }}
-        >
+        <IconButton onClick={props.toggleLearningNav}>
           {" "}
-          {openLearningNav ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          {props.openLearningNav ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </IconButton>
       </ListItemButton>
-      <Collapse in={openLearningNav} timeout="auto" unmountOnExit>
+      <Collapse in={props.openLearningNav} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {recentLearnings.map((learning: RecentLearning) => (
             <ListItemButton
