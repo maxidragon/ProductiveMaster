@@ -1,30 +1,18 @@
 from rest_framework import serializers
-from .models import Document, Project, Task
+
+from user_auth.serializers import PublicUserSerializer
+from .models import Document, Project, ProjectUser, Task
 from datetime import timedelta
 from django.utils import timezone
 
 class ProjectSerializer(serializers.ModelSerializer):
 
-    num_tasks_todo = serializers.SerializerMethodField()
-    num_tasks_in_progress = serializers.SerializerMethodField()
-    num_tasks_done = serializers.SerializerMethodField()
-
     class Meta:
         model = Project
-        fields = ('id', 'title', 'description', 'status', 'github', 'owner',
-                  'num_tasks_todo', 'num_tasks_in_progress', 'num_tasks_done', 'created_at', 'updated_at')
-        read_only_fields = ('owner', 'num_tasks_todo',
-                            'num_tasks_in_progress', 'num_tasks_done', 'created_at', 'updated_at')
+        fields = ('id', 'title', 'description', 'status', 'github',
+                    'created_at', 'updated_at')
+        read_only_fields = ('created_at', 'updated_at')
 
-    def get_num_tasks_todo(self, obj):
-        return obj.tasks.filter(status='TODO').count()
-
-    def get_num_tasks_in_progress(self, obj):
-        return obj.tasks.filter(status='IN_PROGRESS').count()
-
-    def get_num_tasks_done(self, obj):
-        return obj.tasks.filter(status='DONE').count()
-    
 class ProjectStatsSerializer(serializers.ModelSerializer):
     num_tasks_todo = serializers.SerializerMethodField()
     num_tasks_in_progress = serializers.SerializerMethodField()
@@ -34,9 +22,9 @@ class ProjectStatsSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Project
-        fields = ('id', 'title', 'owner',
+        fields = ('id', 'title', 
                   'num_tasks_todo', 'num_tasks_in_progress', 'num_tasks_done', 'num_tasks_done_last_week', 'num_tasks_done_last_month', 'created_at', 'updated_at')
-        read_only_fields = ('owner', 'num_tasks_todo',
+        read_only_fields = ('num_tasks_todo',
                             'num_tasks_in_progress', 'num_tasks_done', 'num_tasks_done_last_week', 'num_tasks_done_last_month', 'created_at', 'updated_at')
 
     def get_num_tasks_todo(self, obj):
@@ -85,3 +73,17 @@ class DocumentSerializer(serializers.ModelSerializer):
         model = Document
         fields = ('id', 'title', 'url', 'owner', 'project', 'created_at')
         read_only_fields = ('created_at', 'owner')
+        
+class ProjectUserSerializer(serializers.ModelSerializer):
+    user = PublicUserSerializer
+    added_by = PublicUserSerializer
+    class Meta:
+        model = ProjectUser
+        fields = ('id', 'project', 'user', 'is_owner', 'created_at', 'updated_at', 'added_by')
+        read_only_fields = ('created_at', 'updated_at', 'added_by')
+        
+class UpdateProjectUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectUser
+        fields = ('id', 'project', 'user', 'is_owner', 'created_at', 'updated_at')
+        read_only_fields = ('created_at', 'updated_at')

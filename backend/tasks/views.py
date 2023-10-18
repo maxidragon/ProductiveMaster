@@ -1,17 +1,21 @@
-from .permissions import IsOwner, IsProjectOwner
-from .serializers import DocumentSerializer, ProjectSerializer, ProjectStatsSerializer, RecentProjectSerializer, TaskListSerializer, TaskSerializer
+from django.utils import timezone
+from django.shortcuts import get_object_or_404
+from .permissions import IsOwner, IsProjectOwner, ListProjectResourcesPermission
+from .serializers import DocumentSerializer, ProjectSerializer, ProjectStatsSerializer, ProjectUserSerializer, RecentProjectSerializer, TaskListSerializer, TaskSerializer, UpdateProjectUserSerializer
 from rest_framework import generics
-from .models import Document, Project, Task
+from .models import Document, Project, ProjectUser, Task
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.auth.models import User
 
 
 class CreateTask(APIView):
     def post(self, request):
         serializer = TaskSerializer(data=request.data)
         project = Project.objects.get(pk=request.data['project'])
-        if project.owner != request.user:
+        is_in_project = ProjectUser.objects.filter(project=project, user=request.user).exists()
+        if not is_in_project:
             return Response(status=status.HTTP_403_FORBIDDEN)
         if serializer.is_valid():
             serializer.save(owner=request.user)
@@ -26,35 +30,36 @@ class ListTask(generics.ListAPIView):
 
     def get_queryset(self):
         status = self.kwargs.get('status', 'TODO')
-        return Task.objects.filter(owner=self.request.user, status=status).order_by('-updated_at')
-
+        user_projects = ProjectUser.objects.filter(user=self.request.user)
+        tasks = Task.objects.filter(
+            project__in=user_projects.values('project')).order_by('-updated_at')
+        return tasks.filter(status=status)
 
 class TasksForProject(generics.ListAPIView):
     serializer_class = TaskListSerializer
-    permission_classes = [IsProjectOwner]
+    permission_classes = [ListProjectResourcesPermission]
 
     def get_queryset(self):
         project_id = self.kwargs['project_id']
         queryset = Task.objects.filter(
-            project=project_id, owner=self.request.user).order_by('-updated_at')
+            project=project_id).order_by('-updated_at')
         return queryset
 
 
 class TasksForProjectWithStatus(generics.ListAPIView):
     serializer_class = TaskListSerializer
-    permission_classes = [IsProjectOwner]
+    permission_classes = [ListProjectResourcesPermission]
 
     def get_queryset(self):
         project_id = self.kwargs['project_id']
         status = self.kwargs.get('status')
         queryset = Task.objects.filter(
-            project=project_id, owner=self.request.user, status=status).order_by('-updated_at')
+            project=project_id, status=status).order_by('-updated_at')
         return queryset
 
 
 class HighPriorityTasks(generics.ListAPIView):
     serializer_class = TaskListSerializer
-    permission_classes = [IsProjectOwner]
 
     def get_queryset(self):
         queryset = Task.objects.filter(owner=self.request.user, high_priority=True).order_by(
@@ -68,20 +73,22 @@ class SearchTask(generics.ListAPIView):
     def get_queryset(self):
         search = self.kwargs.get('search')
         status = self.kwargs.get('status')
-        queryset = Task.objects.filter(
-            owner=self.request.user, title__icontains=search, status=status).order_by('-updated_at')
-        return queryset
+        user_projects = ProjectUser.objects.filter(user=self.request.user)
+        tasks = Task.objects.filter(
+            project__in=user_projects.values('project'), title__icontains=search).order_by('-updated_at')
+        return tasks.filter(status=status)
 
 
 class SearchTaskFromProject(generics.ListAPIView):
     serializer_class = TaskSerializer
+    permission_classes = [ListProjectResourcesPermission]
 
     def get_queryset(self):
         project_id = self.kwargs.get('project_id')
         search = self.kwargs.get('search')
         status = self.kwargs.get('status')
         queryset = Task.objects.filter(
-            owner=self.request.user, title__icontains=search, project=project_id).order_by('-updated_at')
+            title__icontains=search, project=project_id).order_by('-updated_at')
         if status is not None:
             queryset = queryset.filter(status=status)
         return queryset
@@ -103,10 +110,12 @@ class ListCreateProject(generics.ListCreateAPIView):
     serializer_class = ProjectSerializer
 
     def get_queryset(self):
-        return Project.objects.filter(owner=self.request.user).order_by('-updated_at')
+        user_projects = ProjectUser.objects.filter(user=self.request.user).values('project')
+        return Project.objects.filter(
+            id__in=user_projects).order_by('-updated_at')
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        serializer.save()
 
 
 class ProjectsByStatus(generics.ListAPIView):
@@ -114,13 +123,15 @@ class ProjectsByStatus(generics.ListAPIView):
 
     def get_queryset(self):
         status = self.kwargs['status']
-        return Project.objects.filter(owner=self.request.user, status=status).order_by('-updated_at')
+        user_projects = ProjectUser.objects.filter(user=self.request.user).values('project')
+        return Project.objects.filter(
+            id__in=user_projects, status=status).order_by('-updated_at')
 
 
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [IsOwner]
+    permission_classes = [IsProjectOwner]
 
 
 class SearchProjects(generics.ListAPIView):
@@ -128,7 +139,9 @@ class SearchProjects(generics.ListAPIView):
 
     def get_queryset(self):
         search = self.kwargs['search']
-        return Project.objects.filter(owner=self.request.user, title__icontains=search).order_by('-updated_at')
+        user_projects = ProjectUser.objects.filter(user=self.request.user).values('project')
+        return Project.objects.filter(
+            id__in=user_projects, title__icontains=search).order_by('-updated_at')
 
 
 class SearchProjectsByStatus(generics.ListAPIView):
@@ -137,14 +150,17 @@ class SearchProjectsByStatus(generics.ListAPIView):
     def get_queryset(self):
         search = self.kwargs['search']
         status = self.kwargs['status']
-        return Project.objects.filter(owner=self.request.user, title__icontains=search, status=status).order_by('-updated_at')
+        user_projects = ProjectUser.objects.filter(user=self.request.user).values('project')
+        return Project.objects.filter(
+            id__in=user_projects, title__icontains=search, status=status).order_by('-updated_at')
 
 
 class RecentProjects(APIView):
 
     def get(self, request):
+        user_projects = ProjectUser.objects.filter(user=request.user).values('project')
         projects = Project.objects.filter(
-            owner=request.user, status="IN_PROGRESS").order_by('-updated_at')[:3]
+            id__in=user_projects).order_by('-updated_at')[:3]
         serializer = RecentProjectSerializer(projects, many=True)
         return Response(serializer.data)
 
@@ -152,13 +168,15 @@ class RecentProjects(APIView):
 class ProjectStats(APIView):
 
     def get(self, request, pk):
+        if not ProjectUser.objects.filter(project=pk, user=request.user).exists():
+            return Response(status=status.HTTP_403_FORBIDDEN)
         project = Project.objects.get(pk=pk)
         serializer = ProjectStatsSerializer(project)
         return Response(serializer.data)
 
 class ListDocumentForProject(generics.ListAPIView):
     serializer_class = DocumentSerializer
-    permission_classes = [IsProjectOwner]
+    permission_classes = [ListProjectResourcesPermission]
 
     def get_queryset(self):
         project_id = self.kwargs['project_id']
@@ -169,7 +187,8 @@ class CreateDocument(APIView):
     def post(self, request):
         serializer = DocumentSerializer(data=request.data)
         project = Project.objects.get(pk=request.data['project'])
-        if project.owner != request.user:
+        project_user = ProjectUser.objects.filter(project=project, user=request.user).exists()
+        if not project_user:
             return Response(status=status.HTTP_403_FORBIDDEN)
         if serializer.is_valid():
             serializer.save(owner=request.user)
@@ -181,3 +200,63 @@ class DocumentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
     permission_classes = [IsOwner]
+
+class ListProjectUsers(generics.ListAPIView):
+    serializer_class = ProjectUserSerializer
+    permission_classes = [ListProjectResourcesPermission]
+    
+    def get_queryset(self):
+        project_id = self.kwargs['project_id']
+        return ProjectUser.objects.filter(project=project_id).order_by('-updated_at')
+
+class AddProjectUser(APIView):    
+    def post(self, request):
+        project = Project.objects.get(pk=request.data['project'])
+        project_user = ProjectUser.objects.filter(project=project, user=request.user, is_owner=True).exists()
+        if not project_user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+                
+        user = get_object_or_404(User, email=request.data['email'])
+        if ProjectUser.objects.filter(project=project, user=user).exists():
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': 'User already in project'})
+        data = {
+            'project': project.id,
+            'user': user.id,
+            'is_owner': request.data['is_owner']
+        }
+        serializer = ProjectUserSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save(added_by=request.user, project=project)
+            project.updated_at = serializer.data['updated_at']
+            project.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED) 
+   
+class UpdateDeleteProjectUser(APIView):
+    
+    def put(self, request, pk):
+        project_user = get_object_or_404(ProjectUser, pk=pk)
+        project = project_user.project 
+        has_permission = ProjectUser.objects.filter(project=project, user=request.user, is_owner=True).exists()
+        if not has_permission:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        project_user.is_owner = request.data['is_owner']
+        serializer = UpdateProjectUserSerializer(project_user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        project.updated_at = serializer.data['updated_at']
+        project.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def delete(self, request, pk):
+        project_user = ProjectUser.objects.get(pk=pk)
+        project = Project.objects.get(pk=project_user.project.id)        
+        has_permission = ProjectUser.objects.filter(project=project, user=request.user, is_owner=True).exists()
+        if not has_permission:
+            return Response(status=status.HTTP_403_FORBIDDEN)       
+        project_users_count = ProjectUser.objects.filter(project=project, is_owner=True).count()
+        if project_users_count == 1:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': 'Cannot remove the only owner of the project'})   
+        project_user.delete()
+        project.updated_at = timezone.now()
+        project.save()               
+        return Response(status=status.HTTP_204_NO_CONTENT)
