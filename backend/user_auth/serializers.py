@@ -53,3 +53,9 @@ class UserDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserData
         fields = ('id', 'github_profile', 'wakatime_api_key', 'gprm_stats', 'gprm_streak', 'gprm_languages')
+        
+class PublicUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username')
+        read_only_fields = ('id', 'username')

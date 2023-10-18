@@ -32,7 +32,14 @@ class Project(models.Model):
     updated_at = models.DateTimeField(auto_now=True)    
     status = models.CharField(max_length=11, choices=STATUS_CHOICES, default='PLANNED')
     github = models.URLField(null=True, blank=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')
+
+class ProjectUser(models.Model):
+    project = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='project_users')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='project_users')
+    is_owner = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    added_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='added_project_users')
     
 class Document(models.Model):
     title = models.CharField(max_length=100)

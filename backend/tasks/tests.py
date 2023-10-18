@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from rest_framework import status
-from .models import Document, Task, Project
+from .models import Document, ProjectUser, Task, Project
 from django.contrib.auth.models import User
 
 
@@ -11,9 +11,11 @@ class CreateListTaskTest(TestCase):
         self.user = User.objects.create_user(
             username='testuser', password='testpassword')
         self.project = Project.objects.create(
-            title='Test Project', owner=self.user)
+            title='Test Project')
         self.task = Task.objects.create(
             title='Test Task', project=self.project, owner=self.user)
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, added_by=self.user)
 
     def authenticate(self):
         response = self.client.post(reverse(
@@ -72,7 +74,9 @@ class TaskDetailTests(TestCase):
         self.user2 = User.objects.create_user(
             username="noowner", password="nopassword")
         self.project = Project.objects.create(
-            title='Test Project', owner=self.user)
+            title='Test Project')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, added_by=self.user)
         self.task = Task.objects.create(
             title='Test Task', project=self.project, owner=self.user)
 
@@ -132,7 +136,9 @@ class HighPriorityTasksTest(TestCase):
         self.user = User.objects.create_user(
             username='testuser', password='testpassword')
         self.project = Project.objects.create(
-            title='Test Project', owner=self.user)
+            title='Test Project')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, added_by=self.user)        
         self.task = Task.objects.create(
             title='Test Task', project=self.project, owner=self.user, high_priority=True)
         self.task2 = Task.objects.create(
@@ -158,7 +164,10 @@ class ListCreateProjectTest(TestCase):
         self.user = User.objects.create_user(
             username='testuser', password='testpassword')
         self.project = Project.objects.create(
-            title='Test Project', description='Test Project Description', owner=self.user)
+            title='Test Project', description='Test Project Description')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)
+
 
     def authenticate(self):
         response = self.client.post(reverse(
@@ -193,7 +202,10 @@ class ProjectDetailTest(TestCase):
         self.user2 = User.objects.create_user(
             username="noowner", password="nopassword")
         self.project = Project.objects.create(
-            title='Test Project', description='Test Project Description', owner=self.user)
+            title='Test Project', description='Test Project Description')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)
+        
 
     def authenticate(self, username, password):
         response = self.client.post(reverse(
@@ -249,9 +261,12 @@ class TaskForProjectTest(TestCase):
         self.user2 = User.objects.create_user(
             username="noowner", password="nopassword")
         self.project = Project.objects.create(
-            title='Test Project', description='Test Project Description', owner=self.user)
+            title='Test Project', description='Test Project Description')
         self.task = Task.objects.create(
             title='Test Task', description='Test Task Description', owner=self.user, project=self.project)
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)
+
 
     def authenticate(self, username, password):
         response = self.client.post(reverse(
@@ -271,7 +286,7 @@ class TaskForProjectTest(TestCase):
         url = reverse('tasks-for-project', args=[self.project.id])
         token = self.authenticate('noowner', 'nopassword')
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
-        self.assertEqual(response.data['count'], 0)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class TaskForProjectWithStatusTest(TestCase):
@@ -282,9 +297,12 @@ class TaskForProjectWithStatusTest(TestCase):
         self.user2 = User.objects.create_user(
             username="noowner", password="nopassword")
         self.project = Project.objects.create(
-            title='Test Project', description='Test Project Description', owner=self.user)
+            title='Test Project', description='Test Project Description')
         self.task = Task.objects.create(
             title='Test Task', description='Test Task Description', owner=self.user, project=self.project)
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)
+        
 
     def authenticate(self, username, password):
         response = self.client.post(reverse(
@@ -306,8 +324,7 @@ class TaskForProjectWithStatusTest(TestCase):
                       args=[self.project.id, 'TODO'])
         token = self.authenticate('noowner', 'nopassword')
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
-        self.assertEqual(response.data['count'], 0)
-
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 class SearchTasks(TestCase):
     def setUp(self):
@@ -317,7 +334,9 @@ class SearchTasks(TestCase):
         self.user2 = User.objects.create_user(
             username="noowner", password="nopassword")
         self.project = Project.objects.create(
-            title='Test Project', description='Test Project Description', owner=self.user)
+            title='Test Project', description='Test Project Description')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)        
         self.task = Task.objects.create(
             title='Test Task', description='Test Task Description', owner=self.user, project=self.project, status='TODO')
         self.task2 = Task.objects.create(
@@ -358,11 +377,15 @@ class TestProjectByStatus(TestCase):
         self.user = User.objects.create_user(
             username='testuser', password='testpassword')
         self.user2 = User.objects.create_user(
-            username="noowner", password="nopassword")
+            username="noowner", password="nopassword")      
         self.project = Project.objects.create(
-            title='Test Project', description='Test Project Description', owner=self.user, status='PLANNED')
+            title='Test Project', description='Test Project Description', status='PLANNED')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)
         self.project2 = Project.objects.create(
-            title='Test Project', description='Test Project Description', owner=self.user, status='IN_PROGRESS')
+            title='Test Project', description='Test Project Description', status='IN_PROGRESS')
+        self.project_user2 = ProjectUser.objects.create(
+            user=self.user, project=self.project2, is_owner=True, added_by=self.user)
 
     def authenticate(self, username, password):
         response = self.client.post(reverse(
@@ -402,9 +425,13 @@ class TestSearchProjects(TestCase):
         self.user2 = User.objects.create_user(
             username="noowner", password="nopassword")
         self.project = Project.objects.create(
-            title='Test Project', description='Test Project Description', owner=self.user, status='PLANNED')
+            title='Test Project', description='Test Project Description', status='PLANNED')
         self.project2 = Project.objects.create(
-            title='Another', description='Test Project Description', owner=self.user, status='IN_PROGRESS')
+            title='Another', description='Test Project Description', status='IN_PROGRESS')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)  
+        self.project_user2 = ProjectUser.objects.create(
+            user=self.user, project=self.project2, is_owner=True, added_by=self.user)                  
 
     def authenticate(self, username, password):
         response = self.client.post(reverse(
@@ -443,10 +470,14 @@ class TestSearchProjectsWithStatus(TestCase):
         self.user2 = User.objects.create_user(
             username="noowner", password="nopassword")
         self.project = Project.objects.create(
-            title='Test Project', description='Test Project Description', owner=self.user, status='PLANNED')
+            title='Test Project', description='Test Project Description', status='PLANNED')
         self.project2 = Project.objects.create(
-            title='Another', description='Test Project Description', owner=self.user, status='IN_PROGRESS')
-
+            title='Another', description='Test Project Description', status='IN_PROGRESS')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)  
+        self.project_user2 = ProjectUser.objects.create(
+            user=self.user, project=self.project2, is_owner=True, added_by=self.user) 
+    
     def authenticate(self, username, password):
         response = self.client.post(reverse(
             'get-token'), {'username': username, 'password': password}, format='json')
@@ -481,7 +512,9 @@ class TestListDocumentsForProject(TestCase):
         self.user = User.objects.create_user(
             username='testuser', password='testpassword')
         self.project = Project.objects.create(
-            title='Test Project', owner=self.user)
+            title='Test Project')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)  
         self.document = Document.objects.create(
             title='Test Document', url='https://docs.google.com', project=self.project, owner=self.user)
 
@@ -506,7 +539,9 @@ class TestCreateDocument(TestCase):
         self.user = User.objects.create_user(
             username='testuser', password='testpassword')
         self.project = Project.objects.create(
-            title='Test Project', owner=self.user)
+            title='Test Project')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)  
 
     def authenticate(self):
         response = self.client.post(reverse(
@@ -530,7 +565,9 @@ class TestDocumentDetail(TestCase):
         self.user2 = User.objects.create_user(
             username="noowner", password="nopassword")
         self.project = Project.objects.create(
-            title='Test Project', description='Test Project Description', owner=self.user)
+            title='Test Project', description='Test Project Description')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)  
         self.document = Document.objects.create(
             title='Test Document', url='https://docs.google.com', project=self.project, owner=self.user)
 
