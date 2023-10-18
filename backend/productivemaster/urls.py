@@ -17,7 +17,7 @@ if os.environ.get('DEBUG') == 'True':
     
 else:
     urlpatterns = [
-        path('admin/', admin.site.urls),
+        path('api/admin/', admin.site.urls),
         path('api/get-token/', views.obtain_auth_token, name='get-token'),
         path('api/auth/', include('user_auth.urls')),
         path('api/notes/', include('notes.urls')),
