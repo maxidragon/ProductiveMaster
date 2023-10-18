@@ -80,4 +80,10 @@ class ProjectUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectUser
         fields = ('id', 'project', 'user', 'is_owner', 'created_at', 'updated_at', 'added_by')
-        read_only_fields = ('project', 'created_at', 'updated_at', 'added_by')
+        read_only_fields = ('created_at', 'updated_at', 'added_by')
+        
+class UpdateProjectUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectUser
+        fields = ('id', 'project', 'user', 'is_owner', 'created_at', 'updated_at')
+        read_only_fields = ('created_at', 'updated_at')
