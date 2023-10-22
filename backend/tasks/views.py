@@ -116,6 +116,10 @@ class ListCreateProject(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save()
+        project = Project.objects.get(pk=serializer.data['id'])
+        project_user = ProjectUser(
+            user=self.request.user, project=project, is_owner=True, added_by=self.request.user)
+        project_user.save()
 
 
 class ProjectsByStatus(generics.ListAPIView):
@@ -215,7 +219,6 @@ class AddProjectUser(APIView):
         project_user = ProjectUser.objects.filter(project=project, user=request.user, is_owner=True).exists()
         if not project_user:
             return Response(status=status.HTTP_403_FORBIDDEN)
-                
         user = get_object_or_404(User, email=request.data['email'])
         if ProjectUser.objects.filter(project=project, user=user).exists():
             return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': 'User already in project'})
@@ -224,13 +227,13 @@ class AddProjectUser(APIView):
             'user': user.id,
             'is_owner': request.data['is_owner']
         }
-        serializer = ProjectUserSerializer(data=data)
+        serializer = UpdateProjectUserSerializer(data=data)
         if serializer.is_valid():
             serializer.save(added_by=request.user, project=project)
             project.updated_at = serializer.data['updated_at']
             project.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED) 
-   
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class UpdateDeleteProjectUser(APIView):
     
     def put(self, request, pk):
@@ -240,6 +243,8 @@ class UpdateDeleteProjectUser(APIView):
         if not has_permission:
             return Response(status=status.HTTP_403_FORBIDDEN)
         project_user.is_owner = request.data['is_owner']
+        if not project_user.is_owner and ProjectUser.objects.filter(project=project, is_owner=True).count() == 1:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': 'Cannot remove the only owner of the project'})
         serializer = UpdateProjectUserSerializer(project_user, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -260,3 +265,9 @@ class UpdateDeleteProjectUser(APIView):
         project.updated_at = timezone.now()
         project.save()               
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class AmIProjectOwner(APIView):
+    
+    def get(self, request, project_id):
+        is_owner = ProjectUser.objects.filter(project=project_id, user=request.user, is_owner=True).exists()
+        return Response({'is_owner': is_owner})

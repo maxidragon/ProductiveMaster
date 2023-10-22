@@ -75,8 +75,8 @@ class DocumentSerializer(serializers.ModelSerializer):
         read_only_fields = ('created_at', 'owner')
         
 class ProjectUserSerializer(serializers.ModelSerializer):
-    user = PublicUserSerializer
-    added_by = PublicUserSerializer
+    user = PublicUserSerializer()
+    added_by = PublicUserSerializer()
     class Meta:
         model = ProjectUser
         fields = ('id', 'project', 'user', 'is_owner', 'created_at', 'updated_at', 'added_by')

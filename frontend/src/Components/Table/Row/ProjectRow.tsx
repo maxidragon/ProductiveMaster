@@ -14,6 +14,7 @@ import EditProjectModal from "../../ModalComponents/Edit/EditProjectModal";
 import { statusPretyName } from "../../../logic/other";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import ProjectStatsModal from "../../ModalComponents/ProjectStatsModal";
+import PeopleIcon from "@mui/icons-material/People";
 
 const ProjectRow = (props: {
   project: Project;
@@ -85,6 +86,12 @@ const ProjectRow = (props: {
               to={`/documents/${editedProject.id}`}
             >
               <DescriptionIcon />
+            </IconButton>
+            <IconButton
+              component={RouterLink}
+              to={`/participants/${editedProject.id}`}
+            >
+              <PeopleIcon />
             </IconButton>
             <IconButton onClick={() => setOpenStatsModal(true)}>
               <BarChartIcon />

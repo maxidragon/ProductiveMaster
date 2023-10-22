@@ -150,3 +150,27 @@ export interface ProjectStats {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface PublicUser {
+  id: number;
+  username: string;
+}
+
+export interface ProjectParticipant {
+  id: number;
+  project: number;
+  user: PublicUser;
+  added_by: PublicUser;
+  is_owner: boolean;
+  created_at: Date;
+  updated_at: Date;
+}
+export interface UpdateProjectParticipant {
+  id: number;
+  project: number;
+  user: number;
+  added_by: number;
+  is_owner: boolean;
+  created_at: Date;
+  updated_at: Date;
+}

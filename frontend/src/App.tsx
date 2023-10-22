@@ -24,6 +24,7 @@ import LearningCategories from "./Pages/LearningCategories/LearningCategories";
 import LearningResources from "./Pages/LearningResources/LearningResources";
 import ForgotPassword from "./Pages/Auth/ForgotPassword/ForgotPassword";
 import ResetPassword from "./Pages/Auth/ResetPassword/ResetPassword";
+import ProjectParticipants from "./Pages/ProjectParticipants/ProjectParticipants";
 
 const router = createHashRouter([
   {
@@ -73,6 +74,10 @@ const router = createHashRouter([
   {
     path: "documents/:projectId",
     element: <Layout children={<DocumentsForProject />} />,
+  },
+  {
+    path: "/participants/:projectId",
+    element: <Layout children={<ProjectParticipants />} />,
   },
   {
     path: "/activities",
