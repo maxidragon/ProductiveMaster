@@ -7,14 +7,9 @@ export const getProjectParticipants = async (projectId: number, page = 1) => {
     "GET",
     true,
   );
-  const isOwner = await backendRequest(
-    `projects/owner/${projectId}/`,
-    "GET",
-    true,
-  );
+  const isOwner = await isProjectOwner(projectId);
   const data = await response.json();
-  const isOwnerData = await isOwner.json();
-  data["is_owner"] = isOwnerData["is_owner"];
+  data["is_owner"] = isOwner["is_owner"];
   return data;
 };
 
@@ -56,4 +51,13 @@ export const deleteProjectParticipant = async (id: number) => {
     status: response.status,
     data: await response.json(),
   };
+};
+
+export const isProjectOwner = async (projectId: number) => {
+  const response = await backendRequest(
+    `projects/owner/${projectId}/`,
+    "GET",
+    true,
+  );
+  return await response.json();
 };

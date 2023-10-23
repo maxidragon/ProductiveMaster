@@ -8,6 +8,7 @@ const mockTask = {
   title: "Mock Task",
   description: "Mock Description",
   status: "IN_PROGRESS",
+  owner: 1,
   high_priority: false,
   issue: "https://github.com",
   pull_request: "https://github.com",

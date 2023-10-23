@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TableRow,
   TableCell,
@@ -20,12 +20,15 @@ import EditTaskModal from "../../ModalComponents/Edit/EditTaskModal";
 import { Link as RouterLink } from "react-router-dom";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { statusPretyName } from "../../../logic/other";
+import { isProjectOwner as isProjectOwnerFetch } from "../../../logic/projectParticipants";
 
 const TaskRow = (props: {
   task: Task;
   multipleProjects?: boolean;
   handleStatusUpdate: (status: string) => void;
 }) => {
+  const userId = localStorage.getItem("userId") || "";
+  const [isProjectOwner, setIsProjectOwner] = useState(false);
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -67,7 +70,15 @@ const TaskRow = (props: {
     setEdit(false);
     props.handleStatusUpdate(editedTask.status);
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      const isOwner = await isProjectOwnerFetch(editedTask.project.id);
+      setIsProjectOwner(isOwner["is_owner"]);
+    };
+    fetchData();
+  }, [editedTask.project.id]);
 
+  console.log(userId, editedTask.owner, isProjectOwner);
   return (
     <>
       {!hide && (
@@ -120,17 +131,21 @@ const TaskRow = (props: {
               </IconButton>
             )}
           </TableCell>
-          <TableCell>
-            <IconButton onClick={handleComplete}>
-              <CheckCircleIcon />
-            </IconButton>
-            <IconButton onClick={() => setEdit(true)}>
-              <EditIcon />
-            </IconButton>
-            <IconButton onClick={handleDelete}>
-              <DeleteIcon />
-            </IconButton>
-          </TableCell>
+          {(+userId === editedTask.owner || isProjectOwner) && (
+            <>
+              <TableCell>
+                <IconButton onClick={handleComplete}>
+                  <CheckCircleIcon />
+                </IconButton>
+                <IconButton onClick={() => setEdit(true)}>
+                  <EditIcon />
+                </IconButton>
+                <IconButton onClick={handleDelete}>
+                  <DeleteIcon />
+                </IconButton>
+              </TableCell>
+            </>
+          )}
         </TableRow>
       )}
       {edit && (

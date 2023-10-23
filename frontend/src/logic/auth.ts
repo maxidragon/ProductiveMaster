@@ -32,6 +32,7 @@ export const login = async (
       localStorage.setItem("token", data.token);
       const userInfo = await getUser();
       localStorage.setItem("username", userInfo.username);
+      localStorage.setItem("userId", userInfo.id);
     }
     return response.status;
   } catch (error) {
