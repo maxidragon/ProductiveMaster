@@ -7,10 +7,12 @@ import { calculateTotalPages } from "../../logic/other";
 import { getDocumentsForProject } from "../../logic/documents";
 import CreateDocumentModal from "../../Components/ModalComponents/Create/CreateDocumentModal";
 import DocumentsTable from "../../Components/Table/DocumentsTable";
+import { isProjectOwner as isProjectOwnerFetch } from "../../logic/projectParticipants";
 
 const DocumentsForProject = () => {
   const perPage = 10;
   const { projectId } = useParams<{ projectId: string }>();
+  const [isProjectOwner, setIsProjectOwner] = useState(false);
   const [documents, setDocuments] = useState<DocumentInterface[]>([]);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
@@ -51,6 +53,15 @@ const DocumentsForProject = () => {
     fetchData(1);
   }, [fetchData]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!projectId) return;
+      const isOwner = await isProjectOwnerFetch(+projectId);
+      setIsProjectOwner(isOwner["is_owner"]);
+    };
+    fetchData();
+  }, [projectId]);
+
   return (
     <>
       <Box sx={{ display: "flex", flexDirection: "row", mb: 2 }}>
@@ -64,6 +75,7 @@ const DocumentsForProject = () => {
         <DocumentsTable
           documents={documents}
           page={page}
+          isProjectOwner={isProjectOwner}
           totalPages={totalPages}
           totalItems={totalItems}
           handlePageChange={handlePageChange}

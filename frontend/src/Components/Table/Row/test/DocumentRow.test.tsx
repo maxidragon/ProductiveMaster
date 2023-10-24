@@ -21,7 +21,7 @@ describe("DocumentRow component", () => {
     render(
       <Table>
         <TableBody>
-          <DocumentRow document={mockDocument} />
+          <DocumentRow document={mockDocument} isProjectOwner={true} />
         </TableBody>
       </Table>,
     );

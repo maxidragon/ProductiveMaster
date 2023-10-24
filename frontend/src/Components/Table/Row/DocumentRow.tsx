@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { TableRow, TableCell, IconButton, Link } from "@mui/material";
 import { Document as DocumentInterface } from "../../../logic/interfaces";
 import EditIcon from "@mui/icons-material/Edit";
@@ -7,11 +7,15 @@ import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
 import EditDocumentModal from "../../ModalComponents/Edit/EditDocumentModal";
 import { deleteDocument } from "../../../logic/documents";
-import { isProjectOwner as isProjectOwnerFetch } from "../../../logic/projectParticipants";
 
-const DocumentRow = ({ document }: { document: DocumentInterface }) => {
+const DocumentRow = ({
+  document,
+  isProjectOwner,
+}: {
+  document: DocumentInterface;
+  isProjectOwner: boolean;
+}) => {
   const userId = localStorage.getItem("userId") || "";
-  const [isProjectOwner, setIsProjectOwner] = useState(false);
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -39,13 +43,6 @@ const DocumentRow = ({ document }: { document: DocumentInterface }) => {
     setEditedDocument(documentParam);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const isOwner = await isProjectOwnerFetch(editedDocument.project);
-      setIsProjectOwner(isOwner["is_owner"]);
-    };
-    fetchData();
-  }, [editedDocument.project]);
   return (
     <>
       {!hide && (

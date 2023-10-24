@@ -15,6 +15,7 @@ import DocumentRow from "./Row/DocumentRow";
 const DocumentsTable = (props: {
   documents: DocumentInterface[];
   page: number;
+  isProjectOwner: boolean;
   totalPages: number;
   totalItems: number;
   handlePageChange: (page: number) => void;
@@ -31,7 +32,11 @@ const DocumentsTable = (props: {
         </TableHead>
         <TableBody>
           {props.documents.map((document: DocumentInterface) => (
-            <DocumentRow key={document.id} document={document} />
+            <DocumentRow
+              key={document.id}
+              document={document}
+              isProjectOwner={props.isProjectOwner}
+            />
           ))}
         </TableBody>
         {props.totalPages > 0 && (
