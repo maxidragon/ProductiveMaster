@@ -43,12 +43,12 @@ const DocumentRow = ({ document }: { document: DocumentInterface }) => {
           key={editedDocument.id}
           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         >
-          <TableCell component="th" scope="row">
+          <TableCell>
             <Link href={editedDocument.url} target="_blank">
               {editedDocument.title}
             </Link>
           </TableCell>
-
+          <TableCell>{editedDocument.owner.username}</TableCell>
           <TableCell>
             <IconButton onClick={() => setEdit(true)}>
               <EditIcon />

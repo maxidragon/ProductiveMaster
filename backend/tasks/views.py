@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from .permissions import IsOwner, IsProjectOwner, ListProjectResourcesPermission
-from .serializers import DocumentSerializer, ProjectSerializer, ProjectStatsSerializer, ProjectUserSerializer, RecentProjectSerializer, TaskListSerializer, TaskSerializer, UpdateProjectUserSerializer
+from .serializers import CreateUpdateDocumentSerializer, DocumentSerializer, ProjectSerializer, ProjectStatsSerializer, ProjectUserSerializer, RecentProjectSerializer, TaskForProjectSerializer, TaskListSerializer, TaskSerializer, UpdateProjectUserSerializer
 from rest_framework import generics
 from .models import Document, Project, ProjectUser, Task
 from rest_framework.views import APIView
@@ -36,7 +36,7 @@ class ListTask(generics.ListAPIView):
         return tasks.filter(status=status)
 
 class TasksForProject(generics.ListAPIView):
-    serializer_class = TaskListSerializer
+    serializer_class = TaskForProjectSerializer
     permission_classes = [ListProjectResourcesPermission]
 
     def get_queryset(self):
@@ -47,7 +47,7 @@ class TasksForProject(generics.ListAPIView):
 
 
 class TasksForProjectWithStatus(generics.ListAPIView):
-    serializer_class = TaskListSerializer
+    serializer_class = TaskForProjectSerializer
     permission_classes = [ListProjectResourcesPermission]
 
     def get_queryset(self):
@@ -80,7 +80,7 @@ class SearchTask(generics.ListAPIView):
 
 
 class SearchTaskFromProject(generics.ListAPIView):
-    serializer_class = TaskSerializer
+    serializer_class = TaskForProjectSerializer
     permission_classes = [ListProjectResourcesPermission]
 
     def get_queryset(self):
@@ -189,7 +189,7 @@ class ListDocumentForProject(generics.ListAPIView):
 
 class CreateDocument(APIView):
     def post(self, request):
-        serializer = DocumentSerializer(data=request.data)
+        serializer = CreateUpdateDocumentSerializer(data=request.data)
         project = Project.objects.get(pk=request.data['project'])
         project_user = ProjectUser.objects.filter(project=project, user=request.user).exists()
         if not project_user:
@@ -202,7 +202,7 @@ class CreateDocument(APIView):
 
 class DocumentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Document.objects.all()
-    serializer_class = DocumentSerializer
+    serializer_class = CreateUpdateDocumentSerializer
     permission_classes = [IsOwner]
 
 class ListProjectUsers(generics.ListAPIView):

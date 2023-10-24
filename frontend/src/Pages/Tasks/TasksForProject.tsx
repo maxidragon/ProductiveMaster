@@ -12,15 +12,15 @@ import {
 } from "@mui/material";
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
-import TasksTable from "../../Components/Table/TasksTable";
-import { Task } from "../../logic/interfaces";
+import { TaskForProject } from "../../logic/interfaces";
 import CreateTaskModal from "../../Components/ModalComponents/Create/CreateTaskModal";
 import { calculateTotalPages } from "../../logic/other";
+import TasksForProjectTable from "../../Components/Table/TasksForProjectTable";
 
 const TasksForProject = () => {
   const perPage = 10;
   const { projectId } = useParams<{ projectId: string }>();
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<TaskForProject[]>([]);
   const [status, setStatus] = useState<string>("TODO");
   const [search, setSearch] = useState<string>("");
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -184,7 +184,7 @@ const TasksForProject = () => {
       {loading ? (
         <LinearProgress />
       ) : (
-        <TasksTable
+        <TasksForProjectTable
           tasks={tasks}
           page={page}
           totalPages={totalPages}

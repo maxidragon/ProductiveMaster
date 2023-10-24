@@ -14,7 +14,6 @@ import PaginationFooter from "../Pagination/PaginationFooter";
 
 const TasksTable = (props: {
   tasks: Task[];
-  multipleProjects?: boolean;
   page: number;
   totalPages: number;
   totalItems: number;
@@ -34,8 +33,8 @@ const TasksTable = (props: {
           <TableRow>
             <TableCell>Title</TableCell>
             <TableCell>Description</TableCell>
-            {props.multipleProjects && <TableCell>Project</TableCell>}
-            {props.multipleProjects && <TableCell>Tasks for project</TableCell>}
+            <TableCell>Project</TableCell>
+            <TableCell>Tasks for project</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Issue</TableCell>
             <TableCell>PR</TableCell>
@@ -47,7 +46,6 @@ const TasksTable = (props: {
             <TaskRow
               key={task.id}
               task={task}
-              multipleProjects={props.multipleProjects}
               handleStatusUpdate={handleStatusUpdate}
             />
           ))}

@@ -106,7 +106,6 @@ const Tasks = () => {
       ) : (
         <TasksTable
           tasks={tasks}
-          multipleProjects={true}
           page={page}
           totalPages={totalPages}
           totalItems={totalItems}

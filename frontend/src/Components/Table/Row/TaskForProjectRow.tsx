@@ -7,7 +7,7 @@ import {
   Chip,
   Box,
 } from "@mui/material";
-import { Task } from "../../../logic/interfaces";
+import { Task, TaskForProject } from "../../../logic/interfaces";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
@@ -17,18 +17,16 @@ import AssignmentReturnedIcon from "@mui/icons-material/AssignmentReturned";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { deleteTask, updateTask } from "../../../logic/tasks";
 import EditTaskModal from "../../ModalComponents/Edit/EditTaskModal";
-import { Link as RouterLink } from "react-router-dom";
-import AssignmentIcon from "@mui/icons-material/Assignment";
 import { statusPretyName } from "../../../logic/other";
 
-const TaskRow = (props: {
-  task: Task;
+const TasksForProjectRow = (props: {
+  task: TaskForProject;
   handleStatusUpdate: (status: string) => void;
 }) => {
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [editedTask, setEditedTask] = useState<Task>(props.task);
+  const [editedTask, setEditedTask] = useState<TaskForProject>(props.task);
   const handleDelete = async () => {
     if (props.task === null) return;
     confirm({ description: "Are you sure you want to delete this task?" })
@@ -46,7 +44,11 @@ const TaskRow = (props: {
       });
   };
   const editTask = (task: Task) => {
-    setEditedTask(task);
+    const taskToSet = {
+      ...task,
+      owner: editedTask.owner,
+    };
+    setEditedTask(taskToSet);
   };
   const handleComplete = async () => {
     const task = { ...editedTask, status: "DONE", completed_at: new Date() };
@@ -83,16 +85,8 @@ const TaskRow = (props: {
             )}
           </TableCell>
           <TableCell>{editedTask.description}</TableCell>
-          <TableCell>{editedTask.project.title}</TableCell>
-          <TableCell>
-            <IconButton
-              component={RouterLink}
-              to={`/tasks/project/${editedTask.project.id}`}
-            >
-              <AssignmentIcon />
-            </IconButton>
-          </TableCell>
           <TableCell>{statusPretyName(editedTask.status)}</TableCell>
+          <TableCell>{editedTask.owner.username}</TableCell>
           <TableCell>
             {editedTask.issue && (
               <IconButton
@@ -140,4 +134,4 @@ const TaskRow = (props: {
   );
 };
 
-export default TaskRow;
+export default TasksForProjectRow;

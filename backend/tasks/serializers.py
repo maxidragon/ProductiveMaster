@@ -57,6 +57,13 @@ class TaskSerializer(serializers.ModelSerializer):
                   'created_at', 'updated_at', 'completed_at', 'owner', 'project', 'issue', 'pull_request')
         read_only_fields = ('created_at', 'updated_at', 'owner')
 
+class TaskForProjectSerializer(serializers.ModelSerializer):
+    owner = PublicUserSerializer()
+    class Meta:
+        model = Task
+        fields = ('id', 'title', 'description', 'status', 'high_priority',
+                  'created_at', 'updated_at', 'completed_at', 'owner', 'project', 'issue', 'pull_request')
+        read_only_fields = ('created_at', 'updated_at', 'owner')
 
 class TaskListSerializer(serializers.ModelSerializer):
     project = ProjectSerializer()
@@ -68,11 +75,17 @@ class TaskListSerializer(serializers.ModelSerializer):
         read_only_fields = ('created_at', 'updated_at', 'owner')
 
 class DocumentSerializer(serializers.ModelSerializer):
-
+    owner = PublicUserSerializer()
     class Meta:
         model = Document
-        fields = ('id', 'title', 'url', 'owner', 'project', 'created_at')
-        read_only_fields = ('created_at', 'owner')
+        fields = ('id', 'title', 'url', 'owner', 'project', 'created_at', 'updated_at')
+        read_only_fields = ('created_at', 'updated_at', 'owner')
+        
+class CreateUpdateDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Document
+        fields = ('id', 'title', 'url', 'owner', 'project', 'created_at', 'updated_at')
+        read_only_fields = ('created_at', 'updated_at', 'owner')
         
 class ProjectUserSerializer(serializers.ModelSerializer):
     user = PublicUserSerializer()

@@ -8,30 +8,45 @@ import {
   TableBody,
   TableFooter,
 } from "@mui/material";
-import { Document as DocumentInterface } from "../../logic/interfaces";
+import { TaskForProject } from "../../logic/interfaces";
 import PaginationFooter from "../Pagination/PaginationFooter";
-import DocumentRow from "./Row/DocumentRow";
+import TaskForProjectRow from "./Row/TaskForProjectRow";
 
-const DocumentsTable = (props: {
-  documents: DocumentInterface[];
+const TasksForProjectTable = (props: {
+  tasks: TaskForProject[];
   page: number;
   totalPages: number;
   totalItems: number;
   handlePageChange: (page: number) => void;
+  status?: string;
+  fetchData: (pageParam: number, statusParam?: string) => void;
 }) => {
+  const handleStatusUpdate = (status: string) => {
+    if (props.status === status) return;
+    props.fetchData(props.page, props.status);
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }}>
         <TableHead>
           <TableRow>
             <TableCell>Title</TableCell>
+            <TableCell>Description</TableCell>
+            <TableCell>Status</TableCell>
             <TableCell>Owner</TableCell>
+            <TableCell>Issue</TableCell>
+            <TableCell>PR</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.documents.map((document: DocumentInterface) => (
-            <DocumentRow key={document.id} document={document} />
+          {props.tasks.map((task: TaskForProject) => (
+            <TaskForProjectRow
+              key={task.id}
+              task={task}
+              handleStatusUpdate={handleStatusUpdate}
+            />
           ))}
         </TableBody>
         {props.totalPages > 0 && (
@@ -49,4 +64,4 @@ const DocumentsTable = (props: {
   );
 };
 
-export default DocumentsTable;
+export default TasksForProjectTable;

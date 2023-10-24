@@ -7,6 +7,10 @@ const mockDocument = {
   id: 1,
   title: "Test",
   project: 1,
+  owner: {
+    id: 1,
+    username: "test",
+  },
   created_at: new Date("2021-10-17T12:00:00Z"),
   updated_at: new Date("2021-10-17T12:00:00Z"),
   url: "https://test.com",

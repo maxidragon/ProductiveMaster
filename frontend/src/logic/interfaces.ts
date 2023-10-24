@@ -40,6 +40,21 @@ export interface Task {
   completed_at?: Date;
 }
 
+export interface TaskForProject {
+  id: number;
+  title: string;
+  description?: string;
+  status: string;
+  owner: PublicUser;
+  high_priority: boolean;
+  issue?: string;
+  pull_request?: string;
+  project: Project;
+  created_at: Date;
+  updated_at: Date;
+  completed_at?: Date;
+}
+
 export interface Activity {
   id: number;
   title: string;
@@ -94,6 +109,7 @@ export interface Document {
   id: number;
   title: string;
   url: string;
+  owner: PublicUser;
   project: number;
   created_at: Date;
   updated_at: Date;

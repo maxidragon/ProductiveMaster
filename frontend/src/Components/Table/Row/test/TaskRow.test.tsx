@@ -32,7 +32,6 @@ describe("TaskRow component", () => {
           <TableBody>
             <TaskRow
               task={mockTask}
-              multipleProjects={false}
               handleStatusUpdate={(status) => {
                 status = "IN_PROGRESS";
                 return status;
@@ -57,7 +56,6 @@ describe("TaskRow component", () => {
           <TableBody>
             <TaskRow
               task={mockTask}
-              multipleProjects={true}
               handleStatusUpdate={(status) => {
                 status = "IN_PROGRESS";
                 return status;
@@ -85,7 +83,6 @@ describe("TaskRow component", () => {
           <TableBody>
             <TaskRow
               task={{ ...mockTask, high_priority: true }}
-              multipleProjects={false}
               handleStatusUpdate={(status) => {
                 status = "IN_PROGRESS";
                 return status;
