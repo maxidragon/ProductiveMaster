@@ -35,6 +35,7 @@ export interface Task {
   issue?: string;
   pull_request?: string;
   project: Project;
+  owner: number;
   created_at: Date;
   updated_at: Date;
   completed_at?: Date;

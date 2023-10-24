@@ -27,6 +27,7 @@ const TasksForProjectRow = (props: {
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editedTask, setEditedTask] = useState<TaskForProject>(props.task);
+  const [taskOwner] = useState(props.task.owner);
   const handleDelete = async () => {
     if (props.task === null) return;
     confirm({ description: "Are you sure you want to delete this task?" })
@@ -46,14 +47,17 @@ const TasksForProjectRow = (props: {
   const editTask = (task: Task) => {
     const taskToSet = {
       ...task,
-      owner: editedTask.owner,
+      owner: taskOwner,
     };
     setEditedTask(taskToSet);
   };
   const handleComplete = async () => {
     const task = { ...editedTask, status: "DONE", completed_at: new Date() };
     setEditedTask(task);
-    const response = await updateTask(task);
+    const response = await updateTask({
+      ...task,
+      owner: task.owner.id,
+    });
     if (response.status === 200) {
       enqueueSnackbar("Status is successfully changed to done!", {
         variant: "success",
@@ -126,7 +130,10 @@ const TasksForProjectRow = (props: {
         <EditTaskModal
           open={edit}
           handleClose={handleCloseEditModal}
-          task={editedTask}
+          task={{
+            ...editedTask,
+            owner: editedTask.owner.id,
+          }}
           updateTask={editTask}
         />
       )}
