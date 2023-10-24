@@ -271,3 +271,15 @@ class AmIProjectOwner(APIView):
     def get(self, request, project_id):
         is_owner = ProjectUser.objects.filter(project=project_id, user=request.user, is_owner=True).exists()
         return Response({'is_owner': is_owner})
+    
+class LeaveProject(APIView):
+    def delete(self, request, project_id):
+        project_user = ProjectUser.objects.get(project=project_id, user=request.user)
+        project = Project.objects.get(pk=project_user.project.id)        
+        project_users_count = ProjectUser.objects.filter(project=project, is_owner=True).count()
+        if project_users_count == 1 and project_user.is_owner:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': 'Cannot remove the only owner of the project'})   
+        project_user.delete()
+        project.updated_at = timezone.now()
+        project.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)

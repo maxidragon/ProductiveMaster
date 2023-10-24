@@ -61,3 +61,15 @@ export const isProjectOwner = async (projectId: number) => {
   );
   return await response.json();
 };
+
+export const leaveProject = async (projectId: number) => {
+  const response = await backendRequest(
+    `projects/leave/${projectId}/`,
+    "DELETE",
+    true,
+  );
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
+};

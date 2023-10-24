@@ -23,6 +23,7 @@ urlpatterns = [
     path('projects/users/add/', views.AddProjectUser.as_view(), name='add-project-user'),
     path('projects/users/update/<int:pk>/', views.UpdateDeleteProjectUser.as_view(), name='project-user-detail'),
     path('projects/owner/<int:project_id>/', views.AmIProjectOwner.as_view(), name='project-owner'),
+    path('projects/leave/<int:project_id>/', views.LeaveProject.as_view(), name='leave-project'),
     path('projects/stats/<int:pk>/', views.ProjectStats.as_view(), name='project-stats'),
     path('documents/project/<int:project_id>/', views.ListDocumentForProject.as_view(), name='documents-for-project'),
     path('documents/create/', views.CreateDocument.as_view(), name='create-document'),

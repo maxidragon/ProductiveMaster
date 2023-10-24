@@ -937,3 +937,37 @@ class TestUpdateDeleteProjectUsers(TestCase):
         token = self.authenticate('testuser4', 'testpassword')
         response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+class LeaveProjectTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.user2 = User.objects.create_user(
+            username='testuser2', password='testpassword')
+        self.project = Project.objects.create(
+            title='Test Project', description='Test Project Description')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)
+        self.project_user2 = ProjectUser.objects.create(
+            user=self.user2, project=self.project, added_by=self.user)
+        
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password})
+        token = response.data['token']
+        return token
+    
+    def test_leave_project_as_participant(self):
+        url = reverse('leave-project', kwargs={'project_id': self.project.id})
+        token = self.authenticate('testuser2', 'testpassword')
+        response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        
+    def test_leave_project_as_only_owner(self):
+        url = reverse('leave-project', kwargs={'project_id': self.project.id})
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+    
