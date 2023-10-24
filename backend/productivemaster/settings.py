@@ -24,6 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-k5$dtg*e+6#h%k=(@^aq9d76n9bra^cq=5u^d6r^8gv_uh)y2p'
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
+CSRF_COOKIE_SECURE = False
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -33,6 +35,8 @@ if os.environ.get('DEBUG') == 'False':
 
 if not DEBUG:
     SECRET_KEY = os.environ.get('SECRET_KEY')
+    CSRF_TRUSTED_ORIGINS.append(os.environ.get('FRONTEND_URL'))
+    CSRF_COOKIE_SECURE = True
     
 ALLOWED_HOSTS = ['*']
 
