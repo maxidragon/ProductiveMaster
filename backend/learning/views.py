@@ -51,6 +51,7 @@ class LearningResourceDetail(generics.RetrieveUpdateDestroyAPIView):
         learning = Learning.objects.get(pk=serializer.data['learning'])
         learning.updated_at = serializer.data['updated_at']
         learning.save()
+
 class ListLearnings(generics.ListAPIView):
     serializer_class = LearningListSerializer
 

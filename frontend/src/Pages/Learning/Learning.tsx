@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
 import { LearningType } from "../../logic/interfaces";
-import { searchTasks } from "../../logic/tasks";
 import {
   LinearProgress,
   FormControl,
@@ -79,7 +78,7 @@ const Learning = () => {
       fetchData(page, status);
       return;
     }
-    const filteredLearnings = await searchTasks(event.target.value, status);
+    const filteredLearnings = await searchLearnings(event.target.value, status);
     setLearnings(filteredLearnings.results);
     setPage(1);
     const totalPagesNumber = calculateTotalPages(
