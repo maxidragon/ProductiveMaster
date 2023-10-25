@@ -1,9 +1,13 @@
+import json
 from rest_framework import serializers
 
 from user_auth.serializers import PublicUserSerializer
 from .models import Document, Project, ProjectUser, Task
 from datetime import timedelta
 from django.utils import timezone
+from urllib.parse import urlparse
+import requests
+
 
 class ProjectSerializer(serializers.ModelSerializer):
 
@@ -19,12 +23,13 @@ class ProjectStatsSerializer(serializers.ModelSerializer):
     num_tasks_done = serializers.SerializerMethodField()
     num_tasks_done_last_week = serializers.SerializerMethodField()
     num_tasks_done_last_month = serializers.SerializerMethodField()
+    total_code_lines = serializers.SerializerMethodField()
     
     class Meta:
         model = Project
-        fields = ('id', 'title', 
+        fields = ('id', 'title', 'github', 'total_code_lines',
                   'num_tasks_todo', 'num_tasks_in_progress', 'num_tasks_done', 'num_tasks_done_last_week', 'num_tasks_done_last_month', 'created_at', 'updated_at')
-        read_only_fields = ('num_tasks_todo',
+        read_only_fields = ('num_tasks_todo', 'total_code_lines',
                             'num_tasks_in_progress', 'num_tasks_done', 'num_tasks_done_last_week', 'num_tasks_done_last_month', 'created_at', 'updated_at')
 
     def get_num_tasks_todo(self, obj):
@@ -41,6 +46,25 @@ class ProjectStatsSerializer(serializers.ModelSerializer):
     
     def get_num_tasks_done_last_month(self, obj):
         return obj.tasks.filter(status='DONE', completed_at__gte=timezone.now()-timedelta(days=30)).count()
+    
+    def get_total_code_lines(self, obj):
+        githubUrl = obj.github
+        parsed_url = urlparse(githubUrl)
+        extractedUrl = parsed_url.path
+        response = requests.get(f'https://ghloc.vercel.app/api/{extractedUrl}/BADGE')
+        try:
+            response.raise_for_status()
+            json_data = response.json() 
+
+            if 'message' in json_data:
+                return json_data['message']
+            else:
+                return None
+
+        except:
+            return None
+
+
     
 
 class RecentProjectSerializer(serializers.ModelSerializer):

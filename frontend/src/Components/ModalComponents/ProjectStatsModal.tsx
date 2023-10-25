@@ -57,6 +57,18 @@ const ProjectStatsModal = (props: {
                     Tasks done last month: {stats.num_tasks_done_last_month}
                   </Typography>
                 </Grid>
+                <Grid item>
+                  {stats.total_code_lines ? (
+                    <Typography variant="h6">
+                      Total code lines: {stats.total_code_lines}
+                    </Typography>
+                  ) : (
+                    <Typography variant="h6">
+                      GitHub repository must be connected and public to see
+                      total code lines
+                    </Typography>
+                  )}
+                </Grid>
               </>
             )}
           </Grid>
