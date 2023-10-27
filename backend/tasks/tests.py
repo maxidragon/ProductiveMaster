@@ -970,4 +970,51 @@ class LeaveProjectTest(TestCase):
         response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         
+class TestRecentProjects(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.user2 = User.objects.create_user(
+            username="testuser2", password="testpassword")
+        self.user3 = User.objects.create_user(
+            username="testuser3", password="testpassword")
+        self.project = Project.objects.create(
+            title='Test Project', description='Test Project Description', status='PLANNED')
+        self.project2 = Project.objects.create(
+            title='In progress', description='Test Project Description', status='IN_PROGRESS')
+        self.project3 = Project.objects.create(
+            title='Another', description='Test Project Description', status='DONE')
+        self.project4 = Project.objects.create(
+            title='Another in progress', description='Test Project Description', status='IN_PROGRESS')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)
+        self.project_user2 = ProjectUser.objects.create(
+            user=self.user, project=self.project2, is_owner=True, added_by=self.user)
+        self.project_user3 = ProjectUser.objects.create(
+            user=self.user, project=self.project3, is_owner=True, added_by=self.user)
+        self.project_user4 = ProjectUser.objects.create(
+            user=self.user2, project=self.project4, is_owner=True, added_by=self.user2)
+        self.project_user5 = ProjectUser.objects.create(
+            user=self.user3, project=self.project4, is_owner=False, added_by=self.user2)
+
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password})
+        token = response.data['token']
+        return token
     
+    #exclude done and planned projects
+    def test_get_recent_projects_as_owner(self): 
+        url = reverse('recent-projects')
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['id'], self.project2.id)
+        
+    def test_get_recent_projects_as_participant(self): 
+        url = reverse('recent-projects')
+        token = self.authenticate('testuser3', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['id'], self.project4.id)

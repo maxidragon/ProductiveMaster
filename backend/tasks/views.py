@@ -164,7 +164,7 @@ class RecentProjects(APIView):
     def get(self, request):
         user_projects = ProjectUser.objects.filter(user=request.user).values('project')
         projects = Project.objects.filter(
-            id__in=user_projects).order_by('-updated_at')[:3]
+            id__in=user_projects, status='IN_PROGRESS').order_by('-updated_at')[:3]
         serializer = RecentProjectSerializer(projects, many=True)
         return Response(serializer.data)
 
