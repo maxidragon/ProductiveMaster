@@ -364,3 +364,37 @@ class SearchLearningsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data['results']), 0)
         
+class RecentLearningsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.user2 = User.objects.create_user(
+            username='nonowner', password='nonownerpassword')
+        self.learning_category = LearningCategory.objects.create(
+            name='Test Learning Category', owner=self.user)
+        self.learning = Learning.objects.create(
+            title='Test Learning', description='Test Learning Description', owner=self.user, status='TO_LEARN', learning_category=self.learning_category)
+        self.learning2 = Learning.objects.create(
+            title='Test Learning 2', description='Test Learning Description 2', owner=self.user, status='IN_PROGRESS', learning_category=self.learning_category)
+        
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password}, format='json')
+        token = response.data['token']
+        return token
+
+    def test_recent_learnings(self):
+        url = reverse('recent-learnings')
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data[0].get('title'), 'Test Learning 2')
+    
+    def test_recent_learnings_as_non_owner(self):
+        url = reverse('recent-learnings')
+        token = self.authenticate('nonowner', 'nonownerpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 0)        
+        
