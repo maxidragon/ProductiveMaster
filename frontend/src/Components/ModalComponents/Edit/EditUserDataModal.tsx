@@ -1,8 +1,13 @@
-import { Modal, Box, TextField, Typography, Grid } from "@mui/material";
+import { Modal, Box, TextField, Typography, Grid, Button } from "@mui/material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { getUserData, updateUserData } from "../../../logic/auth";
+import {
+  getUserData,
+  removeAvatar,
+  updateAvatar,
+  updateUserData,
+} from "../../../logic/auth";
 import ActionsButtons from "../ActionsButtons";
 import { UserData } from "../../../logic/interfaces";
 import EditIcon from "@mui/icons-material/Edit";
@@ -18,11 +23,30 @@ const EditUserDataModal = (props: {
     gprm_streak: "",
     gprm_languages: "",
   });
+  const [avatar, setAvatar] = useState<File>();
   const handleEdit = async () => {
     const status = await updateUserData(data);
+    if (avatar) {
+      const avatarStatus = await updateAvatar(avatar);
+      if (avatarStatus === 200) {
+        enqueueSnackbar("Your avatar has been updated", { variant: "success" });
+      } else {
+        enqueueSnackbar("Something went wrong", { variant: "error" });
+      }
+    }
+
     if (status === 200) {
       enqueueSnackbar("Your data has been updated", { variant: "success" });
       props.handleClose();
+    } else {
+      enqueueSnackbar("Something went wrong", { variant: "error" });
+    }
+  };
+
+  const handleDeleteAvatar = async () => {
+    const status = await removeAvatar();
+    if (status === 200) {
+      enqueueSnackbar("Your avatar has been deleted", { variant: "success" });
     } else {
       enqueueSnackbar("Something went wrong", { variant: "error" });
     }
@@ -99,6 +123,32 @@ const EditUserDataModal = (props: {
                       setData({ ...data, gprm_languages: event.target.value })
                     }
                   />
+                </Grid>
+                <Grid item>
+                  <Button variant="contained" component="label">
+                    Upload Avatar
+                    <input
+                      accept="image/*"
+                      id="contained-button-file"
+                      multiple
+                      type="file"
+                      style={{ display: "none" }}
+                      onChange={(event) => {
+                        if (event.target.files) {
+                          setAvatar(event.target.files[0]);
+                        }
+                      }}
+                    />
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleDeleteAvatar}
+                  >
+                    Delete Avatar
+                  </Button>
                 </Grid>
               </>
             )}

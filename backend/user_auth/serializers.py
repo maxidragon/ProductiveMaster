@@ -59,3 +59,9 @@ class PublicUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username')
         read_only_fields = ('id', 'username')
+                
+        
+class AvatarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserData
+        fields = ('id', 'avatar')

@@ -6,6 +6,7 @@ import {
   Link,
   Chip,
   Box,
+  Tooltip,
 } from "@mui/material";
 import { Task, TaskForProject } from "../../../logic/interfaces";
 import EditIcon from "@mui/icons-material/Edit";
@@ -18,6 +19,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { deleteTask, updateTask } from "../../../logic/tasks";
 import EditTaskModal from "../../ModalComponents/Edit/EditTaskModal";
 import { statusPretyName } from "../../../logic/other";
+import AvatarComponent from "../../AvatarComponent";
 
 const TasksForProjectRow = (props: {
   task: TaskForProject;
@@ -28,6 +30,7 @@ const TasksForProjectRow = (props: {
   const [edit, setEdit] = useState(false);
   const [editedTask, setEditedTask] = useState<TaskForProject>(props.task);
   const [taskOwner] = useState(props.task.owner);
+
   const handleDelete = async () => {
     if (props.task === null) return;
     confirm({ description: "Are you sure you want to delete this task?" })
@@ -90,7 +93,17 @@ const TasksForProjectRow = (props: {
           </TableCell>
           <TableCell>{editedTask.description}</TableCell>
           <TableCell>{statusPretyName(editedTask.status)}</TableCell>
-          <TableCell>{editedTask.owner.username}</TableCell>
+          <TableCell>
+            <Tooltip title={editedTask.owner.username}>
+              <IconButton>
+                <AvatarComponent
+                  userId={editedTask.owner.id}
+                  username={editedTask.owner.username}
+                  size="30px"
+                />
+              </IconButton>
+            </Tooltip>
+          </TableCell>
           <TableCell>
             {editedTask.issue && (
               <IconButton

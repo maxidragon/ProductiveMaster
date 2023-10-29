@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TableRow, TableCell, IconButton } from "@mui/material";
+import { TableRow, TableCell, IconButton, Grid, Tooltip } from "@mui/material";
 import { ProjectParticipant } from "../../../logic/interfaces";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -7,6 +7,7 @@ import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
 import { deleteProjectParticipant } from "../../../logic/projectParticipants";
 import EditProjectParticipantModal from "../../ModalComponents/Edit/EditProjectParticipantModal";
+import AvatarComponent from "../../AvatarComponent";
 
 const ProjectParticipantRow = ({
   user,
@@ -54,10 +55,29 @@ const ProjectParticipantRow = ({
           key={editedUser.id}
           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         >
-          <TableCell component="th" scope="row">
-            {editedUser.user.username}
+          <TableCell>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item>
+                <AvatarComponent
+                  userId={editedUser.user.id}
+                  username={editedUser.user.username}
+                  size="30px"
+                />
+              </Grid>
+              <Grid item>{editedUser.user.username}</Grid>
+            </Grid>
           </TableCell>
-          <TableCell>{editedUser.added_by.username}</TableCell>
+          <TableCell>
+            <Tooltip title={editedUser.added_by.username}>
+              <IconButton>
+                <AvatarComponent
+                  userId={editedUser.added_by.id}
+                  username={editedUser.added_by.username}
+                  size="30px"
+                />
+              </IconButton>
+            </Tooltip>
+          </TableCell>
           <TableCell>{editedUser.is_owner ? "Owner" : "Participant"}</TableCell>
           {isProjectOwner && (
             <TableCell>

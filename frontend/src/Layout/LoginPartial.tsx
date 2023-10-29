@@ -1,17 +1,27 @@
 import LogoutIcon from "@mui/icons-material/Logout";
-import { IconButton, Typography } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getUsername, logout } from "../logic/auth";
+import AvatarComponent from "../Components/AvatarComponent";
 
 const LoginPartial = (props: { userLoggedIn: boolean }) => {
   const navigate = useNavigate();
   const username = getUsername();
   return (
     <>
-      {props.userLoggedIn && (
+      {props.userLoggedIn && username && (
         <>
-          <Typography>Hello {username}</Typography>
-
+          <IconButton
+            onClick={() => {
+              navigate("/settings");
+            }}
+          >
+            <AvatarComponent
+              userId={localStorage.getItem("userId") as unknown as number}
+              username={username}
+              size="30px"
+            />
+          </IconButton>
           <IconButton
             color="inherit"
             onClick={() => {

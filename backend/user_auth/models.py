@@ -6,7 +6,6 @@ from django.dispatch import receiver
 from django.core.mail import EmailMultiAlternatives
 from django.dispatch import receiver
 from django.template.loader import render_to_string
-from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
 from rest_framework.authtoken.models import Token
 
@@ -16,6 +15,7 @@ class UserData(models.Model):
     gprm_stats = models.TextField()
     gprm_streak = models.TextField()
     gprm_languages = models.TextField()
+    avatar = models.BinaryField(null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_data')
     
 
