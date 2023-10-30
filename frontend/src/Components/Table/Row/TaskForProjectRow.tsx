@@ -30,6 +30,7 @@ const TasksForProjectRow = (props: {
   const [edit, setEdit] = useState(false);
   const [editedTask, setEditedTask] = useState<TaskForProject>(props.task);
   const [taskOwner] = useState(props.task.owner);
+  const [taskAssignee] = useState(props.task.assignee);
 
   const handleDelete = async () => {
     if (props.task === null) return;
@@ -51,6 +52,7 @@ const TasksForProjectRow = (props: {
     const taskToSet = {
       ...task,
       owner: taskOwner,
+      assignee: taskAssignee,
     };
     setEditedTask(taskToSet);
   };
@@ -60,6 +62,7 @@ const TasksForProjectRow = (props: {
     const response = await updateTask({
       ...task,
       owner: task.owner.id,
+      assignee: task.assignee?.id,
     });
     if (response.status === 200) {
       enqueueSnackbar("Status is successfully changed to done!", {
@@ -105,6 +108,19 @@ const TasksForProjectRow = (props: {
             </Tooltip>
           </TableCell>
           <TableCell>
+            {editedTask.assignee && (
+              <Tooltip title={editedTask.assignee.username}>
+                <IconButton>
+                  <AvatarComponent
+                    userId={editedTask.assignee.id}
+                    username={editedTask.assignee.username}
+                    size="30px"
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
+          </TableCell>
+          <TableCell>
             {editedTask.issue && (
               <IconButton
                 component={Link}
@@ -146,6 +162,7 @@ const TasksForProjectRow = (props: {
           task={{
             ...editedTask,
             owner: editedTask.owner.id,
+            assignee: editedTask.assignee?.id,
           }}
           updateTask={editTask}
         />

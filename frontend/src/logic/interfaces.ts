@@ -33,6 +33,7 @@ export interface Task {
   status: string;
   high_priority: boolean;
   issue?: string;
+  assignee?: number;
   pull_request?: string;
   project: Project;
   owner: number;
@@ -47,6 +48,7 @@ export interface TaskForProject {
   description?: string;
   status: string;
   owner: PublicUser;
+  assignee: PublicUser;
   high_priority: boolean;
   issue?: string;
   pull_request?: string;

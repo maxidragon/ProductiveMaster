@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Box,
   Typography,
@@ -7,12 +7,19 @@ import {
   Grid,
   Checkbox,
   FormControlLabel,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { createTask } from "../../../logic/tasks";
 import ActionsButtons from "../ActionsButtons";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { getProjectParticipants } from "../../../logic/projectParticipants";
+import { ProjectParticipant } from "../../../logic/interfaces";
+import AvatarComponent from "../../AvatarComponent";
 
 const CreateTaskModal = (props: {
   open: boolean;
@@ -29,6 +36,8 @@ const CreateTaskModal = (props: {
   > = useRef();
   //eslint-disable-next-line
   const highPriorityRef: any = useRef();
+  const [participants, setParticipants] = useState<ProjectParticipant[]>([]);
+  const [assignee, setAssignee] = useState<number>();
 
   const handleCreate = async () => {
     if (!titleRef.current || !descriptionRef.current || !githubLinkRef.current)
@@ -43,6 +52,7 @@ const CreateTaskModal = (props: {
       description,
       highPriority,
       github,
+      assignee,
     );
     if (response.status === 201) {
       enqueueSnackbar("Task created!", { variant: "success" });
@@ -71,6 +81,16 @@ const CreateTaskModal = (props: {
       }
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getProjectParticipants(+props.projectId);
+      setParticipants(data.results);
+    };
+
+    fetchData();
+  }, [props.projectId]);
+
   return (
     <Modal open={props.open} onClose={props.handleClose}>
       <Box sx={style}>
@@ -105,6 +125,33 @@ const CreateTaskModal = (props: {
               label="High priority"
             />
           </Grid>
+        </Grid>
+        <Grid item>
+          <FormControl fullWidth>
+            <InputLabel id="assigneLabel">Assignee</InputLabel>
+            <Select
+              labelId="assigneLabel"
+              value={assignee}
+              label="Assignee"
+              onChange={(e) => setAssignee(+e.target.value)}
+            >
+              <MenuItem value={0}>No assignee</MenuItem>
+              {participants &&
+                participants.map((participant) => (
+                  <MenuItem
+                    value={participant.user.id}
+                    sx={{ display: "flex", gap: 1 }}
+                  >
+                    <AvatarComponent
+                      userId={participant.user.id}
+                      username={participant.user.username}
+                      size="30px"
+                    />
+                    {participant.user.username}
+                  </MenuItem>
+                ))}
+            </Select>
+          </FormControl>
         </Grid>
         <ActionsButtons
           cancel={props.handleClose}

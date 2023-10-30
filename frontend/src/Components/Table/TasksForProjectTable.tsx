@@ -35,6 +35,7 @@ const TasksForProjectTable = (props: {
             <TableCell>Description</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Owner</TableCell>
+            <TableCell>Assignee</TableCell>
             <TableCell>Issue</TableCell>
             <TableCell>PR</TableCell>
             <TableCell>Actions</TableCell>

@@ -66,6 +66,7 @@ export const createTask = async (
   description: string,
   high_priority: boolean,
   issue?: string,
+  assignee?: number,
 ) => {
   const body = {
     project: +projectId,
@@ -73,6 +74,7 @@ export const createTask = async (
     description,
     issue,
     high_priority,
+    assignee: assignee ? assignee : null,
   };
   const response = await backendRequest(`tasks/create/`, "POST", true, body);
   return {

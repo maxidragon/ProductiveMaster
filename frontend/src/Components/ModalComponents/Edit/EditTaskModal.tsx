@@ -14,9 +14,12 @@ import {
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { updateTask } from "../../../logic/tasks";
-import { Task } from "../../../logic/interfaces";
+import { ProjectParticipant, Task } from "../../../logic/interfaces";
 import ActionsButtons from "../ActionsButtons";
 import EditIcon from "@mui/icons-material/Edit";
+import { useState, useEffect } from "react";
+import { getProjectParticipants } from "../../../logic/projectParticipants";
+import AvatarComponent from "../../AvatarComponent";
 
 const EditTaskModal = (props: {
   open: boolean;
@@ -24,8 +27,14 @@ const EditTaskModal = (props: {
   task: Task;
   updateTask: (task: Task) => void;
 }) => {
+  const [participants, setParticipants] = useState<ProjectParticipant[]>([]);
+  const [assignee, setAssignee] = useState<number>(props.task.assignee || 0);
   const handleEdit = async () => {
-    const response = await updateTask(props.task);
+    const data = {
+      ...props.task,
+      assignee: assignee,
+    };
+    const response = await updateTask(data);
     if (response.status === 200) {
       enqueueSnackbar("Task updated!", { variant: "success" });
       props.handleClose();
@@ -58,6 +67,21 @@ const EditTaskModal = (props: {
       }
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log(props.task.project);
+      let id = 0;
+      if (typeof props.task.project === "number") {
+        id = props.task.project;
+      }
+      const data = await getProjectParticipants(id);
+      setParticipants(data.results);
+    };
+
+    fetchData();
+  }, [props.task.project]);
+
   return (
     <Modal open={props.open} onClose={props.handleClose}>
       <Box sx={style}>
@@ -134,6 +158,33 @@ const EditTaskModal = (props: {
                 <MenuItem value={"TODO"}>To do</MenuItem>
                 <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
                 <MenuItem value={"DONE"}>Done</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <FormControl fullWidth>
+              <InputLabel id="assigneLabel">Assignee</InputLabel>
+              <Select
+                labelId="assigneLabel"
+                value={assignee}
+                label="Assignee"
+                onChange={(event) => setAssignee(+event.target.value)}
+              >
+                <MenuItem value={0}>No assignee</MenuItem>
+                {participants &&
+                  participants.map((participant) => (
+                    <MenuItem
+                      value={participant.user.id}
+                      sx={{ display: "flex", gap: 1 }}
+                    >
+                      <AvatarComponent
+                        userId={participant.user.id}
+                        username={participant.user.username}
+                        size="30px"
+                      />
+                      {participant.user.username}
+                    </MenuItem>
+                  ))}
               </Select>
             </FormControl>
           </Grid>
