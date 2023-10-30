@@ -1,5 +1,5 @@
 import { UserData, UserSettings } from "./interfaces";
-import { backendRequest } from "./request";
+import { backendRequest, backendRequestWithFiles } from "./request";
 
 export const registerUser = async (
   email: FormDataEntryValue | null,
@@ -106,4 +106,30 @@ export const resetPassword = async (token: string, newPassword: string) => {
     status: response.status,
     data: await response.json(),
   };
+};
+
+export const updateAvatar = async (avatar: File) => {
+  const formData = new FormData();
+  formData.append("avatar", avatar as Blob);
+  const response = await backendRequestWithFiles(
+    "auth/avatar/update/",
+    "PUT",
+    true,
+    formData,
+  );
+  return response.status;
+};
+
+export const getUserAvatar = async (userId: number) => {
+  const response = await backendRequest(`auth/avatar/${userId}/`, "GET", true);
+  const blob = await response.blob();
+  return {
+    status: response.status,
+    url: URL.createObjectURL(blob),
+  };
+};
+
+export const removeAvatar = async () => {
+  const response = await backendRequest(`auth/avatar/remove/`, "DELETE", true);
+  return response.status;
 };
