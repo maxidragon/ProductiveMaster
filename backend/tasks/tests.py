@@ -96,12 +96,16 @@ class TaskDetailTests(TestCase):
             username='testuser', password='testpassword')
         self.user2 = User.objects.create_user(
             username="noowner", password="nopassword")
+        self.user3 = User.objects.create_user(
+            username="testuser3", password="testpassword")
         self.project = Project.objects.create(
             title='Test Project')
         self.project_user = ProjectUser.objects.create(
             user=self.user, project=self.project, added_by=self.user)
         self.task = Task.objects.create(
             title='Test Task', project=self.project, owner=self.user)
+        self.task2 = Task.objects.create(
+            title='Test Task', project=self.project, owner=self.user, assignee=self.user3)
 
     def authenticate(self, username, password):
         response = self.client.post(reverse(
@@ -116,6 +120,12 @@ class TaskDetailTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], self.task.title)
 
+    def test_get_task_as_assignee(self):
+        url = reverse('task-detail', args=[self.task2.id])
+        token = self.authenticate('testuser3', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_get_task_forbidden(self):
         url = reverse('task-detail', args=[self.task.id])
         token = self.authenticate('noowner', 'nopassword')
@@ -127,6 +137,16 @@ class TaskDetailTests(TestCase):
         data = {'title': 'New Title', 'description': 'New Description', 'issue': 'https://github.com',
                 'project': self.project.id, 'status': 'TODO', 'owner': self.user.id, 'pull_request': 'https://github.com'}
         token = self.authenticate('testuser', 'testpassword')
+        response = self.client.put(
+            url, data, HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], 'New Title')
+        
+    def test_update_task_as_assignee(self):
+        url = reverse('task-detail', args=[self.task2.id])
+        data = {'title': 'New Title', 'description': 'New Description', 'issue': 'https://github.com',
+                'project': self.project.id, 'status': 'TODO', 'owner': self.user.id, 'pull_request': 'https://github.com'}
+        token = self.authenticate('testuser3', 'testpassword')
         response = self.client.put(
             url, data, HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -146,6 +166,12 @@ class TaskDetailTests(TestCase):
         token = self.authenticate('testuser', 'testpassword')
         response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        
+    def test_delete_task_as_assignee_forbidden(self):
+        url = reverse('task-detail', args=[self.task2.id])
+        token = self.authenticate('testuser3', 'testpassword')
+        response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_delete_task_forbidden(self):
         url = reverse('task-detail', args=[self.task.id])

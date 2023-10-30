@@ -8,7 +8,14 @@ class IsOwner(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         return obj.owner == request.user
     
+class IsOwnerOrAssignee(permissions.BasePermission):
     
+        def has_object_permission(self, request, view, obj):
+            if request.method in ['GET', 'PUT']:
+                return obj.owner == request.user or obj.assignee == request.user
+            if request.method == 'DELETE':
+                project_user = ProjectUser.objects.filter(project=obj.project, user=request.user, is_owner=True).exists()
+                return obj.owner == request.user or project_user
 class IsProjectOwner(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):

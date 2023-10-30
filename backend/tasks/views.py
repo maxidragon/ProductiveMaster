@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
-from .permissions import IsOwner, IsProjectOwner, ListProjectResourcesPermission
+from .permissions import IsOwner, IsOwnerOrAssignee, IsProjectOwner, ListProjectResourcesPermission
 from .serializers import CreateUpdateDocumentSerializer, DocumentSerializer, ProjectSerializer, ProjectStatsSerializer, ProjectUserSerializer, RecentProjectSerializer, TaskForProjectSerializer, TaskListSerializer, TaskSerializer, UpdateProjectUserSerializer
 from rest_framework import generics
 from .models import Document, Project, ProjectUser, Task
@@ -97,7 +97,7 @@ class SearchTaskFromProject(generics.ListAPIView):
 class TaskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    permission_classes = [IsOwner]
+    permission_classes = [IsOwnerOrAssignee]
 
     def perform_update(self, serializer):
         serializer.save(owner=self.request.user)

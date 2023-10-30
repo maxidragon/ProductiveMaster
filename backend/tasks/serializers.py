@@ -83,10 +83,11 @@ class TaskSerializer(serializers.ModelSerializer):
 
 class TaskForProjectSerializer(serializers.ModelSerializer):
     owner = PublicUserSerializer()
+    assignee = PublicUserSerializer()
     class Meta:
         model = Task
         fields = ('id', 'title', 'description', 'status', 'high_priority',
-                  'created_at', 'updated_at', 'completed_at', 'owner', 'project', 'issue', 'pull_request')
+                  'created_at', 'updated_at', 'completed_at', 'owner', 'assignee', 'project', 'issue', 'pull_request')
         read_only_fields = ('created_at', 'updated_at', 'owner')
 
 class TaskListSerializer(serializers.ModelSerializer):

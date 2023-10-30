@@ -18,6 +18,7 @@ class Task(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     completed_at = models.DateTimeField(null=True, blank=True) 
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
+    assignee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_tasks', null=True, blank=True)
     project = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='tasks', null=True, blank=True)
     
 class Project(models.Model):
