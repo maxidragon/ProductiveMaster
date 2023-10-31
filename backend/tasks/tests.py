@@ -1085,7 +1085,7 @@ class RecentTasksForProjectTest(TestCase):
         self.project_user2 = ProjectUser.objects.create(
             user=self.user2, project=self.project, added_by=self.user)
         self.task = Task.objects.create(
-            title='Test Task', description='Test Task Description', project=self.project)
+            title='Test Task', description='Test Task Description', project=self.project, owner=self.user)
         
     def authenticate(self, username, password):
         response = self.client.post(reverse(

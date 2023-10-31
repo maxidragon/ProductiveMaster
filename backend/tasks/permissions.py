@@ -15,7 +15,6 @@ class IsOwnerOrAssignee(permissions.BasePermission):
             if request.method in ['GET', 'PUT']:
                 return obj.owner == request.user or obj.assignee == request.user or project_user
             if request.method == 'DELETE':
-                project_user = ProjectUser.objects.filter(project=obj.project, user=request.user, is_owner=True).exists()
                 return obj.owner == request.user or project_user
 
 class IsProjectOwner(permissions.BasePermission):
@@ -45,7 +44,8 @@ class IsProjectOwnerOrReadonly(permissions.BasePermission):
             project = get_object_or_404(Project, id=project_id)
             is_project_owner = ProjectUser.objects.filter(project=project, user=request.user, is_owner=True).exists()
             if request.method in ['GET', 'HEAD', 'OPTIONS']:
-                return True
+                project_user = ProjectUser.objects.filter(project=project, user=request.user).exists()
+                return is_project_owner or project_user
             return is_project_owner
         
 class ListProjectResourcesPermission(permissions.BasePermission):
