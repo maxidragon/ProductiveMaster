@@ -21,10 +21,9 @@ import EditTaskModal from "../../ModalComponents/Edit/EditTaskModal";
 import { statusPretyName } from "../../../logic/other";
 import AvatarComponent from "../../AvatarComponent";
 
-const TasksForProjectRow = (props: {
+const RecentTaskRow = (props: {
   task: TaskForProject;
   isProjectOwner: boolean;
-  handleStatusUpdate: (status: string) => void;
 }) => {
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
@@ -69,7 +68,6 @@ const TasksForProjectRow = (props: {
       enqueueSnackbar("Status is successfully changed to done!", {
         variant: "success",
       });
-      props.handleStatusUpdate("DONE");
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
@@ -77,7 +75,6 @@ const TasksForProjectRow = (props: {
 
   const handleCloseEditModal = () => {
     setEdit(false);
-    props.handleStatusUpdate(editedTask.status);
   };
 
   return (
@@ -178,4 +175,4 @@ const TasksForProjectRow = (props: {
   );
 };
 
-export default TasksForProjectRow;
+export default RecentTaskRow;

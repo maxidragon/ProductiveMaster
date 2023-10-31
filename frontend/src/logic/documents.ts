@@ -50,3 +50,12 @@ export const deleteDocument = async (documentId: number) => {
   );
   return response.status;
 };
+
+export const getRecentDocuments = async (projectId: number) => {
+  const response = await backendRequest(
+    `documents/recent/${projectId}/`,
+    "GET",
+    true,
+  );
+  return await response.json();
+};

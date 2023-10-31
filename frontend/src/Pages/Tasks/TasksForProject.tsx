@@ -16,6 +16,7 @@ import { TaskForProject } from "../../logic/interfaces";
 import CreateTaskModal from "../../Components/ModalComponents/Create/CreateTaskModal";
 import { calculateTotalPages } from "../../logic/other";
 import TasksForProjectTable from "../../Components/Table/TasksForProjectTable";
+import { isProjectOwner as isProjectOwnerCheck } from "../../logic/projectParticipants";
 
 const TasksForProject = () => {
   const perPage = 10;
@@ -27,6 +28,7 @@ const TasksForProject = () => {
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
+  const [isProjectOwner, setIsProjectOwner] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);
   const fetchData = useCallback(
     async (pageParam: number, statusParam?: string) => {
@@ -151,6 +153,15 @@ const TasksForProject = () => {
     fetchData(1, status);
   }, [status, fetchData]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!projectId) return;
+      const isOwner = await isProjectOwnerCheck(+projectId);
+      setIsProjectOwner(isOwner["is_owner"]);
+    };
+    fetchData();
+  }, [projectId]);
+
   return (
     <>
       <Box sx={{ display: "flex", flexDirection: "row", mb: 2 }}>
@@ -192,13 +203,14 @@ const TasksForProject = () => {
           handlePageChange={handlePageChange}
           status={status}
           fetchData={fetchData}
+          isProjectOwner={isProjectOwner}
         />
       )}
       {createModalOpen && projectId && (
         <CreateTaskModal
           open={createModalOpen}
           handleClose={handleCloseCreateModal}
-          projectId={projectId}
+          projectId={+projectId}
         />
       )}
     </>

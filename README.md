@@ -74,7 +74,7 @@ npm install
 
 - Run frontend server
 ```
-npm start
+npm run dev
 ```
 The server will be accessible at localhost:3000
 

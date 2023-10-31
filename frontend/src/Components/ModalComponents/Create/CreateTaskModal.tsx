@@ -24,7 +24,7 @@ import AvatarComponent from "../../AvatarComponent";
 const CreateTaskModal = (props: {
   open: boolean;
   handleClose: () => void;
-  projectId: string;
+  projectId: number;
 }) => {
   const titleRef: React.MutableRefObject<HTMLInputElement | null | undefined> =
     useRef();

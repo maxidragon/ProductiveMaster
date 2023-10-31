@@ -25,6 +25,7 @@ import LearningResources from "./Pages/LearningResources/LearningResources";
 import ForgotPassword from "./Pages/Auth/ForgotPassword/ForgotPassword";
 import ResetPassword from "./Pages/Auth/ResetPassword/ResetPassword";
 import ProjectParticipants from "./Pages/ProjectParticipants/ProjectParticipants";
+import SingleProject from "./Pages/Projects/SingleProject";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
   {
     path: "/projects",
     element: <Layout children={<Projects />} />,
+  },
+  {
+    path: "/projects/:projectId",
+    element: <Layout children={<SingleProject />} />,
   },
   {
     path: "/tasks",

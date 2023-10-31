@@ -11,11 +11,13 @@ class IsOwner(permissions.BasePermission):
 class IsOwnerOrAssignee(permissions.BasePermission):
     
         def has_object_permission(self, request, view, obj):
+            project_user = ProjectUser.objects.filter(project=obj.project, user=request.user, is_owner=True).exists()
             if request.method in ['GET', 'PUT']:
-                return obj.owner == request.user or obj.assignee == request.user
+                return obj.owner == request.user or obj.assignee == request.user or project_user
             if request.method == 'DELETE':
                 project_user = ProjectUser.objects.filter(project=obj.project, user=request.user, is_owner=True).exists()
                 return obj.owner == request.user or project_user
+
 class IsProjectOwner(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
@@ -30,6 +32,22 @@ class IsProjectOwner(permissions.BasePermission):
         is_project_owner = ProjectUser.objects.filter(project=project, user=request.user, is_owner=True).exists()
         return is_project_owner
 
+class IsProjectOwnerOrReadonly(permissions.BasePermission):
+    
+        def has_object_permission(self, request, view, obj):
+            if request.method in ['POST', 'PUT'] and request.data.get('project'):
+                project_id = request.data['project']
+            else:
+                if view.kwargs.get('project_id'):
+                    project_id = view.kwargs['project_id']
+                if view.kwargs.get('pk'):
+                    project_id = view.kwargs['pk']    
+            project = get_object_or_404(Project, id=project_id)
+            is_project_owner = ProjectUser.objects.filter(project=project, user=request.user, is_owner=True).exists()
+            if request.method in ['GET', 'HEAD', 'OPTIONS']:
+                return True
+            return is_project_owner
+        
 class ListProjectResourcesPermission(permissions.BasePermission):
     
     def has_permission(self, request, view):

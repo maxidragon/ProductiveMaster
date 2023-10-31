@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TableRow, TableCell, IconButton, Link } from "@mui/material";
+import { TableRow, TableCell, IconButton, Link, Tooltip } from "@mui/material";
 import { Document as DocumentInterface } from "../../../logic/interfaces";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -7,6 +7,7 @@ import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
 import EditDocumentModal from "../../ModalComponents/Edit/EditDocumentModal";
 import { deleteDocument } from "../../../logic/documents";
+import AvatarComponent from "../../AvatarComponent";
 
 const DocumentRow = ({
   document,
@@ -55,19 +56,29 @@ const DocumentRow = ({
               {editedDocument.title}
             </Link>
           </TableCell>
-          <TableCell>{editedDocument.owner.username}</TableCell>
-          {(+userId === editedDocument.owner.id || isProjectOwner) && (
-            <>
-              <TableCell>
+          <TableCell>
+            <Tooltip title={editedDocument.owner.username}>
+              <IconButton>
+                <AvatarComponent
+                  userId={editedDocument.owner.id}
+                  username={editedDocument.owner.username}
+                  size="30px"
+                />
+              </IconButton>
+            </Tooltip>
+          </TableCell>
+          <TableCell>
+            {(+userId === editedDocument.owner.id || isProjectOwner) && (
+              <>
                 <IconButton onClick={() => setEdit(true)}>
                   <EditIcon />
                 </IconButton>
                 <IconButton onClick={handleDelete}>
                   <DeleteIcon />
                 </IconButton>
-              </TableCell>
-            </>
-          )}
+              </>
+            )}
+          </TableCell>
         </TableRow>
       )}
       {edit && (

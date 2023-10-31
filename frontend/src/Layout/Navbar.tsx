@@ -66,7 +66,7 @@ const Navbar = (props: {
             <ListItemButton
               sx={{ pl: 4 }}
               component={Link}
-              to={`/tasks/project/${project.id}`}
+              to={`/projects/${project.id}`}
               key={project.id}
             >
               <ListItemIcon>

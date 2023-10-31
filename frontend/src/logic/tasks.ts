@@ -22,6 +22,15 @@ export const getTasksForProject = async (
   return await response.json();
 };
 
+export const getRecentTasks = async (projectId: number) => {
+  const response = await backendRequest(
+    `tasks/project/recent/${projectId}/`,
+    "GET",
+    true,
+  );
+  return await response.json();
+};
+
 export const getTaskById = async (taskId: string) => {
   const response = await backendRequest(`tasks/${taskId}/`, "GET", true);
   return await response.json();
@@ -61,7 +70,7 @@ export const getHighPriorityTasks = async (page = 1) => {
 };
 
 export const createTask = async (
-  projectId: string,
+  projectId: number,
   title: string,
   description: string,
   high_priority: boolean,
@@ -69,7 +78,7 @@ export const createTask = async (
   assignee?: number,
 ) => {
   const body = {
-    project: +projectId,
+    project: projectId,
     title,
     description,
     issue,

@@ -20,7 +20,6 @@ const CreateDocumentModal = (props: {
     if (!titleRef.current || !urlRef.current) return;
     const title = titleRef.current.value;
     const url = urlRef.current.value;
-    console.log(title, url, props.projectId);
     const response = await createDocument(props.projectId, title, url);
     if (response.status === 201) {
       enqueueSnackbar("Document created!", { variant: "success" });

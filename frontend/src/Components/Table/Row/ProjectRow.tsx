@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, TableRow, TableCell, IconButton } from "@mui/material";
 import { Project } from "../../../logic/interfaces";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -15,6 +15,7 @@ import { statusPretyName } from "../../../logic/other";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import ProjectStatsModal from "../../ModalComponents/ProjectStatsModal";
 import PeopleIcon from "@mui/icons-material/People";
+import { isProjectOwner } from "../../../logic/projectParticipants";
 
 const ProjectRow = (props: {
   project: Project;
@@ -24,6 +25,7 @@ const ProjectRow = (props: {
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editedProject, setEditedProject] = useState<Project>(props.project);
+  const [isOwner, setIsOwner] = useState(false);
   const [openStatsModal, setOpenStatsModal] = useState(false);
   const handleDelete = async () => {
     if (props.project === null) return;
@@ -32,7 +34,7 @@ const ProjectRow = (props: {
         "Are you sure you want to delete this project and all tasks?",
     })
       .then(async () => {
-        const status = await deleteProject(props.project.id.toString());
+        const status = await deleteProject(props.project.id);
         if (status === 204) {
           enqueueSnackbar("Project deleted!", { variant: "success" });
           setHide(true);
@@ -53,6 +55,14 @@ const ProjectRow = (props: {
     props.handleStatusUpdate(editedProject.status);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const isOwner = await isProjectOwner(props.project.id);
+      setIsOwner(isOwner["is_owner"]);
+    };
+    fetchData();
+  }, [props.project.id]);
+
   return (
     <>
       {!hide && (
@@ -61,7 +71,9 @@ const ProjectRow = (props: {
           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         >
           <TableCell component="th" scope="row">
-            {editedProject.title}
+            <Link to={`/projects/${editedProject.id}`} component={RouterLink}>
+              {editedProject.title}
+            </Link>
           </TableCell>
           <TableCell>{editedProject.description}</TableCell>
           <TableCell>{statusPretyName(editedProject.status)}</TableCell>
@@ -96,12 +108,16 @@ const ProjectRow = (props: {
             <IconButton onClick={() => setOpenStatsModal(true)}>
               <BarChartIcon />
             </IconButton>
-            <IconButton onClick={() => setEdit(true)}>
-              <EditIcon />
-            </IconButton>
-            <IconButton onClick={handleDelete}>
-              <DeleteIcon />
-            </IconButton>
+            {isOwner && (
+              <>
+                <IconButton onClick={() => setEdit(true)}>
+                  <EditIcon />
+                </IconButton>
+                <IconButton onClick={handleDelete}>
+                  <DeleteIcon />
+                </IconButton>
+              </>
+            )}
           </TableCell>
         </TableRow>
       )}

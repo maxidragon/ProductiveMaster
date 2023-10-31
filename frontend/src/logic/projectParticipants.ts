@@ -73,3 +73,12 @@ export const leaveProject = async (projectId: number) => {
     data: await response.json(),
   };
 };
+
+export const getMostActiveParticipants = async (projectId: number) => {
+  const response = await backendRequest(
+    `project/users/recent/${projectId}/`,
+    "GET",
+    true,
+  );
+  return await response.json();
+};

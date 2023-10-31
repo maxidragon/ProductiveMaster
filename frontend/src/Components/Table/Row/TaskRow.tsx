@@ -77,7 +77,6 @@ const TaskRow = (props: {
     fetchData();
   }, [editedTask.project.id]);
 
-  console.log(userId, editedTask.owner, isProjectOwner);
   return (
     <>
       {!hide && (

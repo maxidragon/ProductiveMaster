@@ -1,4 +1,5 @@
 import { Project } from "./interfaces";
+import { isProjectOwner } from "./projectParticipants";
 import { backendRequest } from "./request";
 
 export const getAllProjects = async (page = 1) => {
@@ -17,6 +18,15 @@ export const getProjectsByStatus = async (status: string, page = 1) => {
 export const getRecentProjects = async () => {
   const response = await backendRequest("projects/recent/", "GET", true);
   return await response.json();
+};
+
+export const getProjectById = async (id: number) => {
+  const response = await backendRequest(`projects/detail/${id}/`, "GET", true);
+  const isOwner = await isProjectOwner(id);
+  return {
+    data: await response.json(),
+    isOwner: isOwner["is_owner"],
+  };
 };
 
 export const createProject = async (
@@ -48,7 +58,7 @@ export const updateProject = async (project: Project) => {
   };
 };
 
-export const deleteProject = async (id: string): Promise<number> => {
+export const deleteProject = async (id: number): Promise<number> => {
   const response = await backendRequest(
     `projects/detail/${id}/`,
     "DELETE",

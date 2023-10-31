@@ -106,6 +106,8 @@ class TaskDetailTests(TestCase):
             title='Test Task', project=self.project, owner=self.user)
         self.task2 = Task.objects.create(
             title='Test Task', project=self.project, owner=self.user, assignee=self.user3)
+        self.task3 = Task.objects.create(
+            title='Test Task', project=self.project, owner=self.user3)
 
     def authenticate(self, username, password):
         response = self.client.post(reverse(
@@ -151,6 +153,16 @@ class TaskDetailTests(TestCase):
             url, data, HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], 'New Title')
+        
+    def test_update_task_as_project_owner(self):
+        url = reverse('task-detail', args=[self.task3.id])
+        data = {'title': 'New Title', 'description': 'New Description', 'issue': 'https://github.com',
+                'project': self.project.id, 'status': 'TODO', 'owner': self.user.id, 'pull_request': 'https://github.com'}
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.put(
+            url, data, HTTP_AUTHORIZATION=f'Token {token}', content_type='application/json')    
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['title'], 'New Title')
 
     def test_update_task_forbidden(self):
         url = reverse('task-detail', args=[self.task.id])
@@ -163,6 +175,12 @@ class TaskDetailTests(TestCase):
 
     def test_delete_task(self):
         url = reverse('task-detail', args=[self.task.id])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        
+    def test_delete_task_as_project_owner(self):
+        url = reverse('task-detail', args=[self.task3.id])
         token = self.authenticate('testuser', 'testpassword')
         response = self.client.delete(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -284,6 +302,12 @@ class ProjectDetailTest(TestCase):
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['title'], self.project.title)
+
+    def test_get_project_as_participant(self):
+        url = reverse('project-detail', args=[self.project.id])
+        token = self.authenticate('testuser2', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_project_as_random_user_forbidden(self):
         url = reverse('project-detail', args=[self.project.id])
@@ -1044,3 +1068,131 @@ class TestRecentProjects(TestCase):
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['id'], self.project4.id)
+
+class RecentTasksForProjectTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.user2 = User.objects.create_user(
+            username="testuser2", password="testpassword")
+        self.user3 = User.objects.create_user(
+            username="noowner", password="nopassword")
+        self.project = Project.objects.create(
+            title='Test Project', description='Test Project Description')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)
+        self.project_user2 = ProjectUser.objects.create(
+            user=self.user2, project=self.project, added_by=self.user)
+        self.task = Task.objects.create(
+            title='Test Task', description='Test Task Description', project=self.project)
+        
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password})
+        token = response.data['token']
+        return token
+    
+    def test_get_recent_tasks_as_project_owner(self):
+        url = reverse('recent-tasks-for-project', kwargs={'project_id': self.project.id})
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['id'], self.task.id)
+        
+    def test_get_recent_tasks_as_project_participant(self):
+        url = reverse('recent-tasks-for-project', kwargs={'project_id': self.project.id})
+        token = self.authenticate('testuser2', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['id'], self.task.id)
+        
+    def test_get_recent_tasks_as_random_user(self):
+        url = reverse('recent-tasks-for-project', kwargs={'project_id': self.project.id})
+        token = self.authenticate('noowner', 'nopassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        
+class RecentDocumentsForProjectTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.user2 = User.objects.create_user(
+            username="testuser2", password="testpassword")
+        self.user3 = User.objects.create_user(
+            username="noowner", password="nopassword")
+        self.project = Project.objects.create(
+            title='Test Project', description='Test Project Description')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)
+        self.project_user2 = ProjectUser.objects.create(
+            user=self.user2, project=self.project, added_by=self.user)
+        self.document = Document.objects.create(
+            title='Test Document', url='https://docs.google.com', project=self.project, owner=self.user)
+        
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password})
+        token = response.data['token']
+        return token
+    
+    def test_get_recent_documents_as_project_owner(self):
+        url = reverse('recent-documents-for-project', kwargs={'project_id': self.project.id})
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['id'], self.document.id)
+        
+    def test_get_recent_documents_as_project_participant(self):
+        url = reverse('recent-documents-for-project', kwargs={'project_id': self.project.id})
+        token = self.authenticate('testuser2', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['id'], self.document.id)
+        
+    def test_get_recent_documents_as_random_user(self):
+        url = reverse('recent-documents-for-project', kwargs={'project_id': self.project.id})
+        token = self.authenticate('noowner', 'nopassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+class ActiveParticipantsTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.user2=  User.objects.create_user(
+            username='testuser2', password='testpassword')
+        self.user3 = User.objects.create_user(
+            username="noowner", password="nopassword")
+        self.project = Project.objects.create(
+            title='Test Project', description='Test Project Description')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)
+        self.project_user2 = ProjectUser.objects.create(
+            user=self.user2, project=self.project, added_by=self.user)
+        
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password})
+        token = response.data['token']
+        return token
+    
+    def test_get_active_participants_as_owner(self):
+        url = reverse('active-participants', kwargs={'project_id': self.project.id})
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(len(response.data), 2)
+        
+    def test_get_active_participants_as_participant(self):
+        url = reverse('active-participants', kwargs={'project_id': self.project.id})
+        token = self.authenticate('testuser2', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(len(response.data), 2)
+        
+    def test_get_active_participants_as_random_user(self):
+        url = reverse('active-participants', kwargs={'project_id': self.project.id})
+        token = self.authenticate('noowner', 'nopassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

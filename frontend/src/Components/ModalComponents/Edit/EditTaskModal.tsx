@@ -70,7 +70,6 @@ const EditTaskModal = (props: {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(props.task.project);
       let id = 0;
       if (typeof props.task.project === "number") {
         id = props.task.project;

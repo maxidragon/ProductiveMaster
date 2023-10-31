@@ -1,6 +1,8 @@
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
-from .permissions import IsOwner, IsOwnerOrAssignee, IsProjectOwner, ListProjectResourcesPermission
+
+from user_auth.serializers import PublicUserSerializer
+from .permissions import IsOwner, IsOwnerOrAssignee, IsProjectOwner, IsProjectOwnerOrReadonly, ListProjectResourcesPermission
 from .serializers import CreateUpdateDocumentSerializer, DocumentSerializer, ProjectSerializer, ProjectStatsSerializer, ProjectUserSerializer, RecentProjectSerializer, TaskForProjectSerializer, TaskListSerializer, TaskSerializer, UpdateProjectUserSerializer
 from rest_framework import generics
 from .models import Document, Project, ProjectUser, Task
@@ -135,7 +137,7 @@ class ProjectsByStatus(generics.ListAPIView):
 class ProjectDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [IsProjectOwner]
+    permission_classes = [IsProjectOwnerOrReadonly]
 
 
 class SearchProjects(generics.ListAPIView):
@@ -283,3 +285,32 @@ class LeaveProject(APIView):
         project.updated_at = timezone.now()
         project.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class RecentTasksForProject(APIView):
+    
+    def get(self, request, project_id):
+        project_user = ProjectUser.objects.filter(project=project_id, user=request.user).exists()
+        if not project_user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        tasks = Task.objects.filter(project=project_id, updated_at__gte=timezone.now() - timezone.timedelta(days=30)).order_by('-updated_at')[:5]
+        serializer = TaskForProjectSerializer(tasks, many=True)
+        return Response(serializer.data)
+    
+class RecentDocumentsForProject(APIView):
+        
+    def get(self, request, project_id):
+        project_user = ProjectUser.objects.filter(project=project_id, user=request.user).exists()
+        if not project_user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        documents = Document.objects.filter(project=project_id, updated_at__gte=timezone.now() - timezone.timedelta(days=30)).order_by('-updated_at')[:5]
+        serializer = DocumentSerializer(documents, many=True)
+        return Response(serializer.data)
+    
+class ActiveParticipants(APIView):
+    def get(self, request, project_id):
+        project_user = ProjectUser.objects.filter(project=project_id, user=request.user).exists()
+        if not project_user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        project_users = ProjectUser.objects.filter(project=project_id, updated_at__gte=timezone.now() - timezone.timedelta(days=30)).order_by('-updated_at')[:5]
+        serializer = ProjectUserSerializer(project_users, many=True)
+        return Response(serializer.data)
