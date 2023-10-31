@@ -125,6 +125,7 @@ const EditUserDataModal = (props: {
                   />
                 </Grid>
                 <Grid item>
+                  <Typography variant="h6">{avatar && avatar.name}</Typography>
                   <Button variant="contained" component="label">
                     Upload Avatar
                     <input
