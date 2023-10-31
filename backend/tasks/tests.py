@@ -101,7 +101,9 @@ class TaskDetailTests(TestCase):
         self.project = Project.objects.create(
             title='Test Project')
         self.project_user = ProjectUser.objects.create(
-            user=self.user, project=self.project, added_by=self.user)
+            user=self.user, project=self.project, added_by=self.user, is_owner=True)
+        self.project_user2 = ProjectUser.objects.create(
+            user=self.user3, project=self.project, added_by=self.user)
         self.task = Task.objects.create(
             title='Test Task', project=self.project, owner=self.user)
         self.task2 = Task.objects.create(
