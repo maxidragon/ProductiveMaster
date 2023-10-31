@@ -125,21 +125,26 @@ const TaskRow = (props: {
               </IconButton>
             )}
           </TableCell>
-          {(+userId === editedTask.owner || isProjectOwner) && (
-            <>
-              <TableCell>
+          <TableCell>
+            {editedTask.status !== "DONE" &&
+              (isProjectOwner ||
+                userId === editedTask.owner.toString() ||
+                userId === editedTask.assignee?.toString()) && (
                 <IconButton onClick={handleComplete}>
                   <CheckCircleIcon />
                 </IconButton>
+              )}
+            {(+userId === editedTask.owner || isProjectOwner) && (
+              <>
                 <IconButton onClick={() => setEdit(true)}>
                   <EditIcon />
                 </IconButton>
                 <IconButton onClick={handleDelete}>
                   <DeleteIcon />
                 </IconButton>
-              </TableCell>
-            </>
-          )}
+              </>
+            )}
+          </TableCell>
         </TableRow>
       )}
       {edit && (

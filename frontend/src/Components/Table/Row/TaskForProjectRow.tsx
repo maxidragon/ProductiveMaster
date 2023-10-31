@@ -144,9 +144,16 @@ const TasksForProjectRow = (props: {
             )}
           </TableCell>
           <TableCell>
-            <IconButton onClick={handleComplete}>
-              <CheckCircleIcon />
-            </IconButton>
+            {editedTask.status !== "DONE" &&
+              (props.isProjectOwner ||
+                localStorage.getItem("userId") ===
+                  editedTask.owner.id.toString() ||
+                localStorage.getItem("userId") ===
+                  editedTask.assignee.id.toString()) && (
+                <IconButton onClick={handleComplete}>
+                  <CheckCircleIcon />
+                </IconButton>
+              )}
             {(props.isProjectOwner ||
               localStorage.getItem("userId") ===
                 editedTask.owner.id.toString()) && (
