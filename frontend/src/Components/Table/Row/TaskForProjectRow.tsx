@@ -149,22 +149,26 @@ const TasksForProjectRow = (props: {
                 localStorage.getItem("userId") ===
                   editedTask.owner.id.toString() ||
                 localStorage.getItem("userId") ===
-                  editedTask.assignee.id.toString()) && (
+                  editedTask.assignee?.id.toString()) && (
                 <IconButton onClick={handleComplete}>
                   <CheckCircleIcon />
                 </IconButton>
               )}
             {(props.isProjectOwner ||
               localStorage.getItem("userId") ===
+                editedTask.owner.id.toString() ||
+              localStorage.getItem("userId") ===
+                editedTask.assignee?.id.toString()) && (
+              <IconButton onClick={() => setEdit(true)}>
+                <EditIcon />
+              </IconButton>
+            )}
+            {(props.isProjectOwner ||
+              localStorage.getItem("userId") ===
                 editedTask.owner.id.toString()) && (
-              <>
-                <IconButton onClick={() => setEdit(true)}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton onClick={handleDelete}>
-                  <DeleteIcon />
-                </IconButton>
-              </>
+              <IconButton onClick={handleDelete}>
+                <DeleteIcon />
+              </IconButton>
             )}
           </TableCell>
         </TableRow>
