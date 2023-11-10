@@ -16,6 +16,7 @@ class UserData(models.Model):
     gprm_streak = models.TextField()
     gprm_languages = models.TextField()
     avatar = models.BinaryField(null=True, blank=True)
+    last_visited = models.DateTimeField(auto_now=True, null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_data')
     
 

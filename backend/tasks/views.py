@@ -1,5 +1,6 @@
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from user_auth.models import UserData
 
 from user_auth.serializers import PublicUserSerializer
 from .permissions import IsOwner, IsOwnerOrAssignee, IsProjectOwner, IsProjectOwnerOrReadonly, ListProjectResourcesPermission
@@ -168,6 +169,9 @@ class RecentProjects(APIView):
         projects = Project.objects.filter(
             id__in=user_projects, status='IN_PROGRESS').order_by('-updated_at')[:3]
         serializer = RecentProjectSerializer(projects, many=True)
+        user_data = UserData.objects.get(user=request.user)
+        user_data.last_visited = timezone.now()
+        user_data.save()
         return Response(serializer.data)
 
 
