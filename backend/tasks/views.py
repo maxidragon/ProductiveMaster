@@ -1,9 +1,9 @@
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 from user_auth.models import UserData
 
-from user_auth.serializers import PublicUserSerializer
-from .permissions import IsOwner, IsOwnerOrAssignee, IsProjectOwner, IsProjectOwnerOrReadonly, ListProjectResourcesPermission
+from .permissions import IsOwner, IsOwnerOrAssignee, IsProjectOwnerOrReadonly, ListProjectResourcesPermission
 from .serializers import CreateUpdateDocumentSerializer, DocumentSerializer, ProjectSerializer, ProjectStatsSerializer, ProjectUserSerializer, RecentProjectSerializer, TaskForProjectSerializer, TaskListSerializer, TaskSerializer, UpdateProjectUserSerializer
 from rest_framework import generics
 from .models import Document, Project, ProjectUser, Task
@@ -11,7 +11,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
-
 
 class CreateTask(APIView):
     def post(self, request):
@@ -77,10 +76,7 @@ class SearchTask(generics.ListAPIView):
         search = self.kwargs.get('search')
         status = self.kwargs.get('status')
         user_projects = ProjectUser.objects.filter(user=self.request.user)
-        tasks = Task.objects.filter(
-            project__in=user_projects.values('project'), title__icontains=search).order_by('-updated_at')
-        return tasks.filter(status=status)
-
+        return Task.objects.filter(Q(status=status) & Q(project__in=user_projects.values('project')) & (Q(title__icontains=search) | Q(description__icontains=search))).order_by('-updated_at')
 
 class SearchTaskFromProject(generics.ListAPIView):
     serializer_class = TaskForProjectSerializer
@@ -90,10 +86,9 @@ class SearchTaskFromProject(generics.ListAPIView):
         project_id = self.kwargs.get('project_id')
         search = self.kwargs.get('search')
         status = self.kwargs.get('status')
-        queryset = Task.objects.filter(
-            title__icontains=search, project=project_id).order_by('-updated_at')
+        queryset =  Task.objects.filter(Q(project=project_id) & (Q(title__icontains=search) | Q(description__icontains=search))).order_by('-updated_at')
         if status is not None:
-            queryset = queryset.filter(status=status)
+            queryset = queryset.filter(status=status).order_by('-updated_at')
         return queryset
 
 
@@ -148,7 +143,7 @@ class SearchProjects(generics.ListAPIView):
         search = self.kwargs['search']
         user_projects = ProjectUser.objects.filter(user=self.request.user).values('project')
         return Project.objects.filter(
-            id__in=user_projects, title__icontains=search).order_by('-updated_at')
+            Q(id__in=user_projects) & (Q(title__icontains=search) | Q(description__icontains=search))).order_by('-updated_at')
 
 
 class SearchProjectsByStatus(generics.ListAPIView):
@@ -159,7 +154,7 @@ class SearchProjectsByStatus(generics.ListAPIView):
         status = self.kwargs['status']
         user_projects = ProjectUser.objects.filter(user=self.request.user).values('project')
         return Project.objects.filter(
-            id__in=user_projects, title__icontains=search, status=status).order_by('-updated_at')
+            Q(id__in=user_projects) & Q(status=status) & (Q(title__icontains=search) | Q(description__icontains=search))).order_by('-updated_at')
 
 
 class RecentProjects(APIView):

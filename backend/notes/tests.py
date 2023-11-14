@@ -4,8 +4,6 @@ from rest_framework import status
 from .models import Note
 from django.contrib.auth.models import User
 
-# Create your tests here.
-
 class ListCreateNoteTests(TestCase):
     def setUp(self):
         self.client = Client()
@@ -86,7 +84,8 @@ class SearchNotes(TestCase):
             username='testuser', password='testpassword')
         self.user2 = User.objects.create_user(
             username='nonowner', password='nonownerpassword')
-        self.note = Note.objects.create(title='Test Note', description='Test Note Description', owner=self.user)
+        self.note = Note.objects.create(title='Test Note', description='abc', owner=self.user)
+        self.note2 = Note.objects.create(title='Note2', description='def', owner=self.user)
 
     def authenticate(self, username, password):
         response = self.client.post(reverse(
@@ -94,14 +93,22 @@ class SearchNotes(TestCase):
         token = response.data['token']
         return token    
     
-    def test_search_notes_as_owner(self):
+    def test_search_notes_by_title_as_owner(self):
         url = reverse('search-notes', kwargs={'search': 'Test'})
         token = self.authenticate('testuser', 'testpassword')
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
         self.assertEqual(response.data['results'][0]['title'], 'Test Note')
-        
+    
+    def test_search_notes_by_description_as_owner(self):
+        url = reverse('search-notes', kwargs={'search': 'def'})
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['description'], 'def')
+    
     def test_search_notes_as_non_owner(self):
         url = reverse('search-notes', kwargs={'search': 'Test'})
         token = self.authenticate('nonowner', 'nonownerpassword')

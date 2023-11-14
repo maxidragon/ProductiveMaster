@@ -453,7 +453,7 @@ class TaskForProjectWithStatusTest(TestCase):
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-class SearchTasks(TestCase):
+class TestSearchTasks(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(
@@ -482,6 +482,14 @@ class SearchTasks(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
         self.assertEqual(response.data['count'], 1)
+        
+    def test_search_done_tasks_by_description_as_owner(self):
+        url = reverse('search-task', args=['Another', 'DONE'])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['count'], 1)
 
     def test_search_tasks_as_not_owner(self):
         url = reverse('search-task', args=['Test', 'TODO'])
@@ -497,6 +505,77 @@ class SearchTasks(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 0)
 
+class SearchTasksFromProjectTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.user2 = User.objects.create_user(
+            username="noowner", password="nopassword")
+        self.project = Project.objects.create(
+            title='Test Project', description='Test Project Description')
+        self.project2 = Project.objects.create(
+            title='Another Project', description='Another Project Description')
+        self.project_user = ProjectUser.objects.create(
+            user=self.user, project=self.project, is_owner=True, added_by=self.user)        
+        self.task = Task.objects.create(
+            title='Test Task', description='Test Task Description', owner=self.user, project=self.project, status='TODO')
+        self.task2 = Task.objects.create(
+            title='Test2 Task', description='Another Task Description', owner=self.user, project=self.project, status='DONE')
+        self.task3 = Task.objects.create(
+            title='Test Task', description='Test Task Description', owner=self.user, project=self.project2, status='TODO')
+        
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password}, format='json')        
+        token = response.data['token']
+        return token
+    
+    def test_search_tasks_from_project_as_owner_by_title(self):
+        url = reverse('search-tasks-from-project', args=[self.project.id, 'Test'])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['results']), 2)
+        self.assertEqual(response.data['count'], 2)
+        
+    def test_search_tasks_from_project_as_owner_by_description(self):
+        url = reverse('search-tasks-from-project', args=[self.project.id, 'Another'])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['count'], 1)
+        
+    def test_search_tasks_from_project_as_not_owner(self):
+        url = reverse('search-tasks-from-project', args=[self.project.id, 'Test'])
+        token = self.authenticate('noowner', 'nopassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')        
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        
+    def test_search_tasks_from_project_as_owner_with_no_results(self):
+        url = reverse('search-tasks-from-project', args=[self.project.id, 'notexist'])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.data['count'], 0)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
+    def test_search_todo_tasks_from_project_by_title_as_owner(self):
+        url = reverse('search-tasks-from-project-with-status', args=[self.project.id, 'Test', 'TODO'])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['count'], 1)
+        
+    def test_search_todo_tasks_from_project_by_description_as_owner(self):
+        url = reverse('search-tasks-from-project-with-status', args=[self.project.id, 'Another', 'DONE'])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['count'], 1)
+        
 
 class TestProjectByStatus(TestCase):
     def setUp(self):
@@ -566,9 +645,9 @@ class TestSearchProjects(TestCase):
         self.user_project_participant = User.objects.create_user(
             username='testuser2', password='testpassword')
         self.project = Project.objects.create(
-            title='Test Project', description='Test Project Description', status='PLANNED')
+            title='Test Project', description='Description', status='PLANNED')
         self.project2 = Project.objects.create(
-            title='Another', description='Test Project Description', status='IN_PROGRESS')
+            title='Project2', description='Another Description', status='IN_PROGRESS')
         self.project_user = ProjectUser.objects.create(
             user=self.user, project=self.project, is_owner=True, added_by=self.user)  
         self.project_user2 = ProjectUser.objects.create(
@@ -583,10 +662,18 @@ class TestSearchProjects(TestCase):
         token = response.data['token']
         return token
 
-    def test_search_project_as_owner(self):
+    def test_search_project_as_owner_by_title(self):
         url = reverse('search-projects', args=['Test'])
         token = self.authenticate('testuser', 'testpassword')
         response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['count'], 1)
+        
+    def test_search_project_as_owner_by_description(self):
+        url = reverse('search-projects', args=['Another'])
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')        
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['results']), 1)
         self.assertEqual(response.data['count'], 1)
