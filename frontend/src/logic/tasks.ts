@@ -96,6 +96,7 @@ export const updateTask = async (task: Task) => {
   const data = {
     ...task,
     project: task.project.id,
+    assignee: task.assignee ? task.assignee : null,
   };
   const response = await backendRequest(`tasks/${task.id}/`, "PUT", true, data);
   return {
