@@ -31,3 +31,11 @@ class RecentLearningsSerializer(serializers.ModelSerializer):
         model = Learning
         fields = ('id', 'title', 'updated_at')
         read_only_fields = ('updated_at',)
+        
+class LearningResourcesWithCategoriesSerializer(serializers.ModelSerializer):
+    learning = LearningSerializer()
+    class Meta:
+        model = LearningResource
+        fields = ('id', 'title', 'url', 'learning', 'owner', 'created_at', 'updated_at')
+        read_only_fields = ('owner', 'learning', 'created_at', 'updated_at')
+    

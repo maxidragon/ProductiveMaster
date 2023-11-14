@@ -48,3 +48,21 @@ export const deleteLearningResource = async (resourceId: number) => {
   );
   return response.status;
 };
+
+export const getAllLearningResources = async (page = 1) => {
+  const response = await backendRequest(
+    `learnings/resources/all/?page=${page}`,
+    "GET",
+    true,
+  );
+  return await response.json();
+};
+
+export const searchLearningResources = async (query: string, page = 1) => {
+  const response = await backendRequest(
+    `learnings/resources/search/${query}/?page=${page}`,
+    "GET",
+    true,
+  );
+  return await response.json();
+};

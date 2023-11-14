@@ -145,6 +145,16 @@ export interface LearningResource {
   owner: number;
 }
 
+export interface LearningResourceWithCategory {
+  id: number;
+  title: string;
+  url: string;
+  created_at: Date;
+  updated_at: Date;
+  learning: LearningType;
+  owner: number;
+}
+
 export interface RecentProject {
   id: number;
   title: string;

@@ -26,6 +26,7 @@ import ForgotPassword from "./Pages/Auth/ForgotPassword/ForgotPassword";
 import ResetPassword from "./Pages/Auth/ResetPassword/ResetPassword";
 import ProjectParticipants from "./Pages/ProjectParticipants/ProjectParticipants";
 import SingleProject from "./Pages/Projects/SingleProject";
+import LearningResourcesSearch from "./Pages/LearningResources/LearningResourcesSearch";
 
 const router = createBrowserRouter([
   {
@@ -103,6 +104,10 @@ const router = createBrowserRouter([
   {
     path: "/learning/categories",
     element: <Layout children={<LearningCategories />} />,
+  },
+  {
+    path: "learning/resources",
+    element: <Layout children={<LearningResourcesSearch />} />,
   },
   {
     path: "learning/:learningId/resources",

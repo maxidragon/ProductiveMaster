@@ -122,6 +122,12 @@ const Navbar = (props: {
           ))}
         </List>
       </Collapse>
+      <ListItemButton component={Link} to={"/learning/resources"}>
+        <ListItemIcon>
+          <BookIcon />
+        </ListItemIcon>
+        <ListItemText primary="Learning resources" />
+      </ListItemButton>
       <ListItemButton component={Link} to={"/goals"}>
         <ListItemIcon>
           <BarChartIcon />

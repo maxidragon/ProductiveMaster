@@ -398,3 +398,46 @@ class RecentLearningsTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 0)        
         
+class SearchLearningResourcesTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(
+            username='testuser', password='testpassword')
+        self.user2 = User.objects.create_user(
+            username='nonowner', password='nonownerpassword')
+        self.learning_category = LearningCategory.objects.create(
+            name='Test Learning Category', owner=self.user)
+        self.learning = Learning.objects.create(
+            title='Test Learning', description='Test Learning Description', owner=self.user, status='TO_LEARN', learning_category=self.learning_category)
+        self.learning_resource = LearningResource.objects.create(
+            title='Test Learning Resource', url='http://www.test.com', learning=self.learning, owner=self.user)
+        self.learning_resource2 = LearningResource.objects.create(
+            title='2', url='http://www.test2.com', learning=self.learning, owner=self.user)
+        
+    def authenticate(self, username, password):
+        response = self.client.post(reverse(
+            'get-token'), {'username': username, 'password': password}, format='json')
+        token = response.data['token']
+        return token
+
+    def test_search_learning_resources(self):
+        url = reverse('search-learning-resources', kwargs={'search': 'Test'})
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data['results']), 1)
+        
+    def test_search_learning_resources_no_results(self):
+        url = reverse('search-learning-resources', kwargs={'search': 'Test2'})
+        token = self.authenticate('testuser', 'testpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data['results']), 0)
+        
+    def test_search_learning_resources_as_another_user(self):
+        url = reverse('search-learning-resources', kwargs={'search': 'Test'})
+        token = self.authenticate('nonowner', 'nonownerpassword')
+        response = self.client.get(url, HTTP_AUTHORIZATION=f'Token {token}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data['results']), 0)
+        

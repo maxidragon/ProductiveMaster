@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import LearningCategorySerializer, LearningListSerializer, LearningResourceSerializer, LearningSerializer, RecentLearningsSerializer
+from .serializers import LearningCategorySerializer, LearningListSerializer, LearningResourceSerializer, LearningResourcesWithCategoriesSerializer, LearningSerializer, RecentLearningsSerializer
 from .models import Learning, LearningCategory, LearningResource
 from .permissions import IsOwner
 
@@ -95,3 +95,15 @@ class ListRecentLearnings(APIView):
             owner=request.user, status="IN_PROGRESS").order_by('-updated_at')[:3]
         serializer = RecentLearningsSerializer(learnings, many=True)
         return Response(serializer.data)
+
+class ListAllLearningResources(generics.ListAPIView):
+    serializer_class = LearningResourcesWithCategoriesSerializer
+    
+    def get_queryset(self):
+        return LearningResource.objects.filter(owner=self.request.user).order_by('-updated_at')
+class SearchLearningResources(generics.ListAPIView):
+    serializer_class = LearningResourcesWithCategoriesSerializer
+    
+    def get_queryset(self):
+        search = self.kwargs.get('search')
+        return LearningResource.objects.filter(title__icontains=search, owner=self.request.user).order_by('-updated_at')
