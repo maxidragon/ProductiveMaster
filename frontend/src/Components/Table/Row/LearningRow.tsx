@@ -66,8 +66,8 @@ const LearningRow = (props: {
                   editedLearning.status === "TO_LEARN"
                     ? "primary"
                     : editedLearning.status === "IN_PROGRESS"
-                    ? "warning"
-                    : "success"
+                      ? "warning"
+                      : "success"
                 }
               />
             </Box>

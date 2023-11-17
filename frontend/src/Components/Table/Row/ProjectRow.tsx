@@ -91,8 +91,8 @@ const ProjectRow = (props: {
                   editedProject.status === "PLANNED"
                     ? "primary"
                     : editedProject.status === "IN_PROGRESS"
-                    ? "warning"
-                    : "success"
+                      ? "warning"
+                      : "success"
                 }
               />
             </Box>

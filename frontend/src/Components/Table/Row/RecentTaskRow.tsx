@@ -101,8 +101,8 @@ const RecentTaskRow = (props: {
                   editedTask.status === "TODO"
                     ? "primary"
                     : editedTask.status === "IN_PROGRESS"
-                    ? "warning"
-                    : "success"
+                      ? "warning"
+                      : "success"
                 }
               />
             </Box>
