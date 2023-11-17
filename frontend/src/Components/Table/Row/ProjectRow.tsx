@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, TableRow, TableCell, IconButton } from "@mui/material";
+import {
+  Link,
+  TableRow,
+  TableCell,
+  IconButton,
+  Box,
+  Chip,
+} from "@mui/material";
 import { Project } from "../../../logic/interfaces";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import EditIcon from "@mui/icons-material/Edit";
@@ -76,7 +83,20 @@ const ProjectRow = (props: {
             </Link>
           </TableCell>
           <TableCell>{editedProject.description}</TableCell>
-          <TableCell>{statusPretyName(editedProject.status)}</TableCell>
+          <TableCell>
+            <Box sx={{ display: "inline-block", ml: 1 }}>
+              <Chip
+                label={statusPretyName(editedProject.status)}
+                color={
+                  editedProject.status === "PLANNED"
+                    ? "primary"
+                    : editedProject.status === "IN_PROGRESS"
+                    ? "warning"
+                    : "success"
+                }
+              />
+            </Box>
+          </TableCell>
           <TableCell>
             {editedProject.github && (
               <IconButton

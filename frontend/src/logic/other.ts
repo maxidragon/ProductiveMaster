@@ -35,3 +35,20 @@ export const statusPretyName = (status: string): string => {
       return "";
   }
 };
+
+export const statusLabelColor = (status: string) => {
+  switch (status) {
+    case "PLANNED":
+      return "blue";
+    case "TO_LEARN":
+      return "yellow";
+    case "TODO":
+      return "blue";
+    case "IN_PROGRESS":
+      return "orange";
+    case "DONE":
+      return "green";
+    default:
+      return "primary";
+  }
+};

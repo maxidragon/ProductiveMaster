@@ -93,7 +93,20 @@ const RecentTaskRow = (props: {
             )}
           </TableCell>
           <TableCell>{editedTask.description}</TableCell>
-          <TableCell>{statusPretyName(editedTask.status)}</TableCell>
+          <TableCell>
+            <Box sx={{ display: "inline-block", ml: 1 }}>
+              <Chip
+                label={statusPretyName(editedTask.status)}
+                color={
+                  editedTask.status === "TODO"
+                    ? "primary"
+                    : editedTask.status === "IN_PROGRESS"
+                    ? "warning"
+                    : "success"
+                }
+              />
+            </Box>
+          </TableCell>
           <TableCell>
             <Tooltip title={editedTask.owner.username}>
               <IconButton>

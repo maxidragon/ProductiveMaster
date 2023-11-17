@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TableRow, TableCell, IconButton } from "@mui/material";
+import { TableRow, TableCell, IconButton, Box, Chip } from "@mui/material";
 import { LearningType } from "../../../logic/interfaces";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -58,7 +58,20 @@ const LearningRow = (props: {
           </TableCell>
           <TableCell>{editedLearning.description}</TableCell>
           <TableCell>{editedLearning.learning_category.name}</TableCell>
-          <TableCell>{statusPretyName(editedLearning.status)}</TableCell>
+          <TableCell>
+            <Box sx={{ display: "inline-block", ml: 1 }}>
+              <Chip
+                label={statusPretyName(editedLearning.status)}
+                color={
+                  editedLearning.status === "TO_LEARN"
+                    ? "primary"
+                    : editedLearning.status === "IN_PROGRESS"
+                    ? "warning"
+                    : "success"
+                }
+              />
+            </Box>
+          </TableCell>
           <TableCell>
             <IconButton
               component={RouterLink}
