@@ -23,7 +23,10 @@ export const addProjectParticipant = async (
     email: email,
     is_owner: isOwner,
   });
-  return await response.json();
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
 export const updateProjectParticipant = async (
@@ -47,10 +50,7 @@ export const deleteProjectParticipant = async (id: number) => {
     "DELETE",
     true,
   );
-  return {
-    status: response.status,
-    data: await response.json(),
-  };
+  return response.status;
 };
 
 export const isProjectOwner = async (projectId: number) => {

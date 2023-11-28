@@ -260,7 +260,7 @@ class UpdateDeleteProjectUser(APIView):
         if not has_permission:
             return Response(status=status.HTTP_403_FORBIDDEN)       
         project_users_count = ProjectUser.objects.filter(project=project, is_owner=True).count()
-        if project_users_count == 1:
+        if project_users_count == 1 and project_user.is_owner:
             return Response(status=status.HTTP_400_BAD_REQUEST, data={'message': 'Cannot remove the only owner of the project'})   
         project_user.delete()
         project.updated_at = timezone.now()

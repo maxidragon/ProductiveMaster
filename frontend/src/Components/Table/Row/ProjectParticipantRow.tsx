@@ -20,22 +20,22 @@ const ProjectParticipantRow = ({
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editedUser, setEditedUser] = useState<ProjectParticipant>(user);
-  const handleDelete = async () => {
+
+  const handleDelete = () => {
+    console.log(user);
     if (user === null) return;
     confirm({
       description:
         "Are you sure you want to delete this user from the project?",
     })
       .then(async () => {
-        const res = await deleteProjectParticipant(user.id);
-        if (res.status === 204) {
+        const status = await deleteProjectParticipant(user.id);
+        console.log(status);
+        if (status === 204) {
           enqueueSnackbar("User succesfully removed from the project", {
             variant: "success",
           });
           setHide(true);
-        } else if (res.status === 400) {
-          enqueueSnackbar("User not deleted!", { variant: "info" });
-          enqueueSnackbar(res.data.message, { variant: "error" });
         } else {
           enqueueSnackbar("Something went wrong!", { variant: "error" });
         }
