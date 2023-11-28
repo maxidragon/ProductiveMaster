@@ -23,7 +23,7 @@ const RecentTasksTable = (props: {
             <TableCell>Title</TableCell>
             <TableCell>Description</TableCell>
             <TableCell>Status</TableCell>
-            <TableCell>Owner</TableCell>
+            <TableCell>Author</TableCell>
             <TableCell>Assignee</TableCell>
             <TableCell>Issue</TableCell>
             <TableCell>PR</TableCell>
