@@ -12,7 +12,10 @@ export const getLearningsByStatus = async (status: string, page = 1) => {
 
 export const getRecentLearnings = async () => {
   const response = await backendRequest(`learnings/recent/`, "GET", true);
-  return await response.json();
+  return {
+    status: response.status,
+    data: await response.json(),
+  };
 };
 
 export const searchLearnings = async (

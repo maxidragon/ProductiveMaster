@@ -6,7 +6,6 @@ import {
   Typography,
   CircularProgress,
   Box,
-  Tooltip,
 } from "@mui/material";
 import {
   Project,
@@ -14,16 +13,20 @@ import {
   Document as DocumentInterface,
   ProjectParticipant,
 } from "../../logic/interfaces";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import DescriptionIcon from "@mui/icons-material/Description";
+import {
+  GitHub as GitHubIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Assignment as AssignmentIcon,
+  Description as DescriptionIcon,
+  People as PeopleIcon,
+  BarChart as BarChartIcon,
+  AddTask as AddTaskIcon,
+  AddCircle as AddCircleIcon,
+} from "@mui/icons-material";
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
 import { Link as RouterLink, useNavigate, useParams } from "react-router-dom";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import PeopleIcon from "@mui/icons-material/People";
 import { deleteProject, getProjectById } from "../../logic/projects";
 import EditProjectModal from "../../Components/ModalComponents/Edit/EditProjectModal";
 import ProjectStatsModal from "../../Components/ModalComponents/ProjectStatsModal";
@@ -31,12 +34,10 @@ import RecentTasksTable from "../../Components/Table/RecentTasksTable";
 import { getRecentTasks } from "../../logic/tasks";
 import RecentDocumentsTable from "../../Components/Table/RecentDocumentsTable";
 import { getMostActiveParticipants } from "../../logic/projectParticipants";
-import AvatarComponent from "../../Components/AvatarComponent";
 import CreateTaskModal from "../../Components/ModalComponents/Create/CreateTaskModal";
 import CreateDocumentModal from "../../Components/ModalComponents/Create/CreateDocumentModal";
-import AddTaskIcon from "@mui/icons-material/AddTask";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { getRecentDocuments } from "../../logic/documents";
+import ParticipantAvatar from "../../Components/ParticipantAvatar";
 
 const SingleProject = () => {
   const { projectId } = useParams();
@@ -112,6 +113,7 @@ const SingleProject = () => {
   const fetchMostActiveParticipants = async () => {
     if (!projectId) return;
     const data = await getMostActiveParticipants(+projectId);
+    console.log(data);
     setMostActiveParticipants(data);
   };
 
@@ -227,16 +229,8 @@ const SingleProject = () => {
         <Grid item sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <Typography variant="h5">Active participants</Typography>
           <Box sx={{ display: "flex", flexDirection: "row" }}>
-            {mostActiveParticipants.map((participant) => (
-              <Tooltip title={participant.user.id}>
-                <IconButton>
-                  <AvatarComponent
-                    userId={participant.user.id}
-                    username={participant.user.username}
-                    size="30px"
-                  />
-                </IconButton>
-              </Tooltip>
+            {mostActiveParticipants.map((participant: ProjectParticipant) => (
+              <ParticipantAvatar participant={participant} />
             ))}
           </Box>
         </Grid>

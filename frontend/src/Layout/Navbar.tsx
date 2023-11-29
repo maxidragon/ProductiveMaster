@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Collapse,
   IconButton,
@@ -29,6 +29,7 @@ const Navbar = (props: {
   openLearningNav: boolean;
   toggleLearningNav: () => void;
 }) => {
+  const navigate = useNavigate();
   const [recentProjects, setRecentProjects] = useState<RecentProject[]>([]);
   const [recentLearnings, setRecentLearnings] = useState<RecentLearning[]>([]);
 
@@ -36,8 +37,11 @@ const Navbar = (props: {
     const fetchData = async () => {
       const projects = await getRecentProjects();
       const learnings = await getRecentLearnings();
-      setRecentProjects(projects);
-      setRecentLearnings(learnings);
+      if (projects.status === 401 || learnings.status === 401) {
+        navigate("/auth/login");
+      }
+      setRecentProjects(projects.data);
+      setRecentLearnings(learnings.data);
     };
     fetchData();
   }, []);
@@ -62,19 +66,20 @@ const Navbar = (props: {
       </ListItemButton>
       <Collapse in={props.openProjectNav} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          {recentProjects.map((project: RecentProject) => (
-            <ListItemButton
-              sx={{ pl: 4 }}
-              component={Link}
-              to={`/projects/${project.id}`}
-              key={project.id}
-            >
-              <ListItemIcon>
-                <TopicIcon />
-              </ListItemIcon>
-              <ListItemText primary={project.title} />
-            </ListItemButton>
-          ))}
+          {recentProjects.length > 0 &&
+            recentProjects.map((project: RecentProject) => (
+              <ListItemButton
+                sx={{ pl: 4 }}
+                component={Link}
+                to={`/projects/${project.id}`}
+                key={project.id}
+              >
+                <ListItemIcon>
+                  <TopicIcon />
+                </ListItemIcon>
+                <ListItemText primary={project.title} />
+              </ListItemButton>
+            ))}
         </List>
       </Collapse>
       <ListItemButton component={Link} to={"/tasks"}>
@@ -107,19 +112,20 @@ const Navbar = (props: {
       </ListItemButton>
       <Collapse in={props.openLearningNav} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          {recentLearnings.map((learning: RecentLearning) => (
-            <ListItemButton
-              sx={{ pl: 4 }}
-              component={Link}
-              to={`/learning/${learning.id}/resources`}
-              key={learning.id}
-            >
-              <ListItemIcon>
-                <TopicIcon />
-              </ListItemIcon>
-              <ListItemText primary={learning.title} />
-            </ListItemButton>
-          ))}
+          {recentLearnings.length > 0 &&
+            recentLearnings.map((learning: RecentLearning) => (
+              <ListItemButton
+                sx={{ pl: 4 }}
+                component={Link}
+                to={`/learning/${learning.id}/resources`}
+                key={learning.id}
+              >
+                <ListItemIcon>
+                  <TopicIcon />
+                </ListItemIcon>
+                <ListItemText primary={learning.title} />
+              </ListItemButton>
+            ))}
         </List>
       </Collapse>
       <ListItemButton component={Link} to={"/learning/resources"}>

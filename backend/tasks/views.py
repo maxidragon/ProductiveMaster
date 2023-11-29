@@ -310,6 +310,6 @@ class ActiveParticipants(APIView):
         project_user = ProjectUser.objects.filter(project=project_id, user=request.user).exists()
         if not project_user:
             return Response(status=status.HTTP_403_FORBIDDEN)
-        project_users = ProjectUser.objects.filter(project=project_id, updated_at__gte=timezone.now() - timezone.timedelta(days=30)).order_by('-updated_at')[:5]
+        project_users = ProjectUser.objects.filter(project=project_id).order_by('-updated_at')[:5]
         serializer = ProjectUserSerializer(project_users, many=True)
         return Response(serializer.data)
