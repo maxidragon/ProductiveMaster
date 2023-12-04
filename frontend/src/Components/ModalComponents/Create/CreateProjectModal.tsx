@@ -1,15 +1,13 @@
 import { useRef } from "react";
 import { Box, Typography, Modal, TextField, Grid } from "@mui/material";
+import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 import { style, formStyle } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { createProject } from "../../../logic/projects";
+import { ModalProps } from "../../../logic/interfaces";
 import ActionsButtons from "../ActionsButtons";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-const CreateProjectModal = (props: {
-  open: boolean;
-  handleClose: () => void;
-}) => {
+const CreateProjectModal = ({ open, handleClose }: ModalProps): JSX.Element => {
   const titleRef: React.MutableRefObject<HTMLInputElement | null | undefined> =
     useRef();
   const descriptionRef: React.MutableRefObject<
@@ -28,7 +26,7 @@ const CreateProjectModal = (props: {
     const response = await createProject(title, description, github);
     if (response.status === 201) {
       enqueueSnackbar("Project created!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -49,7 +47,7 @@ const CreateProjectModal = (props: {
     }
   };
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -78,7 +76,7 @@ const CreateProjectModal = (props: {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleCreate}
           submitText={"Create"}
           submitIcon={<AddCircleIcon />}

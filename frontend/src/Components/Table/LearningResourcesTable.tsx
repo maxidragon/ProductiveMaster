@@ -12,13 +12,21 @@ import { LearningResource } from "../../logic/interfaces";
 import PaginationFooter from "../Pagination/PaginationFooter";
 import LearningResourceRow from "./Row/LearningResourceRow";
 
-const LearningResourcesTable = (props: {
+interface Props {
   resources: LearningResource[];
   page: number;
   totalPages: number;
   totalItems: number;
   handlePageChange: (page: number) => void;
-}) => {
+}
+
+const LearningResourcesTable = ({
+  resources,
+  page,
+  totalPages,
+  totalItems,
+  handlePageChange,
+}: Props): JSX.Element => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }}>
@@ -29,17 +37,17 @@ const LearningResourcesTable = (props: {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.resources.map((resource: LearningResource) => (
+          {resources.map((resource: LearningResource) => (
             <LearningResourceRow key={resource.id} resource={resource} />
           ))}
         </TableBody>
-        {props.totalPages > 0 && (
+        {totalPages > 0 && (
           <TableFooter>
             <PaginationFooter
-              page={props.page}
-              totalPages={props.totalPages}
-              totalItems={props.totalItems}
-              handlePageChange={props.handlePageChange}
+              page={page}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              handlePageChange={handlePageChange}
             />
           </TableFooter>
         )}

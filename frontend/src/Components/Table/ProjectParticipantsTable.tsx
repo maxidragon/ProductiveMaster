@@ -12,14 +12,23 @@ import { ProjectParticipant } from "../../logic/interfaces";
 import PaginationFooter from "../Pagination/PaginationFooter";
 import ProjectParticipantRow from "./Row/ProjectParticipantRow";
 
-const ProjectParticipantsTable = (props: {
+interface Props {
   users: ProjectParticipant[];
   page: number;
   totalPages: number;
   totalItems: number;
   handlePageChange: (page: number) => void;
   isProjectOwner: boolean;
-}) => {
+}
+
+const ProjectParticipantsTable = ({
+  users,
+  page,
+  totalPages,
+  totalItems,
+  handlePageChange,
+  isProjectOwner,
+}: Props): JSX.Element => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }}>
@@ -28,25 +37,25 @@ const ProjectParticipantsTable = (props: {
             <TableCell>Username</TableCell>
             <TableCell>Added by</TableCell>
             <TableCell>Role</TableCell>
-            {props.isProjectOwner && <TableCell>Actions</TableCell>}
+            {isProjectOwner && <TableCell>Actions</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.users.map((user: ProjectParticipant) => (
+          {users.map((user: ProjectParticipant) => (
             <ProjectParticipantRow
               key={user.id}
               user={user}
-              isProjectOwner={props.isProjectOwner}
+              isProjectOwner={isProjectOwner}
             />
           ))}
         </TableBody>
-        {props.totalPages > 0 && (
+        {totalPages > 0 && (
           <TableFooter>
             <PaginationFooter
-              page={props.page}
-              totalPages={props.totalPages}
-              totalItems={props.totalItems}
-              handlePageChange={props.handlePageChange}
+              page={page}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              handlePageChange={handlePageChange}
             />
           </TableFooter>
         )}

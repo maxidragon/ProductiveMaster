@@ -1,21 +1,18 @@
+import { useEffect, useState } from "react";
 import { Modal, Box, TextField, Typography, Grid, Button } from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
-import { useEffect, useState } from "react";
 import {
   getUserData,
   removeAvatar,
   updateAvatar,
   updateUserData,
 } from "../../../logic/auth";
+import { ModalProps, UserData } from "../../../logic/interfaces";
 import ActionsButtons from "../ActionsButtons";
-import { UserData } from "../../../logic/interfaces";
-import EditIcon from "@mui/icons-material/Edit";
 
-const EditUserDataModal = (props: {
-  open: boolean;
-  handleClose: () => void;
-}) => {
+const EditUserDataModal = ({ open, handleClose }: ModalProps): JSX.Element => {
   const [data, setData] = useState<UserData>({
     github_profile: "",
     wakatime_api_key: "",
@@ -37,7 +34,7 @@ const EditUserDataModal = (props: {
 
     if (status === 200) {
       enqueueSnackbar("Your data has been updated", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong", { variant: "error" });
     }
@@ -61,7 +58,7 @@ const EditUserDataModal = (props: {
   }, []);
   return (
     <>
-      <Modal open={props.open} onClose={props.handleClose}>
+      <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <Grid container sx={formStyle}>
             <Grid item>
@@ -155,7 +152,7 @@ const EditUserDataModal = (props: {
             )}
           </Grid>
           <ActionsButtons
-            cancel={props.handleClose}
+            cancel={handleClose}
             submit={handleEdit}
             submitText={"Edit"}
             submitIcon={<EditIcon />}

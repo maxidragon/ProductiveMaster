@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import {
   Box,
   FormControl,
@@ -10,17 +11,20 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { DatePicker } from "@mui/x-date-pickers";
+import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { createGoal } from "../../../logic/goals";
-import { DatePicker } from "@mui/x-date-pickers";
-import { CreateGoal, GoalCategory } from "../../../logic/interfaces";
+import {
+  CreateGoal,
+  GoalCategory,
+  ModalProps,
+} from "../../../logic/interfaces";
 import { getAllGoalCategories } from "../../../logic/goalCategories";
 import ActionsButtons from "../ActionsButtons";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-const CreateGoalModal = (props: { open: boolean; handleClose: () => void }) => {
+const CreateGoalModal = ({ open, handleClose }: ModalProps): JSX.Element => {
   const [goalCategories, setGoalCategories] = useState<GoalCategory[]>([]);
   const [selected, setSelected] = useState<number>(0);
   const titleRef: React.MutableRefObject<HTMLInputElement | null | undefined> =
@@ -48,7 +52,7 @@ const CreateGoalModal = (props: { open: boolean; handleClose: () => void }) => {
     const response = await createGoal(data);
     if (response.status === 201) {
       enqueueSnackbar("Goal created!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -82,7 +86,7 @@ const CreateGoalModal = (props: { open: boolean; handleClose: () => void }) => {
     fetchData();
   }, []);
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -132,7 +136,7 @@ const CreateGoalModal = (props: { open: boolean; handleClose: () => void }) => {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleCreate}
           submitText={"Create"}
           submitIcon={<AddCircleIcon />}

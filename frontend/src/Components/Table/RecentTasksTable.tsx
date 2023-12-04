@@ -10,11 +10,12 @@ import {
 import { TaskForProject } from "../../logic/interfaces";
 import RecentTaskRow from "./Row/RecentTaskRow";
 
-const RecentTasksTable = (props: {
+interface Props {
   tasks: TaskForProject[];
   isProjectOwner: boolean;
-  fetchData: () => void;
-}) => {
+}
+
+const RecentTasksTable = ({ tasks, isProjectOwner }: Props): JSX.Element => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }}>
@@ -31,11 +32,11 @@ const RecentTasksTable = (props: {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.tasks.map((task: TaskForProject) => (
+          {tasks.map((task: TaskForProject) => (
             <RecentTaskRow
               key={task.id}
               task={task}
-              isProjectOwner={props.isProjectOwner}
+              isProjectOwner={isProjectOwner}
             />
           ))}
         </TableBody>

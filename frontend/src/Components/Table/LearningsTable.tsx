@@ -12,7 +12,7 @@ import { LearningType } from "../../logic/interfaces";
 import PaginationFooter from "../Pagination/PaginationFooter";
 import LearningRow from "./Row/LearningRow";
 
-const LearningsTable = (props: {
+interface Props {
   learnings: LearningType[];
   page: number;
   totalPages: number;
@@ -20,10 +20,20 @@ const LearningsTable = (props: {
   handlePageChange: (page: number) => void;
   status?: string;
   fetchData: (pageParam: number, statusParam?: string) => void;
-}) => {
-  const handleStatusUpdate = (status: string) => {
-    if (props.status === status) return;
-    props.fetchData(props.page, props.status);
+}
+
+const LearningsTable = ({
+  learnings,
+  page,
+  totalPages,
+  totalItems,
+  handlePageChange,
+  status,
+  fetchData,
+}: Props): JSX.Element => {
+  const handleStatusUpdate = (statusParam: string) => {
+    if (status === statusParam) return;
+    fetchData(page, status);
   };
 
   return (
@@ -39,7 +49,7 @@ const LearningsTable = (props: {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.learnings.map((learning: LearningType) => (
+          {learnings.map((learning: LearningType) => (
             <LearningRow
               key={learning.id}
               learning={learning}
@@ -47,13 +57,13 @@ const LearningsTable = (props: {
             />
           ))}
         </TableBody>
-        {props.totalPages > 0 && (
+        {totalPages > 0 && (
           <TableFooter>
             <PaginationFooter
-              page={props.page}
-              totalPages={props.totalPages}
-              totalItems={props.totalItems}
-              handlePageChange={props.handlePageChange}
+              page={page}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              handlePageChange={handlePageChange}
             />
           </TableFooter>
         )}

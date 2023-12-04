@@ -1,22 +1,27 @@
 import { Box, Typography, Modal, TextField, Grid } from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
-import ActionsButtons from "../ActionsButtons";
-import EditIcon from "@mui/icons-material/Edit";
 import { updateLearningResource } from "../../../logic/learningResources";
-import { LearningResource } from "../../../logic/interfaces";
+import { LearningResource, ModalProps } from "../../../logic/interfaces";
+import ActionsButtons from "../ActionsButtons";
 
-const EditLearningResourceModal = (props: {
-  open: boolean;
-  handleClose: () => void;
+interface Props extends ModalProps {
   resource: LearningResource;
   updateResource: (resource: LearningResource) => void;
-}) => {
+}
+
+const EditLearningResourceModal = ({
+  open,
+  handleClose,
+  resource,
+  updateResource,
+}: Props): JSX.Element => {
   const handleEdit = async () => {
-    const response = await updateLearningResource(props.resource);
+    const response = await updateLearningResource(resource);
     if (response.status === 200) {
       enqueueSnackbar("Resource updated!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -32,7 +37,7 @@ const EditLearningResourceModal = (props: {
     }
   };
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -44,10 +49,10 @@ const EditLearningResourceModal = (props: {
             <TextField
               placeholder={"Title"}
               fullWidth
-              value={props.resource.title}
+              value={resource.title}
               onChange={(event) =>
-                props.updateResource({
-                  ...props.resource,
+                updateResource({
+                  ...resource,
                   title: event.target.value,
                 })
               }
@@ -57,10 +62,10 @@ const EditLearningResourceModal = (props: {
             <TextField
               placeholder={"URL"}
               fullWidth
-              value={props.resource.url}
+              value={resource.url}
               onChange={(event) =>
-                props.updateResource({
-                  ...props.resource,
+                updateResource({
+                  ...resource,
                   url: event.target.value,
                 })
               }
@@ -68,7 +73,7 @@ const EditLearningResourceModal = (props: {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleEdit}
           submitText={"Edit"}
           submitIcon={<EditIcon />}

@@ -12,7 +12,7 @@ import { Task } from "../../logic/interfaces";
 import TaskRow from "./Row/TaskRow";
 import PaginationFooter from "../Pagination/PaginationFooter";
 
-const TasksTable = (props: {
+interface Props {
   tasks: Task[];
   page: number;
   totalPages: number;
@@ -20,10 +20,20 @@ const TasksTable = (props: {
   handlePageChange: (page: number) => void;
   status?: string;
   fetchData: (pageParam: number, statusParam?: string) => void;
-}) => {
-  const handleStatusUpdate = (status: string) => {
-    if (props.status === status) return;
-    props.fetchData(props.page, props.status);
+}
+
+const TasksTable = ({
+  tasks,
+  page,
+  totalPages,
+  totalItems,
+  handlePageChange,
+  status,
+  fetchData,
+}: Props): JSX.Element => {
+  const handleStatusUpdate = (statusParam: string): void => {
+    if (status === statusParam) return;
+    fetchData(page, status);
   };
 
   return (
@@ -42,7 +52,7 @@ const TasksTable = (props: {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.tasks.map((task: Task) => (
+          {tasks.map((task: Task) => (
             <TaskRow
               key={task.id}
               task={task}
@@ -50,13 +60,13 @@ const TasksTable = (props: {
             />
           ))}
         </TableBody>
-        {props.totalPages > 0 && (
+        {totalPages > 0 && (
           <TableFooter>
             <PaginationFooter
-              page={props.page}
-              totalPages={props.totalPages}
-              totalItems={props.totalItems}
-              handlePageChange={props.handlePageChange}
+              page={page}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              handlePageChange={handlePageChange}
             />
           </TableFooter>
         )}

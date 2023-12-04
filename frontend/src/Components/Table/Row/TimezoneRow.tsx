@@ -1,8 +1,12 @@
+import { useState, useEffect } from "react";
 import { TableRow, TableCell } from "@mui/material";
 import { Timezone } from "../../../logic/interfaces";
-import { useState, useEffect } from "react";
 
-const TimezoneRow = ({ timezone }: { timezone: Timezone }) => {
+interface Props {
+  timezone: Timezone;
+}
+
+const TimezoneRow = ({ timezone }: Props): JSX.Element => {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {

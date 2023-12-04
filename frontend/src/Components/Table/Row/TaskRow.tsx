@@ -7,36 +7,41 @@ import {
   Chip,
   Box,
 } from "@mui/material";
-import { Task } from "../../../logic/interfaces";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  Assignment as AssignmentIcon,
+  AssignmentReturned as AssignmentReturnedIcon,
+  CheckCircle as CheckCircleIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+  TaskAlt as TaskAltIcon,
+} from "@mui/icons-material";
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
-import TaskAltIcon from "@mui/icons-material/TaskAlt";
-import AssignmentReturnedIcon from "@mui/icons-material/AssignmentReturned";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { Task } from "../../../logic/interfaces";
 import { deleteTask, updateTask } from "../../../logic/tasks";
-import EditTaskModal from "../../ModalComponents/Edit/EditTaskModal";
 import { Link as RouterLink } from "react-router-dom";
-import AssignmentIcon from "@mui/icons-material/Assignment";
 import { statusPretyName } from "../../../logic/other";
 import { isProjectOwner as isProjectOwnerFetch } from "../../../logic/projectParticipants";
+import EditTaskModal from "../../ModalComponents/Edit/EditTaskModal";
 
-const TaskRow = (props: {
+interface Props {
   task: Task;
   handleStatusUpdate: (status: string) => void;
-}) => {
+}
+
+const TaskRow = ({ task, handleStatusUpdate }: Props): JSX.Element => {
   const userId = localStorage.getItem("userId") || "";
   const [isProjectOwner, setIsProjectOwner] = useState(false);
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [editedTask, setEditedTask] = useState<Task>(props.task);
-  const handleDelete = async () => {
-    if (props.task === null) return;
+  const [editedTask, setEditedTask] = useState<Task>(task);
+
+  const handleDelete = async (): Promise<void> => {
+    if (task === null) return;
     confirm({ description: "Are you sure you want to delete this task?" })
       .then(async () => {
-        const status = await deleteTask(props.task.id.toString());
+        const status = await deleteTask(task.id.toString());
         if (status === 204) {
           enqueueSnackbar("Task deleted!", { variant: "success" });
           setHide(true);
@@ -48,10 +53,10 @@ const TaskRow = (props: {
         enqueueSnackbar("Task not deleted!", { variant: "info" });
       });
   };
-  const editTask = (task: Task) => {
+  const editTask = (task: Task): void => {
     setEditedTask(task);
   };
-  const handleComplete = async () => {
+  const handleComplete = async (): Promise<void> => {
     const task = { ...editedTask, status: "DONE", completed_at: new Date() };
     setEditedTask(task);
     const response = await updateTask(task);
@@ -59,15 +64,15 @@ const TaskRow = (props: {
       enqueueSnackbar("Status is successfully changed to done!", {
         variant: "success",
       });
-      props.handleStatusUpdate("DONE");
+      handleStatusUpdate("DONE");
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
   };
 
-  const handleCloseEditModal = () => {
+  const handleCloseEditModal = (): void => {
     setEdit(false);
-    props.handleStatusUpdate(editedTask.status);
+    handleStatusUpdate(editedTask.status);
   };
   useEffect(() => {
     const fetchData = async () => {
@@ -167,7 +172,7 @@ const TaskRow = (props: {
           open={edit}
           handleClose={handleCloseEditModal}
           task={editedTask}
-          updateTask={editTask}
+          editTask={editTask}
         />
       )}
     </>

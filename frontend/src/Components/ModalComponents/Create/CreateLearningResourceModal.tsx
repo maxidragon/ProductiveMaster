@@ -1,16 +1,20 @@
-import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
 import { useRef } from "react";
+import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
+import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
-import ActionsButtons from "../ActionsButtons";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { createLearningResource } from "../../../logic/learningResources";
+import { ModalProps } from "../../../logic/interfaces";
+import ActionsButtons from "../ActionsButtons";
 
-const CreateLearningResourceModal = (props: {
-  open: boolean;
-  handleClose: () => void;
+interface Props extends ModalProps {
   learningId: number;
-}) => {
+}
+const CreateLearningResourceModal = ({
+  open,
+  handleClose,
+  learningId,
+}: Props): JSX.Element => {
   const titleRef: React.MutableRefObject<HTMLInputElement | null | undefined> =
     useRef();
   const urlRef: React.MutableRefObject<HTMLInputElement | null | undefined> =
@@ -20,10 +24,10 @@ const CreateLearningResourceModal = (props: {
     if (!titleRef.current || !urlRef.current) return;
     const title = titleRef.current.value;
     const url = urlRef.current.value;
-    const response = await createLearningResource(props.learningId, title, url);
+    const response = await createLearningResource(learningId, title, url);
     if (response.status === 201) {
       enqueueSnackbar("Resource created!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -39,7 +43,7 @@ const CreateLearningResourceModal = (props: {
     }
   };
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -55,7 +59,7 @@ const CreateLearningResourceModal = (props: {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleCreate}
           submitText={"Create"}
           submitIcon={<AddCircleIcon />}

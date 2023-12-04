@@ -12,20 +12,23 @@ import {
   MenuItem,
   Select,
 } from "@mui/material";
+import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { createTask } from "../../../logic/tasks";
-import ActionsButtons from "../ActionsButtons";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { getProjectParticipants } from "../../../logic/projectParticipants";
-import { ProjectParticipant } from "../../../logic/interfaces";
+import {
+  ProjectModalProps,
+  ProjectParticipant,
+} from "../../../logic/interfaces";
+import ActionsButtons from "../ActionsButtons";
 import AvatarComponent from "../../AvatarComponent";
 
-const CreateTaskModal = (props: {
-  open: boolean;
-  handleClose: () => void;
-  projectId: number;
-}) => {
+const CreateTaskModal = ({
+  open,
+  handleClose,
+  projectId,
+}: ProjectModalProps): JSX.Element => {
   const titleRef: React.MutableRefObject<HTMLInputElement | null | undefined> =
     useRef();
   const descriptionRef: React.MutableRefObject<
@@ -47,7 +50,7 @@ const CreateTaskModal = (props: {
     const github = githubLinkRef.current.value;
     const highPriority = highPriorityRef.current.checked;
     const response = await createTask(
-      props.projectId,
+      projectId,
       title,
       description,
       highPriority,
@@ -56,7 +59,7 @@ const CreateTaskModal = (props: {
     );
     if (response.status === 201) {
       enqueueSnackbar("Task created!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -84,15 +87,15 @@ const CreateTaskModal = (props: {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getProjectParticipants(+props.projectId);
+      const data = await getProjectParticipants(+projectId);
       setParticipants(data.results);
     };
 
     fetchData();
-  }, [props.projectId]);
+  }, [projectId]);
 
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -154,7 +157,7 @@ const CreateTaskModal = (props: {
           </FormControl>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleCreate}
           submitText={"Create"}
           submitIcon={<AddCircleIcon />}

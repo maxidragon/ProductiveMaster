@@ -1,22 +1,27 @@
 import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
-import { GoalCategory } from "../../../logic/interfaces";
+import { GoalCategory, ModalProps } from "../../../logic/interfaces";
 import { updateGoalCategory } from "../../../logic/goalCategories";
 import ActionsButtons from "../ActionsButtons";
-import EditIcon from "@mui/icons-material/Edit";
 
-const EditGoalCategoryModal = (props: {
-  open: boolean;
-  handleClose: () => void;
+interface Props extends ModalProps {
   goalCategory: GoalCategory;
-  updateGoalCategory: (goalCategory: GoalCategory) => void;
-}) => {
+  editGoalCategory: (goalCategory: GoalCategory) => void;
+}
+
+const EditGoalCategoryModal = ({
+  open,
+  handleClose,
+  goalCategory,
+  editGoalCategory,
+}: Props): JSX.Element => {
   const handleEdit = async () => {
-    const response = await updateGoalCategory(props.goalCategory);
+    const response = await updateGoalCategory(goalCategory);
     if (response.status === 200) {
       enqueueSnackbar("Category updated!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -27,7 +32,7 @@ const EditGoalCategoryModal = (props: {
     }
   };
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -39,10 +44,10 @@ const EditGoalCategoryModal = (props: {
             <TextField
               placeholder={"Name"}
               fullWidth
-              value={props.goalCategory.title}
+              value={goalCategory.title}
               onChange={(event) =>
-                props.updateGoalCategory({
-                  ...props.goalCategory,
+                editGoalCategory({
+                  ...goalCategory,
                   title: event.target.value,
                 })
               }
@@ -50,7 +55,7 @@ const EditGoalCategoryModal = (props: {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleEdit}
           submitText={"Edit"}
           submitIcon={<EditIcon />}

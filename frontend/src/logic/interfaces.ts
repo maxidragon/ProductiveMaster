@@ -205,3 +205,12 @@ export interface UpdateProjectParticipant {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface ModalProps {
+  open: boolean;
+  handleClose: () => void;
+}
+
+export interface ProjectModalProps extends ModalProps {
+  projectId: number;
+}

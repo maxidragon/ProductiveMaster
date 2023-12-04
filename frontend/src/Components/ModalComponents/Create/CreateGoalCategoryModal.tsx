@@ -1,15 +1,16 @@
-import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
 import { useRef } from "react";
+import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
+import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { createGoalCategory } from "../../../logic/goalCategories";
+import { ModalProps } from "../../../logic/interfaces";
 import ActionsButtons from "../ActionsButtons";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-const CreateGoalCategoryModal = (props: {
-  open: boolean;
-  handleClose: () => void;
-}) => {
+const CreateGoalCategoryModal = ({
+  open,
+  handleClose,
+}: ModalProps): JSX.Element => {
   const titleRef: React.MutableRefObject<HTMLInputElement | null | undefined> =
     useRef();
 
@@ -19,7 +20,7 @@ const CreateGoalCategoryModal = (props: {
     const response = await createGoalCategory(title);
     if (response.status === 201) {
       enqueueSnackbar("Category created!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -31,7 +32,7 @@ const CreateGoalCategoryModal = (props: {
   };
 
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -44,7 +45,7 @@ const CreateGoalCategoryModal = (props: {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleCreate}
           submitText={"Create"}
           submitIcon={<AddCircleIcon />}

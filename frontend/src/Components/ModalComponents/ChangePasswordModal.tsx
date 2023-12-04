@@ -5,11 +5,9 @@ import { enqueueSnackbar } from "notistack";
 import { changePassword } from "../../logic/auth";
 import ActionsButtons from "./ActionsButtons";
 import EditIcon from "@mui/icons-material/Edit";
+import { ModalProps } from "../../logic/interfaces";
 
-const ChangePasswordModal = (props: {
-  open: boolean;
-  handleClose: () => void;
-}) => {
+const ChangePasswordModal = ({ open, handleClose }: ModalProps) => {
   const oldPasswordRef: React.MutableRefObject<
     HTMLInputElement | null | undefined
   > = useRef();
@@ -36,14 +34,14 @@ const ChangePasswordModal = (props: {
     const status = await changePassword(oldPassword, newPassword);
     if (status === 200) {
       enqueueSnackbar("Password has been changed", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Password change failed", { variant: "error" });
     }
   };
   return (
     <>
-      <Modal open={props.open} onClose={props.handleClose}>
+      <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <Grid container sx={formStyle}>
             <Grid item>
@@ -81,7 +79,7 @@ const ChangePasswordModal = (props: {
             </Grid>
           </Grid>
           <ActionsButtons
-            cancel={props.handleClose}
+            cancel={handleClose}
             submit={handleSubmit}
             submitText={"Change password"}
             submitIcon={<EditIcon />}

@@ -3,29 +3,31 @@ import { Box, Button } from "@mui/material";
 import { actionsButtons, buttonStyle } from "./modalStyles";
 import CancelIcon from "@mui/icons-material/Cancel";
 
-const ActionsButtons = (props: {
+interface Props {
   cancel: () => void;
   submit: () => void;
   submitText: string;
   submitIcon: ReactElement;
-}) => {
+}
+
+const ActionsButtons = ({ cancel, submit, submitText, submitIcon }: Props) => {
   return (
     <Box sx={actionsButtons}>
       <Button
         variant="contained"
         sx={buttonStyle}
         endIcon={<CancelIcon />}
-        onClick={props.cancel}
+        onClick={cancel}
       >
         Cancel
       </Button>
       <Button
         variant="contained"
         color="success"
-        endIcon={props.submitIcon}
-        onClick={props.submit}
+        endIcon={submitIcon}
+        onClick={submit}
       >
-        {props.submitText}
+        {submitText}
       </Button>
     </Box>
   );

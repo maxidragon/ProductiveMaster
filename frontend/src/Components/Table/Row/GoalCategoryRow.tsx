@@ -1,20 +1,23 @@
 import { useState } from "react";
 import { TableRow, TableCell, IconButton } from "@mui/material";
-import { GoalCategory } from "../../../logic/interfaces";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
+import { GoalCategory } from "../../../logic/interfaces";
 import { deleteGoalCategory } from "../../../logic/goalCategories";
 import EditGoalCategoryModal from "../../ModalComponents/Edit/EditGoalCategoryModal";
 
-const GoalCategoryRow = ({ goalCategory }: { goalCategory: GoalCategory }) => {
+interface Props {
+  goalCategory: GoalCategory;
+}
+
+const GoalCategoryRow = ({ goalCategory }: Props): JSX.Element => {
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editedGoalCategory, setEditedGoalCategory] =
     useState<GoalCategory>(goalCategory);
-  const handleDelete = async () => {
+  const handleDelete = async (): Promise<void> => {
     if (goalCategory === null) return;
     confirm({ description: "Are you sure you want to delete this category?" })
       .then(async () => {
@@ -30,7 +33,7 @@ const GoalCategoryRow = ({ goalCategory }: { goalCategory: GoalCategory }) => {
         enqueueSnackbar("Goal not deleted!", { variant: "info" });
       });
   };
-  const editGoalCategory = (goalCategory: GoalCategory) => {
+  const editGoalCategory = (goalCategory: GoalCategory): void => {
     setEditedGoalCategory(goalCategory);
   };
 
@@ -59,7 +62,7 @@ const GoalCategoryRow = ({ goalCategory }: { goalCategory: GoalCategory }) => {
           open={edit}
           handleClose={() => setEdit(false)}
           goalCategory={editedGoalCategory}
-          updateGoalCategory={editGoalCategory}
+          editGoalCategory={editGoalCategory}
         />
       )}
     </>

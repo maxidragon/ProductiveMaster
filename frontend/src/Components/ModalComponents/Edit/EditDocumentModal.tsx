@@ -1,22 +1,30 @@
 import { Box, Typography, Modal, TextField, Grid } from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
-import { Document as DocumentInterface } from "../../../logic/interfaces";
-import ActionsButtons from "../ActionsButtons";
+import {
+  Document as DocumentInterface,
+  ModalProps,
+} from "../../../logic/interfaces";
 import { updateDocument } from "../../../logic/documents";
-import EditIcon from "@mui/icons-material/Edit";
+import ActionsButtons from "../ActionsButtons";
 
-const EditDocumentModal = (props: {
-  open: boolean;
-  handleClose: () => void;
+interface Props extends ModalProps {
   document: DocumentInterface;
-  updateDocument: (document: DocumentInterface) => void;
-}) => {
+  editDocument: (document: DocumentInterface) => void;
+}
+
+const EditDocumentModal = ({
+  open,
+  handleClose,
+  document,
+  editDocument,
+}: Props): JSX.Element => {
   const handleEdit = async () => {
-    const response = await updateDocument(props.document);
+    const response = await updateDocument(document);
     if (response.status === 200) {
       enqueueSnackbar("Document updated!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -32,7 +40,7 @@ const EditDocumentModal = (props: {
     }
   };
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -44,10 +52,10 @@ const EditDocumentModal = (props: {
             <TextField
               placeholder={"Title"}
               fullWidth
-              value={props.document.title}
+              value={document.title}
               onChange={(event) =>
-                props.updateDocument({
-                  ...props.document,
+                editDocument({
+                  ...document,
                   title: event.target.value,
                 })
               }
@@ -57,10 +65,10 @@ const EditDocumentModal = (props: {
             <TextField
               placeholder={"URL"}
               fullWidth
-              value={props.document.url}
+              value={document.url}
               onChange={(event) =>
-                props.updateDocument({
-                  ...props.document,
+                editDocument({
+                  ...document,
                   url: event.target.value,
                 })
               }
@@ -68,7 +76,7 @@ const EditDocumentModal = (props: {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleEdit}
           submitText={"Edit"}
           submitIcon={<EditIcon />}

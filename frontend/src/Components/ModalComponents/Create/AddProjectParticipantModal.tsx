@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import {
   Box,
   Checkbox,
@@ -7,18 +8,18 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useRef, useState } from "react";
+import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
-import ActionsButtons from "../ActionsButtons";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { addProjectParticipant } from "../../../logic/projectParticipants";
+import { ProjectModalProps } from "../../../logic/interfaces";
+import ActionsButtons from "../ActionsButtons";
 
-const AddProjectParticipantModal = (props: {
-  open: boolean;
-  handleClose: () => void;
-  projectId: number;
-}) => {
+const AddProjectParticipantModal = ({
+  open,
+  handleClose,
+  projectId,
+}: ProjectModalProps): JSX.Element => {
   const emailRef: React.MutableRefObject<HTMLInputElement | null | undefined> =
     useRef();
   const [isOwner, setIsOwner] = useState<boolean>(false);
@@ -26,14 +27,10 @@ const AddProjectParticipantModal = (props: {
   const handleCreate = async () => {
     if (!emailRef.current) return;
     const email = emailRef.current.value;
-    const response = await addProjectParticipant(
-      email,
-      props.projectId,
-      isOwner,
-    );
+    const response = await addProjectParticipant(email, projectId, isOwner);
     if (response.status === 201) {
       enqueueSnackbar("User added!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -45,7 +42,7 @@ const AddProjectParticipantModal = (props: {
   };
 
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -69,7 +66,7 @@ const AddProjectParticipantModal = (props: {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleCreate}
           submitText={"Create"}
           submitIcon={<AddCircleIcon />}

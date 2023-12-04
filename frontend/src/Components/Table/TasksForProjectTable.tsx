@@ -12,7 +12,7 @@ import { TaskForProject } from "../../logic/interfaces";
 import PaginationFooter from "../Pagination/PaginationFooter";
 import TaskForProjectRow from "./Row/TaskForProjectRow";
 
-const TasksForProjectTable = (props: {
+interface Props {
   tasks: TaskForProject[];
   page: number;
   totalPages: number;
@@ -21,10 +21,21 @@ const TasksForProjectTable = (props: {
   handlePageChange: (page: number) => void;
   status?: string;
   fetchData: (pageParam: number, statusParam?: string) => void;
-}) => {
-  const handleStatusUpdate = (status: string) => {
-    if (props.status === status) return;
-    props.fetchData(props.page, props.status);
+}
+
+const TasksForProjectTable = ({
+  tasks,
+  page,
+  totalPages,
+  totalItems,
+  isProjectOwner,
+  handlePageChange,
+  status,
+  fetchData,
+}: Props): JSX.Element => {
+  const handleStatusUpdate = (statusParam: string) => {
+    if (status === statusParam) return;
+    fetchData(page, status);
   };
 
   return (
@@ -43,22 +54,22 @@ const TasksForProjectTable = (props: {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.tasks.map((task: TaskForProject) => (
+          {tasks.map((task: TaskForProject) => (
             <TaskForProjectRow
               key={task.id}
               task={task}
-              isProjectOwner={props.isProjectOwner}
+              isProjectOwner={isProjectOwner}
               handleStatusUpdate={handleStatusUpdate}
             />
           ))}
         </TableBody>
-        {props.totalPages > 0 && (
+        {totalPages > 0 && (
           <TableFooter>
             <PaginationFooter
-              page={props.page}
-              totalPages={props.totalPages}
-              totalItems={props.totalItems}
-              handlePageChange={props.handlePageChange}
+              page={page}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              handlePageChange={handlePageChange}
             />
           </TableFooter>
         )}

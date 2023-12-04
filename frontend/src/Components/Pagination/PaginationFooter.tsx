@@ -3,29 +3,36 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import { useEffect, useState } from "react";
 
-const PaginationFooter = (props: {
+interface Props {
   page: number;
   totalPages: number;
   totalItems: number;
   handlePageChange: (page: number) => void;
-}) => {
+}
+
+const PaginationFooter = ({
+  page,
+  totalPages,
+  totalItems,
+  handlePageChange,
+}: Props): JSX.Element => {
   const [isPreviousPageDisabled, setIsPreviousPageDisabled] =
     useState<boolean>(false);
   const [isNextPageDisabled, setIsNextPageDisabled] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsPreviousPageDisabled(props.page === 1);
-    setIsNextPageDisabled(props.page === props.totalPages);
-  }, [props.page, props.totalPages]);
+    setIsPreviousPageDisabled(page === 1);
+    setIsNextPageDisabled(page === totalPages);
+  }, [page, totalPages]);
 
-  const nextPage = () => {
-    if (props.page < props.totalPages) {
-      props.handlePageChange(props.page + 1);
+  const nextPage = (): void => {
+    if (page < totalPages) {
+      handlePageChange(page + 1);
     }
   };
-  const previousPage = () => {
-    if (props.page > 1) {
-      props.handlePageChange(props.page - 1);
+  const previousPage = (): void => {
+    if (page > 1) {
+      handlePageChange(page - 1);
     }
   };
 
@@ -50,7 +57,7 @@ const PaginationFooter = (props: {
           <NavigateBeforeIcon />
         </IconButton>
         <Typography>
-          Page {props.page} of {props.totalPages}
+          Page {page} of {totalPages}
         </Typography>
         <IconButton
           onClick={nextPage}
@@ -60,7 +67,7 @@ const PaginationFooter = (props: {
         >
           <NavigateNextIcon />
         </IconButton>
-        <Typography>Total items: {props.totalItems}</Typography>
+        <Typography>Total items: {totalItems}</Typography>
       </TableCell>
     </TableRow>
   );

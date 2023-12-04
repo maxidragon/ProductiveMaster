@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import {
   Box,
   FormControl,
@@ -10,19 +11,18 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
-import { LearningCategory } from "../../../logic/interfaces";
-import ActionsButtons from "../ActionsButtons";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { LearningCategory, ModalProps } from "../../../logic/interfaces";
 import { getAllLearningCategories } from "../../../logic/learningCategories";
 import { createLearning } from "../../../logic/learning";
+import ActionsButtons from "../ActionsButtons";
 
-const CreateLearningModal = (props: {
-  open: boolean;
-  handleClose: () => void;
-}) => {
+const CreateLearningModal = ({
+  open,
+  handleClose,
+}: ModalProps): JSX.Element => {
   const [learningCategories, setLearningCategories] = useState<
     LearningCategory[]
   >([]);
@@ -40,7 +40,7 @@ const CreateLearningModal = (props: {
     const response = await createLearning(name, description, selected);
     if (response.status === 201) {
       enqueueSnackbar("Goal created!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.name) {
@@ -69,7 +69,7 @@ const CreateLearningModal = (props: {
     fetchData();
   }, []);
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -118,7 +118,7 @@ const CreateLearningModal = (props: {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleCreate}
           submitText={"Create"}
           submitIcon={<AddCircleIcon />}

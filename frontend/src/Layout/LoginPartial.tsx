@@ -4,12 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { getUsername, logout } from "../logic/auth";
 import AvatarComponent from "../Components/AvatarComponent";
 
-const LoginPartial = (props: { userLoggedIn: boolean }) => {
+interface Props {
+  userLoggedIn: boolean;
+}
+
+const LoginPartial = ({ userLoggedIn }: Props): JSX.Element => {
   const navigate = useNavigate();
   const username = getUsername();
   return (
     <>
-      {props.userLoggedIn && username && (
+      {userLoggedIn && username && (
         <>
           <IconButton
             onClick={() => {

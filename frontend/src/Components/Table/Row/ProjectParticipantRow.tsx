@@ -1,28 +1,28 @@
 import { useState } from "react";
 import { TableRow, TableCell, IconButton, Grid, Tooltip } from "@mui/material";
-import { ProjectParticipant } from "../../../logic/interfaces";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
+import { ProjectParticipant } from "../../../logic/interfaces";
 import { deleteProjectParticipant } from "../../../logic/projectParticipants";
 import EditProjectParticipantModal from "../../ModalComponents/Edit/EditProjectParticipantModal";
 import AvatarComponent from "../../AvatarComponent";
 
+interface Props {
+  user: ProjectParticipant;
+  isProjectOwner: boolean;
+}
+
 const ProjectParticipantRow = ({
   user,
   isProjectOwner,
-}: {
-  user: ProjectParticipant;
-  isProjectOwner: boolean;
-}) => {
+}: Props): JSX.Element => {
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editedUser, setEditedUser] = useState<ProjectParticipant>(user);
 
-  const handleDelete = () => {
-    console.log(user);
+  const handleDelete = (): void => {
     if (user === null) return;
     confirm({
       description:
@@ -44,7 +44,7 @@ const ProjectParticipantRow = ({
         enqueueSnackbar("User not deleted!", { variant: "info" });
       });
   };
-  const updateUser = (userParam: ProjectParticipant) => {
+  const updateUser = (userParam: ProjectParticipant): void => {
     setEditedUser(userParam);
   };
 

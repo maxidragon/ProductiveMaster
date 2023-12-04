@@ -7,41 +7,45 @@ import {
   Box,
   Chip,
 } from "@mui/material";
-import { Project } from "../../../logic/interfaces";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import DescriptionIcon from "@mui/icons-material/Description";
+import {
+  Assignment as AssignmentIcon,
+  BarChart as BarChartIcon,
+  Description as DescriptionIcon,
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+  GitHub as GitHubIcon,
+  People as PeopleIcon,
+} from "@mui/icons-material";
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
-import { deleteProject } from "../../../logic/projects";
 import { Link as RouterLink } from "react-router-dom";
-import EditProjectModal from "../../ModalComponents/Edit/EditProjectModal";
+import { Project } from "../../../logic/interfaces";
+import { deleteProject } from "../../../logic/projects";
 import { statusPretyName } from "../../../logic/other";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import ProjectStatsModal from "../../ModalComponents/ProjectStatsModal";
-import PeopleIcon from "@mui/icons-material/People";
 import { isProjectOwner } from "../../../logic/projectParticipants";
+import ProjectStatsModal from "../../ModalComponents/ProjectStatsModal";
+import EditProjectModal from "../../ModalComponents/Edit/EditProjectModal";
 
-const ProjectRow = (props: {
+interface Props {
   project: Project;
   handleStatusUpdate: (status: string) => void;
-}) => {
+}
+
+const ProjectRow = ({ project, handleStatusUpdate }: Props): JSX.Element => {
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [editedProject, setEditedProject] = useState<Project>(props.project);
+  const [editedProject, setEditedProject] = useState<Project>(project);
   const [isOwner, setIsOwner] = useState(false);
   const [openStatsModal, setOpenStatsModal] = useState(false);
-  const handleDelete = async () => {
-    if (props.project === null) return;
+  const handleDelete = async (): Promise<void> => {
+    if (project === null) return;
     confirm({
       description:
         "Are you sure you want to delete this project and all tasks?",
     })
       .then(async () => {
-        const status = await deleteProject(props.project.id);
+        const status = await deleteProject(project.id);
         if (status === 204) {
           enqueueSnackbar("Project deleted!", { variant: "success" });
           setHide(true);
@@ -53,22 +57,22 @@ const ProjectRow = (props: {
         enqueueSnackbar("Project not deleted!", { variant: "info" });
       });
   };
-  const updateProject = (project: Project) => {
+  const updateProject = (project: Project): void => {
     setEditedProject(project);
   };
 
-  const handleCloseEditModal = () => {
+  const handleCloseEditModal = (): void => {
     setEdit(false);
-    props.handleStatusUpdate(editedProject.status);
+    handleStatusUpdate(editedProject.status);
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      const isOwner = await isProjectOwner(props.project.id);
+      const isOwner = await isProjectOwner(project.id);
       setIsOwner(isOwner["is_owner"]);
     };
     fetchData();
-  }, [props.project.id]);
+  }, [project.id]);
 
   return (
     <>
@@ -144,14 +148,14 @@ const ProjectRow = (props: {
       <ProjectStatsModal
         open={openStatsModal}
         handleClose={() => setOpenStatsModal(false)}
-        id={editedProject.id}
+        projectId={editedProject.id}
       />
       {edit && (
         <EditProjectModal
           open={edit}
           handleClose={handleCloseEditModal}
           project={editedProject}
-          updateProject={updateProject}
+          editProject={updateProject}
         />
       )}
     </>

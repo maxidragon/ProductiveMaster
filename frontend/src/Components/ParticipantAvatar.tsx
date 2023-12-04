@@ -2,11 +2,10 @@ import { Tooltip, IconButton } from "@mui/material";
 import { ProjectParticipant } from "../logic/interfaces";
 import AvatarComponent from "./AvatarComponent";
 
-const ParticipantAvatar = ({
-  participant,
-}: {
+interface Props {
   participant: ProjectParticipant;
-}) => {
+}
+const ParticipantAvatar = ({ participant }: Props): JSX.Element => {
   return (
     <Tooltip title={participant.user.username}>
       <IconButton>

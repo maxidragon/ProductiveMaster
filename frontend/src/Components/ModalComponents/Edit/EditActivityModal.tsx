@@ -1,24 +1,29 @@
 import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { DateTimePicker } from "@mui/x-date-pickers";
-import { Activity } from "../../../logic/interfaces";
+import { Activity, ModalProps } from "../../../logic/interfaces";
 import { updateActivity } from "../../../logic/activities";
 import dayjs from "dayjs";
 import ActionsButtons from "../ActionsButtons";
-import EditIcon from "@mui/icons-material/Edit";
 
-const EditActivityModal = (props: {
-  open: boolean;
-  handleClose: () => void;
+interface Props extends ModalProps {
   activity: Activity;
-  updateActivity: (activity: Activity) => void;
-}) => {
+  editActivity: (activity: Activity) => void;
+}
+
+const EditActivityModal = ({
+  open,
+  handleClose,
+  activity,
+  editActivity,
+}: Props): JSX.Element => {
   const handleEdit = async () => {
-    const response = await updateActivity(props.activity);
+    const response = await updateActivity(activity);
     if (response.status === 200) {
       enqueueSnackbar("Activity updated!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -44,7 +49,7 @@ const EditActivityModal = (props: {
     }
   };
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -55,10 +60,10 @@ const EditActivityModal = (props: {
           <Grid item>
             <DateTimePicker
               label="Start"
-              value={dayjs(props.activity.start_time)}
+              value={dayjs(activity.start_time)}
               onChange={(value) =>
-                props.updateActivity({
-                  ...props.activity,
+                editActivity({
+                  ...activity,
                   start_time: new Date(dayjs(value).toISOString()),
                 })
               }
@@ -67,10 +72,10 @@ const EditActivityModal = (props: {
           <Grid item>
             <DateTimePicker
               label="End"
-              value={dayjs(props.activity.end_time)}
+              value={dayjs(activity.end_time)}
               onChange={(value) =>
-                props.updateActivity({
-                  ...props.activity,
+                editActivity({
+                  ...activity,
                   end_time: new Date(dayjs(value).toISOString()),
                 })
               }
@@ -80,10 +85,10 @@ const EditActivityModal = (props: {
             <TextField
               placeholder={"Title"}
               fullWidth
-              value={props.activity.title}
+              value={activity.title}
               onChange={(event) =>
-                props.updateActivity({
-                  ...props.activity,
+                editActivity({
+                  ...activity,
                   title: event.target.value,
                 })
               }
@@ -95,10 +100,10 @@ const EditActivityModal = (props: {
               rows={15}
               placeholder={"Write description here..."}
               fullWidth
-              value={props.activity.description}
+              value={activity.description}
               onChange={(event) =>
-                props.updateActivity({
-                  ...props.activity,
+                editActivity({
+                  ...activity,
                   description: event.target.value,
                 })
               }
@@ -106,7 +111,7 @@ const EditActivityModal = (props: {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleEdit}
           submitText={"Edit"}
           submitIcon={<EditIcon />}

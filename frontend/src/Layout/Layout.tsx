@@ -18,7 +18,11 @@ import { isUserLoggedIn } from "../logic/auth";
 import Navbar from "./Navbar";
 import Copyright from "./Copyright";
 
-const Layout = (props: { children: ReactElement }) => {
+interface Props {
+  children: ReactElement;
+}
+
+const Layout = ({ children }: Props): JSX.Element => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const [openProjectNav, setOpenProjectNav] = useState<boolean>(true);
@@ -121,7 +125,7 @@ const Layout = (props: { children: ReactElement }) => {
       >
         <Toolbar />
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          {props.children}
+          {children}
         </Container>
         <Copyright />
       </Box>

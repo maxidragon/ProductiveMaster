@@ -1,22 +1,27 @@
 import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
-import { LearningCategory } from "../../../logic/interfaces";
-import ActionsButtons from "../ActionsButtons";
-import EditIcon from "@mui/icons-material/Edit";
+import { LearningCategory, ModalProps } from "../../../logic/interfaces";
 import { updateLearningCategory } from "../../../logic/learningCategories";
+import ActionsButtons from "../ActionsButtons";
 
-const EditLearningCategoryModal = (props: {
-  open: boolean;
-  handleClose: () => void;
+interface Props extends ModalProps {
   learningCategory: LearningCategory;
-  updateLearningCategory: (learningCategory: LearningCategory) => void;
-}) => {
+  editLearningCategory: (learningCategory: LearningCategory) => void;
+}
+
+const EditLearningCategoryModal = ({
+  open,
+  handleClose,
+  learningCategory,
+  editLearningCategory,
+}: Props): JSX.Element => {
   const handleEdit = async () => {
-    const response = await updateLearningCategory(props.learningCategory);
+    const response = await updateLearningCategory(learningCategory);
     if (response.status === 200) {
       enqueueSnackbar("Category updated!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -27,7 +32,7 @@ const EditLearningCategoryModal = (props: {
     }
   };
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -39,10 +44,10 @@ const EditLearningCategoryModal = (props: {
             <TextField
               placeholder={"Name"}
               fullWidth
-              value={props.learningCategory.name}
+              value={learningCategory.name}
               onChange={(event) =>
-                props.updateLearningCategory({
-                  ...props.learningCategory,
+                editLearningCategory({
+                  ...learningCategory,
                   name: event.target.value,
                 })
               }
@@ -50,7 +55,7 @@ const EditLearningCategoryModal = (props: {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleEdit}
           submitText={"Edit"}
           submitIcon={<EditIcon />}

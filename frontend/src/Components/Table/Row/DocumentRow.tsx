@@ -1,28 +1,26 @@
 import { useState } from "react";
 import { TableRow, TableCell, IconButton, Link, Tooltip } from "@mui/material";
-import { Document as DocumentInterface } from "../../../logic/interfaces";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
-import EditDocumentModal from "../../ModalComponents/Edit/EditDocumentModal";
+import { Document as DocumentInterface } from "../../../logic/interfaces";
 import { deleteDocument } from "../../../logic/documents";
 import AvatarComponent from "../../AvatarComponent";
+import EditDocumentModal from "../../ModalComponents/Edit/EditDocumentModal";
 
-const DocumentRow = ({
-  document,
-  isProjectOwner,
-}: {
+interface Props {
   document: DocumentInterface;
   isProjectOwner: boolean;
-}) => {
+}
+
+const DocumentRow = ({ document, isProjectOwner }: Props): JSX.Element => {
   const userId = localStorage.getItem("userId") || "";
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editedDocument, setEditedDocument] =
     useState<DocumentInterface>(document);
-  const handleDelete = async () => {
+  const handleDelete = async (): Promise<void> => {
     if (document === null) return;
     confirm({
       description: "Are you sure you want to delete this document?",
@@ -40,7 +38,7 @@ const DocumentRow = ({
         enqueueSnackbar("Document not deleted!", { variant: "info" });
       });
   };
-  const updateDocument = (documentParam: DocumentInterface) => {
+  const updateDocument = (documentParam: DocumentInterface): void => {
     setEditedDocument(documentParam);
   };
 
@@ -86,7 +84,7 @@ const DocumentRow = ({
           open={edit}
           handleClose={() => setEdit(false)}
           document={editedDocument}
-          updateDocument={updateDocument}
+          editDocument={updateDocument}
         />
       )}
     </>

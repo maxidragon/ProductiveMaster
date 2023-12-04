@@ -12,13 +12,21 @@ import {
 import GoalRow from "./Row/GoalRow";
 import PaginationFooter from "../Pagination/PaginationFooter";
 
-const GoalsTable = (props: {
+interface Props {
   goals: Goal[];
   page: number;
   totalPages: number;
   totalItems: number;
   handlePageChange: (page: number) => void;
-}) => {
+}
+
+const GoalsTable = ({
+  goals,
+  page,
+  totalPages,
+  totalItems,
+  handlePageChange,
+}: Props): JSX.Element => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }}>
@@ -33,16 +41,16 @@ const GoalsTable = (props: {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.goals.map((goal: Goal) => (
+          {goals.map((goal: Goal) => (
             <GoalRow key={goal.id} goal={goal} />
           ))}
-          {props.totalPages > 0 && (
+          {totalPages > 0 && (
             <TableFooter>
               <PaginationFooter
-                page={props.page}
-                totalPages={props.totalPages}
-                totalItems={props.totalItems}
-                handlePageChange={props.handlePageChange}
+                page={page}
+                totalPages={totalPages}
+                totalItems={totalItems}
+                handlePageChange={handlePageChange}
               />
             </TableFooter>
           )}

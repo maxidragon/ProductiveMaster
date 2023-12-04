@@ -10,10 +10,15 @@ import {
 import { Document as DocumentInterface } from "../../logic/interfaces";
 import DocumentRow from "./Row/DocumentRow";
 
-const RecentDocumentsTable = (props: {
+interface Props {
   documents: DocumentInterface[];
   isProjectOwner: boolean;
-}) => {
+}
+
+const RecentDocumentsTable = ({
+  documents,
+  isProjectOwner,
+}: Props): JSX.Element => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }}>
@@ -25,11 +30,11 @@ const RecentDocumentsTable = (props: {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.documents.map((document: DocumentInterface) => (
+          {documents.map((document: DocumentInterface) => (
             <DocumentRow
               key={document.id}
               document={document}
-              isProjectOwner={props.isProjectOwner}
+              isProjectOwner={isProjectOwner}
             />
           ))}
         </TableBody>

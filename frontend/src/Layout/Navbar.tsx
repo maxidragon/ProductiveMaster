@@ -23,12 +23,19 @@ import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import TopicIcon from "@mui/icons-material/Topic";
 
-const Navbar = (props: {
+interface Props {
   openProjectNav: boolean;
   toggleProjectNav: () => void;
   openLearningNav: boolean;
   toggleLearningNav: () => void;
-}) => {
+}
+
+const Navbar = ({
+  openProjectNav,
+  toggleProjectNav,
+  openLearningNav,
+  toggleLearningNav,
+}: Props): JSX.Element => {
   const navigate = useNavigate();
   const [recentProjects, setRecentProjects] = useState<RecentProject[]>([]);
   const [recentLearnings, setRecentLearnings] = useState<RecentLearning[]>([]);
@@ -59,12 +66,12 @@ const Navbar = (props: {
           <FolderCopyIcon />
         </ListItemIcon>
         <ListItemText primary="Projects" />
-        <IconButton onClick={props.toggleProjectNav}>
+        <IconButton onClick={toggleProjectNav}>
           {" "}
-          {props.openProjectNav ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          {openProjectNav ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </IconButton>
       </ListItemButton>
-      <Collapse in={props.openProjectNav} timeout="auto" unmountOnExit>
+      <Collapse in={openProjectNav} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {recentProjects.length > 0 &&
             recentProjects.map((project: RecentProject) => (
@@ -105,12 +112,12 @@ const Navbar = (props: {
           <BookIcon />
         </ListItemIcon>
         <ListItemText primary="Learning" />
-        <IconButton onClick={props.toggleLearningNav}>
+        <IconButton onClick={toggleLearningNav}>
           {" "}
-          {props.openLearningNav ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          {openLearningNav ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </IconButton>
       </ListItemButton>
-      <Collapse in={props.openLearningNav} timeout="auto" unmountOnExit>
+      <Collapse in={openLearningNav} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {recentLearnings.length > 0 &&
             recentLearnings.map((learning: RecentLearning) => (

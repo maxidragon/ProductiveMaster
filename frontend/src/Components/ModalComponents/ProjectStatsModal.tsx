@@ -1,28 +1,28 @@
 import { useEffect, useState } from "react";
 import { Modal, Box, Typography, Grid } from "@mui/material";
 import { formStyle, style } from "./modalStyles";
-import { ProjectStats } from "../../logic/interfaces";
+import { ProjectModalProps, ProjectStats } from "../../logic/interfaces";
 import { getProjectStatistics } from "../../logic/projects";
 
-const ProjectStatsModal = (props: {
-  open: boolean;
-  handleClose: () => void;
-  id: number;
-}) => {
+const ProjectStatsModal = ({
+  open,
+  handleClose,
+  projectId,
+}: ProjectModalProps): JSX.Element => {
   const [stats, setStats] = useState<ProjectStats | null>(null);
 
   useEffect(() => {
     const getStats = async () => {
-      if (!props.open) return;
-      const data = await getProjectStatistics(props.id);
+      if (!open) return;
+      const data = await getProjectStatistics(projectId);
       setStats(data);
     };
     getStats();
-  }, [props.id, props.open]);
+  }, [projectId, open]);
 
   return (
     <>
-      <Modal open={props.open} onClose={props.handleClose}>
+      <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <Grid container sx={formStyle}>
             {stats && (
@@ -64,7 +64,7 @@ const ProjectStatsModal = (props: {
                     </Typography>
                   ) : (
                     <Typography variant="h6">
-                      GitHub repository must be connected and public to see
+                      GitHub repository must be connected and public to display
                       total code lines
                     </Typography>
                   )}

@@ -12,13 +12,21 @@ import {
 import GoalCategoryRow from "./Row/GoalCategoryRow";
 import PaginationFooter from "../Pagination/PaginationFooter";
 
-const GoalCategoriesTable = (props: {
+interface Props {
   goalCategories: GoalCategory[];
   page: number;
   totalPages: number;
   totalItems: number;
   handlePageChange: (page: number) => void;
-}) => {
+}
+
+const GoalCategoriesTable = ({
+  goalCategories,
+  page,
+  totalPages,
+  totalItems,
+  handlePageChange,
+}: Props): JSX.Element => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }}>
@@ -29,20 +37,20 @@ const GoalCategoriesTable = (props: {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.goalCategories.map((goalCategory: GoalCategory) => (
+          {goalCategories.map((goalCategory: GoalCategory) => (
             <GoalCategoryRow
               key={goalCategory.id}
               goalCategory={goalCategory}
             />
           ))}
         </TableBody>
-        {props.totalPages > 0 && (
+        {totalPages > 0 && (
           <TableFooter>
             <PaginationFooter
-              page={props.page}
-              totalPages={props.totalPages}
-              totalItems={props.totalItems}
-              handlePageChange={props.handlePageChange}
+              page={page}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              handlePageChange={handlePageChange}
             />
           </TableFooter>
         )}

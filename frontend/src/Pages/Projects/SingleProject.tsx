@@ -208,11 +208,7 @@ const SingleProject = () => {
               <AddTaskIcon />
             </IconButton>
           </Box>
-          <RecentTasksTable
-            tasks={recentTasks}
-            fetchData={fetchRecentTasks}
-            isProjectOwner={isOwner}
-          />
+          <RecentTasksTable tasks={recentTasks} isProjectOwner={isOwner} />
         </Grid>
         <Grid item sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <Box sx={{ display: "flex", flexDirection: "row" }}>

@@ -9,24 +9,29 @@ import {
   MenuItem,
   Grid,
 } from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { updateProject } from "../../../logic/projects";
-import { Project } from "../../../logic/interfaces";
+import { ModalProps, Project } from "../../../logic/interfaces";
 import ActionsButtons from "../ActionsButtons";
-import EditIcon from "@mui/icons-material/Edit";
 
-const EditProjectModal = (props: {
-  open: boolean;
-  handleClose: () => void;
+interface Props extends ModalProps {
   project: Project;
-  updateProject: (project: Project) => void;
-}) => {
+  editProject: (project: Project) => void;
+}
+
+const EditProjectModal = ({
+  open,
+  handleClose,
+  project,
+  editProject,
+}: Props): JSX.Element => {
   const handleEdit = async () => {
-    const response = await updateProject(props.project);
+    const response = await updateProject(project);
     if (response.status === 200) {
       enqueueSnackbar("Project updated!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -47,7 +52,7 @@ const EditProjectModal = (props: {
     }
   };
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -59,10 +64,10 @@ const EditProjectModal = (props: {
             <TextField
               placeholder={"Title"}
               fullWidth
-              value={props.project.title}
+              value={project.title}
               onChange={(event) =>
-                props.updateProject({
-                  ...props.project,
+                editProject({
+                  ...project,
                   title: event.target.value,
                 })
               }
@@ -72,10 +77,10 @@ const EditProjectModal = (props: {
             <TextField
               placeholder={"Github"}
               fullWidth
-              value={props.project.github}
+              value={project.github}
               onChange={(event) =>
-                props.updateProject({
-                  ...props.project,
+                editProject({
+                  ...project,
                   github: event.target.value,
                 })
               }
@@ -87,10 +92,10 @@ const EditProjectModal = (props: {
               rows={15}
               placeholder={"Write project description here..."}
               fullWidth
-              value={props.project.description}
+              value={project.description}
               onChange={(event) =>
-                props.updateProject({
-                  ...props.project,
+                editProject({
+                  ...project,
                   description: event.target.value,
                 })
               }
@@ -104,10 +109,10 @@ const EditProjectModal = (props: {
                 label="Status"
                 required
                 name="status"
-                value={props.project.status}
+                value={project.status}
                 onChange={(event) =>
-                  props.updateProject({
-                    ...props.project,
+                  editProject({
+                    ...project,
                     status: event.target.value,
                   })
                 }
@@ -120,7 +125,7 @@ const EditProjectModal = (props: {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleEdit}
           submitText={"Edit"}
           submitIcon={<EditIcon />}

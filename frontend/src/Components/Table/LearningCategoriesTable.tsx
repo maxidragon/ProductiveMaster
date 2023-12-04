@@ -12,13 +12,21 @@ import {
 import PaginationFooter from "../Pagination/PaginationFooter";
 import LearningCategoryRow from "./Row/LearningCategoryRow";
 
-const LearningCategoriesTable = (props: {
+interface Props {
   learningCategories: LearningCategory[];
   page: number;
   totalPages: number;
   totalItems: number;
   handlePageChange: (page: number) => void;
-}) => {
+}
+
+const LearningCategoriesTable = ({
+  learningCategories,
+  page,
+  totalPages,
+  totalItems,
+  handlePageChange,
+}: Props): JSX.Element => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }}>
@@ -29,22 +37,20 @@ const LearningCategoriesTable = (props: {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.learningCategories.map(
-            (learningCategory: LearningCategory) => (
-              <LearningCategoryRow
-                key={learningCategory.id}
-                learningCategory={learningCategory}
-              />
-            ),
-          )}
+          {learningCategories.map((learningCategory: LearningCategory) => (
+            <LearningCategoryRow
+              key={learningCategory.id}
+              learningCategory={learningCategory}
+            />
+          ))}
         </TableBody>
-        {props.totalPages > 0 && (
+        {totalPages > 0 && (
           <TableFooter>
             <PaginationFooter
-              page={props.page}
-              totalPages={props.totalPages}
-              totalItems={props.totalItems}
-              handlePageChange={props.handlePageChange}
+              page={page}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              handlePageChange={handlePageChange}
             />
           </TableFooter>
         )}

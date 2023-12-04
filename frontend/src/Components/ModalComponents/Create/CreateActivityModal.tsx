@@ -1,16 +1,17 @@
-import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
-import { useRef } from "react";
 import { formStyle, style } from "../modalStyles";
+import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
+import { AddCircle as AddCircleIcon } from "@mui/icons-material";
+import { useRef } from "react";
 import { enqueueSnackbar } from "notistack";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { createActivity } from "../../../logic/activities";
+import { ModalProps } from "../../../logic/interfaces";
 import ActionsButtons from "../ActionsButtons";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-const CreateActivityModal = (props: {
-  open: boolean;
-  handleClose: () => void;
-}) => {
+const CreateActivityModal = ({
+  open,
+  handleClose,
+}: ModalProps): JSX.Element => {
   const titleRef: React.MutableRefObject<HTMLInputElement | null | undefined> =
     useRef();
   const descriptionRef: React.MutableRefObject<
@@ -32,7 +33,7 @@ const CreateActivityModal = (props: {
     );
     if (response.status === 201) {
       enqueueSnackbar("Activity created!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -58,7 +59,7 @@ const CreateActivityModal = (props: {
     }
   };
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -86,7 +87,7 @@ const CreateActivityModal = (props: {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleCreate}
           submitText={"Create"}
           submitIcon={<AddCircleIcon />}

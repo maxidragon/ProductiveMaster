@@ -1,20 +1,24 @@
 import { useState } from "react";
 import { TableRow, TableCell, IconButton } from "@mui/material";
-import { Activity } from "../../../logic/interfaces";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
+import { Activity } from "../../../logic/interfaces";
 import { deleteActivity } from "../../../logic/activities";
 import { formatDateTime } from "../../../logic/other";
 import EditActivityModal from "../../ModalComponents/Edit/EditActivityModal";
 
-const ActivityRow = ({ activity }: { activity: Activity }) => {
+interface Props {
+  activity: Activity;
+}
+
+const ActivityRow = ({ activity }: Props): JSX.Element => {
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editedActivity, setEditedActivity] = useState<Activity>(activity);
-  const handleDelete = async () => {
+
+  const handleDelete = async (): Promise<void> => {
     if (activity === null) return;
     confirm({ description: "Are you sure you want to delete this activity?" })
       .then(async () => {
@@ -30,7 +34,7 @@ const ActivityRow = ({ activity }: { activity: Activity }) => {
         enqueueSnackbar("Activity not deleted!", { variant: "info" });
       });
   };
-  const editActivity = (activity: Activity) => {
+  const editActivity = (activity: Activity): void => {
     setEditedActivity(activity);
   };
 
@@ -66,7 +70,7 @@ const ActivityRow = ({ activity }: { activity: Activity }) => {
           open={edit}
           handleClose={() => setEdit(false)}
           activity={editedActivity}
-          updateActivity={editActivity}
+          editActivity={editActivity}
         />
       )}
     </>

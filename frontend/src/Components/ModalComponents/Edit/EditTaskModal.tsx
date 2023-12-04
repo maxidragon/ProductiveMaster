@@ -11,33 +11,42 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { updateTask } from "../../../logic/tasks";
-import { ProjectParticipant, Task } from "../../../logic/interfaces";
-import ActionsButtons from "../ActionsButtons";
-import EditIcon from "@mui/icons-material/Edit";
+import {
+  ModalProps,
+  ProjectParticipant,
+  Task,
+} from "../../../logic/interfaces";
 import { useState, useEffect } from "react";
 import { getProjectParticipants } from "../../../logic/projectParticipants";
+import ActionsButtons from "../ActionsButtons";
 import AvatarComponent from "../../AvatarComponent";
 
-const EditTaskModal = (props: {
-  open: boolean;
-  handleClose: () => void;
+interface Props extends ModalProps {
   task: Task;
-  updateTask: (task: Task) => void;
-}) => {
+  editTask: (task: Task) => void;
+}
+
+const EditTaskModal = ({
+  open,
+  handleClose,
+  task,
+  editTask,
+}: Props): JSX.Element => {
   const [participants, setParticipants] = useState<ProjectParticipant[]>([]);
-  const [assignee, setAssignee] = useState<number>(props.task.assignee || 0);
+  const [assignee, setAssignee] = useState<number>(task.assignee || 0);
   const handleEdit = async () => {
     const data = {
-      ...props.task,
+      ...task,
       assignee: assignee,
     };
     const response = await updateTask(data);
     if (response.status === 200) {
       enqueueSnackbar("Task updated!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -71,18 +80,18 @@ const EditTaskModal = (props: {
   useEffect(() => {
     const fetchData = async () => {
       let id = 0;
-      if (typeof props.task.project === "number") {
-        id = props.task.project;
+      if (typeof task.project === "number") {
+        id = task.project;
       }
       const data = await getProjectParticipants(id);
       setParticipants(data.results);
     };
 
     fetchData();
-  }, [props.task.project]);
+  }, [task.project]);
 
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -94,9 +103,9 @@ const EditTaskModal = (props: {
             <TextField
               placeholder={"Title"}
               fullWidth
-              value={props.task.title}
+              value={task.title}
               onChange={(event) =>
-                props.updateTask({ ...props.task, title: event.target.value })
+                editTask({ ...task, title: event.target.value })
               }
             />
           </Grid>
@@ -104,9 +113,9 @@ const EditTaskModal = (props: {
             <TextField
               placeholder={"Issue"}
               fullWidth
-              value={props.task.issue}
+              value={task.issue}
               onChange={(event) =>
-                props.updateTask({ ...props.task, issue: event.target.value })
+                editTask({ ...task, issue: event.target.value })
               }
             />
           </Grid>
@@ -114,10 +123,10 @@ const EditTaskModal = (props: {
             <TextField
               placeholder={"Pull Request"}
               fullWidth
-              value={props.task.pull_request}
+              value={task.pull_request}
               onChange={(event) =>
-                props.updateTask({
-                  ...props.task,
+                editTask({
+                  ...task,
                   pull_request: event.target.value,
                 })
               }
@@ -129,10 +138,10 @@ const EditTaskModal = (props: {
               rows={15}
               placeholder={"Write task description here..."}
               fullWidth
-              value={props.task.description}
+              value={task.description}
               onChange={(event) =>
-                props.updateTask({
-                  ...props.task,
+                editTask({
+                  ...task,
                   description: event.target.value,
                 })
               }
@@ -146,10 +155,10 @@ const EditTaskModal = (props: {
                 label="Status"
                 required
                 name="status"
-                value={props.task.status}
+                value={task.status}
                 onChange={(event) =>
-                  props.updateTask({
-                    ...props.task,
+                  editTask({
+                    ...task,
                     status: event.target.value,
                   })
                 }
@@ -191,10 +200,10 @@ const EditTaskModal = (props: {
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={props.task.high_priority}
+                  checked={task.high_priority}
                   onChange={(event) =>
-                    props.updateTask({
-                      ...props.task,
+                    editTask({
+                      ...task,
                       high_priority: event.target.checked,
                     })
                   }
@@ -205,7 +214,7 @@ const EditTaskModal = (props: {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleEdit}
           submitText={"Edit"}
           submitIcon={<EditIcon />}

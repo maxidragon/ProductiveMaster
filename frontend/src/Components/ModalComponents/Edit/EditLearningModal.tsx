@@ -10,32 +10,41 @@ import {
   Grid,
   SelectChangeEvent,
 } from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
 import { formStyle, style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
-import { LearningCategory, LearningType } from "../../../logic/interfaces";
-import ActionsButtons from "../ActionsButtons";
-import EditIcon from "@mui/icons-material/Edit";
+import {
+  LearningCategory,
+  LearningType,
+  ModalProps,
+} from "../../../logic/interfaces";
 import { editLearning } from "../../../logic/learning";
 import { useEffect, useState } from "react";
 import { getAllLearningCategories } from "../../../logic/learningCategories";
+import ActionsButtons from "../ActionsButtons";
 
-const EditLearningModal = (props: {
-  open: boolean;
-  handleClose: () => void;
+interface Props extends ModalProps {
   learning: LearningType;
   updateLearning: (learning: LearningType) => void;
-}) => {
+}
+
+const EditLearningModal = ({
+  open,
+  handleClose,
+  learning,
+  updateLearning,
+}: Props): JSX.Element => {
   const [learningCategories, setLearningCategories] = useState<
     LearningCategory[]
   >([]);
   const [selected, setSelected] = useState<number>(
-    props.learning.learning_category.id,
+    learning.learning_category.id,
   );
   const handleEdit = async () => {
-    const response = await editLearning(props.learning);
+    const response = await editLearning(learning);
     if (response.status === 200) {
       enqueueSnackbar("Task updated!", { variant: "success" });
-      props.handleClose();
+      handleClose();
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
       if (response.data.title) {
@@ -59,7 +68,7 @@ const EditLearningModal = (props: {
   }, []);
 
   return (
-    <Modal open={props.open} onClose={props.handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Grid container sx={formStyle}>
           <Grid item>
@@ -71,10 +80,10 @@ const EditLearningModal = (props: {
             <TextField
               placeholder={"Title"}
               fullWidth
-              value={props.learning.title}
+              value={learning.title}
               onChange={(event) =>
-                props.updateLearning({
-                  ...props.learning,
+                updateLearning({
+                  ...learning,
                   title: event.target.value,
                 })
               }
@@ -86,10 +95,10 @@ const EditLearningModal = (props: {
               rows={15}
               placeholder={"Write description here..."}
               fullWidth
-              value={props.learning.description}
+              value={learning.description}
               onChange={(event) =>
-                props.updateLearning({
-                  ...props.learning,
+                updateLearning({
+                  ...learning,
                   description: event.target.value,
                 })
               }
@@ -103,10 +112,10 @@ const EditLearningModal = (props: {
                 label="Status"
                 required
                 name="status"
-                value={props.learning.status}
+                value={learning.status}
                 onChange={(event) =>
-                  props.updateLearning({
-                    ...props.learning,
+                  updateLearning({
+                    ...learning,
                     status: event.target.value,
                   })
                 }
@@ -149,7 +158,7 @@ const EditLearningModal = (props: {
           </Grid>
         </Grid>
         <ActionsButtons
-          cancel={props.handleClose}
+          cancel={handleClose}
           submit={handleEdit}
           submitText={"Edit"}
           submitIcon={<EditIcon />}

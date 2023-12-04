@@ -8,10 +8,12 @@ import {
   TableBody,
 } from "@mui/material";
 import { Activity } from "../../logic/interfaces";
-
 import ActivityRow from "./Row/ActivityRow";
 
-const ActivitiesTable = (props: { activities: Activity[] }) => {
+interface Props {
+  activities: Activity[];
+}
+const ActivitiesTable = ({ activities }: Props): JSX.Element => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }}>
@@ -25,7 +27,7 @@ const ActivitiesTable = (props: { activities: Activity[] }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.activities.map((activity: Activity) => (
+          {activities.map((activity: Activity) => (
             <ActivityRow key={activity.id} activity={activity} />
           ))}
         </TableBody>

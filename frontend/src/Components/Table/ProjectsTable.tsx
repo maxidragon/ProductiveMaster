@@ -9,11 +9,10 @@ import {
   TableFooter,
 } from "@mui/material";
 import { Project } from "../../logic/interfaces";
-
 import ProjectRow from "./Row/ProjectRow";
 import PaginationFooter from "../Pagination/PaginationFooter";
 
-const ProjectsTable = (props: {
+interface Props {
   projects: Project[];
   page: number;
   totalPages: number;
@@ -21,10 +20,20 @@ const ProjectsTable = (props: {
   handlePageChange: (page: number) => void;
   status?: string;
   fetchData: (pageParam: number, statusParam?: string) => void;
-}) => {
-  const handleStatusUpdate = (status: string) => {
-    if (props.status === status) return;
-    props.fetchData(props.page, props.status);
+}
+
+const ProjectsTable = ({
+  projects,
+  page,
+  totalPages,
+  totalItems,
+  handlePageChange,
+  status,
+  fetchData,
+}: Props): JSX.Element => {
+  const handleStatusUpdate = (statusParam: string) => {
+    if (status === statusParam) return;
+    fetchData(page, status);
   };
 
   return (
@@ -39,7 +48,7 @@ const ProjectsTable = (props: {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.projects.map((project: Project) => (
+          {projects.map((project: Project) => (
             <ProjectRow
               key={project.id}
               project={project}
@@ -47,13 +56,13 @@ const ProjectsTable = (props: {
             />
           ))}
         </TableBody>
-        {props.totalPages > 0 && (
+        {totalPages > 0 && (
           <TableFooter>
             <PaginationFooter
-              page={props.page}
-              totalPages={props.totalPages}
-              totalItems={props.totalItems}
-              handlePageChange={props.handlePageChange}
+              page={page}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              handlePageChange={handlePageChange}
             />
           </TableFooter>
         )}

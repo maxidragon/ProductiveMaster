@@ -12,14 +12,23 @@ import { Document as DocumentInterface } from "../../logic/interfaces";
 import PaginationFooter from "../Pagination/PaginationFooter";
 import DocumentRow from "./Row/DocumentRow";
 
-const DocumentsTable = (props: {
+interface Props {
   documents: DocumentInterface[];
   page: number;
   isProjectOwner: boolean;
   totalPages: number;
   totalItems: number;
   handlePageChange: (page: number) => void;
-}) => {
+}
+
+const DocumentsTable = ({
+  documents,
+  page,
+  isProjectOwner,
+  totalPages,
+  totalItems,
+  handlePageChange,
+}: Props): JSX.Element => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }}>
@@ -31,21 +40,21 @@ const DocumentsTable = (props: {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.documents.map((document: DocumentInterface) => (
+          {documents.map((document: DocumentInterface) => (
             <DocumentRow
               key={document.id}
               document={document}
-              isProjectOwner={props.isProjectOwner}
+              isProjectOwner={isProjectOwner}
             />
           ))}
         </TableBody>
-        {props.totalPages > 0 && (
+        {totalPages > 0 && (
           <TableFooter>
             <PaginationFooter
-              page={props.page}
-              totalPages={props.totalPages}
-              totalItems={props.totalItems}
-              handlePageChange={props.handlePageChange}
+              page={page}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              handlePageChange={handlePageChange}
             />
           </TableFooter>
         )}

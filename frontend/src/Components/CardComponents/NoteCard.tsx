@@ -1,10 +1,12 @@
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
+import { Card, CardContent, Typography } from "@mui/material";
 import { Note } from "../../logic/interfaces";
 
-const NoteCard = (props: { note: Note }) => {
+interface Props {
+  note: Note;
+}
+
+const NoteCard = ({ note }: Props): JSX.Element => {
   const navigate = useNavigate();
   return (
     <Card
@@ -13,19 +15,18 @@ const NoteCard = (props: { note: Note }) => {
         width: 300,
         mr: 5,
         mt: 2,
-        cursor: props.note ? "pointer" : "normal",
+        cursor: note ? "pointer" : "normal",
       }}
       onClick={() => {
-        if (props.note.description) {
-          navigate(`/note/${props.note.id}`);
+        if (note.description) {
+          navigate(`/note/${note.id}`);
         }
       }}
     >
       <CardContent sx={{ display: "flex", flexDirection: "column" }}>
-        <Typography variant="h6">{props.note.title}</Typography>
+        <Typography variant="h6">{note.title}</Typography>
         <Typography variant="body2">
-          {props.note.description &&
-            props.note.description.substring(0, 200) + "..."}
+          {note.description && note.description.substring(0, 200) + "..."}
         </Typography>
       </CardContent>
     </Card>

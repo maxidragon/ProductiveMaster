@@ -1,24 +1,23 @@
 import { useState } from "react";
 import { TableRow, TableCell, IconButton } from "@mui/material";
+import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import { LearningCategory } from "../../../logic/interfaces";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
 import { deleteLearningCategory } from "../../../logic/learningCategories";
 import EditLearningCategoryModal from "../../ModalComponents/Edit/EditLearningCategoryModal";
 
-const LearningCategoryRow = ({
-  learningCategory,
-}: {
+interface Props {
   learningCategory: LearningCategory;
-}) => {
+}
+
+const LearningCategoryRow = ({ learningCategory }: Props): JSX.Element => {
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editedLearningCategory, setEditedLearningCategory] =
     useState<LearningCategory>(learningCategory);
-  const handleDelete = async () => {
+  const handleDelete = async (): Promise<void> => {
     if (learningCategory === null) return;
     confirm({ description: "Are you sure you want to delete this category?" })
       .then(async () => {
@@ -34,7 +33,7 @@ const LearningCategoryRow = ({
         enqueueSnackbar("Goal not deleted!", { variant: "info" });
       });
   };
-  const editLearningCategory = (category: LearningCategory) => {
+  const editLearningCategory = (category: LearningCategory): void => {
     setEditedLearningCategory(category);
   };
 
@@ -63,7 +62,7 @@ const LearningCategoryRow = ({
           open={edit}
           handleClose={() => setEdit(false)}
           learningCategory={editedLearningCategory}
-          updateLearningCategory={editLearningCategory}
+          editLearningCategory={editLearningCategory}
         />
       )}
     </>
