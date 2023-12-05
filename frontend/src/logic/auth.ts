@@ -49,12 +49,12 @@ export const getUsername = () => {
   return localStorage.getItem("username");
 };
 
-export const logout = async () => {
+export const logout = (): void => {
   localStorage.removeItem("token");
   localStorage.removeItem("username");
 };
 
-export const isUserLoggedIn = () => {
+export const isUserLoggedIn = (): boolean => {
   const token = localStorage.getItem("token");
   return token !== null;
 };
@@ -62,7 +62,7 @@ export const isUserLoggedIn = () => {
 export const changePassword = async (
   oldPassword: string,
   newPassword: string,
-) => {
+): Promise<number> => {
   const response = await backendRequest("auth/password/change/", "POST", true, {
     old_password: oldPassword,
     new_password: newPassword,
@@ -80,12 +80,12 @@ export const getUserData = async () => {
   return await response.json();
 };
 
-export const updateUserData = async (data: UserData) => {
+export const updateUserData = async (data: UserData): Promise<number> => {
   const response = await backendRequest("auth/data/", "PUT", true, data);
   return response.status;
 };
 
-export const forgotPassword = async (email: string) => {
+export const forgotPassword = async (email: string): Promise<number> => {
   const response = await backendRequest("auth/password/reset/", "POST", false, {
     email: email,
   });
@@ -108,7 +108,7 @@ export const resetPassword = async (token: string, newPassword: string) => {
   };
 };
 
-export const updateAvatar = async (avatar: File) => {
+export const updateAvatar = async (avatar: File): Promise<number> => {
   const formData = new FormData();
   formData.append("avatar", avatar as Blob);
   const response = await backendRequestWithFiles(
@@ -129,7 +129,7 @@ export const getUserAvatar = async (userId: number) => {
   };
 };
 
-export const removeAvatar = async () => {
+export const removeAvatar = async (): Promise<number> => {
   const response = await backendRequest(`auth/avatar/remove/`, "DELETE", true);
   return response.status;
 };

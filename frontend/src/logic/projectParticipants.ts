@@ -44,7 +44,7 @@ export const updateProjectParticipant = async (
   };
 };
 
-export const deleteProjectParticipant = async (id: number) => {
+export const deleteProjectParticipant = async (id: number): Promise<number> => {
   const response = await backendRequest(
     `projects/users/update/${id}/`,
     "DELETE",

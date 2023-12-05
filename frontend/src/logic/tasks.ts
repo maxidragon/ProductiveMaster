@@ -105,7 +105,7 @@ export const updateTask = async (task: Task) => {
   };
 };
 
-export const deleteTask = async (taskId: string) => {
+export const deleteTask = async (taskId: string): Promise<number> => {
   const response = await backendRequest(`tasks/${taskId}/`, "DELETE", true);
   return response.status;
 };

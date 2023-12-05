@@ -187,14 +187,14 @@ const SingleProject = () => {
             <ProjectStatsModal
               open={openStatsModal}
               handleClose={() => setOpenStatsModal(false)}
-              id={editedProject.id}
+              projectId={editedProject.id}
             />
             {edit && (
               <EditProjectModal
                 open={edit}
                 handleClose={handleCloseEditModal}
                 project={editedProject}
-                updateProject={updateProject}
+                editProject={updateProject}
               />
             )}
           </>

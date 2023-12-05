@@ -1,4 +1,6 @@
-export const timezones = [
+import { Timezone } from "./interfaces";
+
+export const timezones: Timezone[] = [
   {
     id: 1,
     display_name: "Warsaw",

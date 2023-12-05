@@ -42,7 +42,7 @@ export const updateDocument = async (document: DocumentInterface) => {
   };
 };
 
-export const deleteDocument = async (documentId: number) => {
+export const deleteDocument = async (documentId: number): Promise<number> => {
   const response = await backendRequest(
     `documents/${documentId}/`,
     "DELETE",

@@ -14,6 +14,7 @@ export const getAllGoalCategories = async () => {
   const response = await backendRequest(`goals/categories/all/`, "GET", true);
   return await response.json();
 };
+
 export const createGoalCategory = async (title: string) => {
   const response = await backendRequest("goals/categories/", "POST", true, {
     title,
