@@ -26,7 +26,9 @@ const NoteCard = ({ note }: Props): JSX.Element => {
       <CardContent sx={{ display: "flex", flexDirection: "column" }}>
         <Typography variant="h6">{note.title}</Typography>
         <Typography variant="body2">
-          {note.description && note.description.substring(0, 200) + "..."}
+          {note.description && note.description.length > 30
+            ? note.description.substring(0, 30) + "..."
+            : note.description}
         </Typography>
       </CardContent>
     </Card>

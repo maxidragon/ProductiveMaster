@@ -95,8 +95,8 @@ const ProjectRow = ({ project, handleStatusUpdate }: Props): JSX.Element => {
                   editedProject.status === "PLANNED"
                     ? "primary"
                     : editedProject.status === "IN_PROGRESS"
-                      ? "warning"
-                      : "success"
+                    ? "warning"
+                    : "success"
                 }
               />
             </Box>

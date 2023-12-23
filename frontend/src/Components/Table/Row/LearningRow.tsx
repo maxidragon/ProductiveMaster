@@ -69,8 +69,8 @@ const LearningRow = ({ learning, handleStatusUpdate }: Props): JSX.Element => {
                   editedLearning.status === "TO_LEARN"
                     ? "primary"
                     : editedLearning.status === "IN_PROGRESS"
-                      ? "warning"
-                      : "success"
+                    ? "warning"
+                    : "success"
                 }
               />
             </Box>
