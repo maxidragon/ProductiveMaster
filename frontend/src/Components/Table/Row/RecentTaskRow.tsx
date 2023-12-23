@@ -106,8 +106,8 @@ const RecentTaskRow = ({ task, isProjectOwner }: Props): JSX.Element => {
                   editedTask.status === "TODO"
                     ? "primary"
                     : editedTask.status === "IN_PROGRESS"
-                    ? "warning"
-                    : "success"
+                      ? "warning"
+                      : "success"
                 }
               />
             </Box>
