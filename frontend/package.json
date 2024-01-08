@@ -70,7 +70,7 @@
     "vite": "^4.5.1",
     "vite-plugin-checker": "^0.6.2",
     "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-handlebars": "^1.6.0",
+    "vite-plugin-handlebars": "^2.0.0",
     "vite-plugin-svgr": "^4.2.0",
     "vite-tsconfig-paths": "^4.2.3",
     "vitest": "^1.1.1"
