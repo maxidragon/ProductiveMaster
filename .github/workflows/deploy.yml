@@ -28,7 +28,7 @@ jobs:
       run: npm run build
       working-directory: ./frontend
     - name: Copy files to /var/www
-      run: cp -r ~/git/productive/_work/ProductiveMaster/ProductiveMaster/frontend/build /var/www/productive.maksymiliangala.com/
+      run: cp -r ~/django/productive/_work/ProductiveMaster/ProductiveMaster/frontend/build /var/www/productive.maksymiliangala.com/
     - name: Cleanup
       run: rm -rf frontend/    
     - name: Create virtual environment
