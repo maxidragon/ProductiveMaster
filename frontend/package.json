@@ -8,7 +8,7 @@
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@mui/styled-engine-sc": "^5.14.12",
-    "@mui/x-date-pickers": "^7.1.1",
+    "@mui/x-date-pickers": "^7.2.0",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^15.0.2",
     "@testing-library/user-event": "^14.5.2",
