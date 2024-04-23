@@ -1,8 +1,7 @@
 name: Deploy
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -27,28 +26,8 @@ jobs:
     - name: Build
       run: npm run build
       working-directory: ./frontend
-    - name: Copy files to /var/www
-      run: cp -r ~/django/productive/_work/ProductiveMaster/ProductiveMaster/frontend/build /var/www/productive.maksymiliangala.com/
-    - name: Cleanup
-      run: rm -rf frontend/    
-    - name: Create virtual environment
-      working-directory: 'backend' 
-      run: |
-        python3 -m venv venv
-    - name: Install Dependencies
-      working-directory: 'backend' 
-      run: |
-        python3 -m pip install --upgrade pip
-        source venv/bin/activate
-        pip install -r requirements.txt
     - name: Create .env
       working-directory: 'backend' 
       run: echo "${{ secrets.ENV_PRODUCTION }}" > .env
-    - name: Apply migrations
-      working-directory: 'backend' 
-      run: |
-        source venv/bin/activate
-        python3 manage.py migrate
-    - name: Restart app
-      working-directory: 'backend' 
-      run: sudo systemctl restart productivemaster.service
+    - name: Run docker compose 
+      run: docker compose up -d
