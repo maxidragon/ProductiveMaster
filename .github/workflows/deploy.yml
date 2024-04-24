@@ -27,7 +27,6 @@ jobs:
       run: npm run build
       working-directory: ./frontend
     - name: Create .env
-      working-directory: 'backend' 
       run: echo "${{ secrets.ENV_PRODUCTION }}" > .env
     - name: Run docker compose 
       run: docker compose up -d
