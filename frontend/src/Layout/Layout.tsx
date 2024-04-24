@@ -54,6 +54,24 @@ const Layout = ({ children }: Props): JSX.Element => {
     setOpenLearningNav(!openLearningNav);
   };
 
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth <= 800) {
+        setOpen(false);
+      } else {
+        setOpen(true);
+      }
+    }
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
