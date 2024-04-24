@@ -6,6 +6,13 @@ on:
     branches: [main]
     types: 
       - completed
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/deploy.yml'
+
   workflow_dispatch:
 
 jobs:

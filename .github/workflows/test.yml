@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
+      - '.github/workflows/test.yml'
+
 jobs:
   test_frontend:
     name: Frontend
