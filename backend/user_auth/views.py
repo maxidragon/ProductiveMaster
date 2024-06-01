@@ -83,7 +83,7 @@ class GetAvatar(APIView):
         user = User.objects.get(id=user_id)
         user_data = UserData.objects.get(user=user)
         if user_data.avatar:
-            response = HttpResponse(user_data.avatar, content_type='image/jpeg')  # Ustal odpowiedni content_type
+            response = HttpResponse(user_data.avatar, content_type='image/jpeg')
             return response
         else:
             return HttpResponse(status=204)
