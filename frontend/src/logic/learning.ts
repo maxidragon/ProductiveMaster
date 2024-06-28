@@ -3,7 +3,7 @@ import { backendRequest } from "./request";
 
 export const getLearningsByStatus = async (status: string, page = 1) => {
   const response = await backendRequest(
-    `learnings/status/${status}?page=${page}`,
+    `learnings/status/${status}/?page=${page}`,
     "GET",
     true,
   );
@@ -24,7 +24,7 @@ export const searchLearnings = async (
   page = 1,
 ) => {
   const response = await backendRequest(
-    `learnings/search/${query}/status/${status}?page=${page}`,
+    `learnings/search/${query}/status/${status}/?page=${page}`,
     "GET",
     true,
   );
