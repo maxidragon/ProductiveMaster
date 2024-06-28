@@ -1,0 +1,22 @@
+services:
+  backend:
+    container_name: productivemaster-dev-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    network_mode: host
+    volumes:
+      - ./backend:/app
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: productivemaster-dev-frontend
+    volumes:
+      - ./frontend/src:/app/src
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    
