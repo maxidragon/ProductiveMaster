@@ -1,6 +1,5 @@
 import { ReactElement, useEffect, useState } from "react";
 import {
-  CssBaseline,
   Box,
   Toolbar,
   Typography,
@@ -8,15 +7,14 @@ import {
   IconButton,
   Container,
 } from "@mui/material";
-import AppBar from "./AppBar";
+
 import Drawer from "./Drawer";
-import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useNavigate } from "react-router-dom";
-import LoginPartial from "./LoginPartial";
 import { isUserLoggedIn } from "../logic/auth";
-import Navbar from "./Navbar";
+import Sidebar from "./Sidebar";
 import Copyright from "./Copyright";
+import Navbar from "./Navbar";
 
 interface Props {
   children: ReactElement;
@@ -74,37 +72,11 @@ const Layout = ({ children }: Props): JSX.Element => {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar position="absolute" open={open}>
-        <Toolbar
-          sx={{
-            pr: "24px",
-          }}
-        >
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={toggleDrawer}
-            sx={{
-              marginRight: "36px",
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            sx={{ flexGrow: 1 }}
-          >
-            Dashboard
-          </Typography>
-          <LoginPartial userLoggedIn={userLoggedIn} />
-        </Toolbar>
-      </AppBar>
+      <Navbar
+        open={open}
+        toggleDrawer={toggleDrawer}
+        userLoggedIn={userLoggedIn}
+      />
       <Drawer variant="permanent" open={open}>
         <Toolbar
           sx={{
@@ -122,7 +94,7 @@ const Layout = ({ children }: Props): JSX.Element => {
           </IconButton>
         </Toolbar>
         <Divider />
-        <Navbar
+        <Sidebar
           openProjectNav={openProjectNav}
           toggleProjectNav={toggleProjectNav}
           openLearningNav={openLearningNav}
@@ -130,22 +102,19 @@ const Layout = ({ children }: Props): JSX.Element => {
         />
       </Drawer>
       <Box
-        component="main"
         sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === "light"
-              ? theme.palette.grey[100]
-              : theme.palette.grey[900],
+          backgroundColor: (theme) => theme.palette.grey[900],
+          color: "white",
           flexGrow: 1,
-          height: "100vh",
+          minHeight: "100vh",
+          mt: 8,
           overflow: "auto",
         }}
       >
-        <Toolbar />
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          {children}
-        </Container>
-        <Copyright />
+        <Container sx={{ mt: 4, mb: 4 }}>{children}</Container>
+        <Box sx={{ mt: "auto", mb: 2 }}>
+          <Copyright />
+        </Box>
       </Box>
     </Box>
   );

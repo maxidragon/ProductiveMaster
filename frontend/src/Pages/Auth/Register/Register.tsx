@@ -2,10 +2,8 @@ import {
   Avatar,
   Box,
   Button,
-  Checkbox,
   Container,
   CssBaseline,
-  FormControlLabel,
   Grid,
   TextField,
   Typography,
@@ -135,14 +133,6 @@ export default function Register() {
                   type="password"
                   id="password2"
                   autoComplete="current-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I accept the terms and conditions."
                 />
               </Grid>
             </Grid>
