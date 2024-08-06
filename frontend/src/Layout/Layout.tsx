@@ -6,6 +6,7 @@ import {
   Divider,
   IconButton,
   Container,
+  CssBaseline,
 } from "@mui/material";
 
 import Drawer from "./Drawer";
@@ -72,6 +73,7 @@ const Layout = ({ children }: Props): JSX.Element => {
 
   return (
     <Box sx={{ display: "flex" }}>
+      <CssBaseline />
       <Navbar
         open={open}
         toggleDrawer={toggleDrawer}
