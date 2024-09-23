@@ -10,8 +10,11 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Note } from "../../logic/interfaces";
 import { deleteNoteById, getNoteById, updateNoteById } from "../../logic/notes";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  CopyAll as CopyIcon,
+} from "@mui/icons-material";
 import { enqueueSnackbar } from "notistack";
 import { useConfirm } from "material-ui-confirm";
 const SingleNote = () => {
@@ -57,6 +60,12 @@ const SingleNote = () => {
       });
   };
 
+  const handleCopy = () => {
+    if (!note) return;
+    navigator.clipboard.writeText(note.description);
+    enqueueSnackbar("Note copied!", { variant: "success" });
+  };
+
   return (
     <>
       <Box
@@ -90,9 +99,19 @@ const SingleNote = () => {
                   setNote({ ...note, description: event.target.value })
                 }
               />
-              <Box sx={{ display: "flex", justifyContent: "end", mt: 2 }}>
+              <Box
+                sx={{ display: "flex", justifyContent: "end", gap: 1, mt: 2 }}
+              >
                 <Button
                   variant="contained"
+                  endIcon={<CopyIcon />}
+                  onClick={handleCopy}
+                >
+                  Copy
+                </Button>
+                <Button
+                  variant="contained"
+                  color="success"
                   endIcon={<EditIcon />}
                   onClick={handleEdit}
                 >
