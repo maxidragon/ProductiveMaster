@@ -35,6 +35,7 @@ if os.environ.get('DEBUG') == 'False':
 
 if not DEBUG:
     SECRET_KEY = os.environ.get('SECRET_KEY')
+    CSRF_TRUSTED_ORIGINS.append(os.environ.get('ADMIN_URL'))
     CSRF_TRUSTED_ORIGINS.append(os.environ.get('FRONTEND_URL'))
     CSRF_COOKIE_SECURE = True
     
