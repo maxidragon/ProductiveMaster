@@ -21,9 +21,6 @@ export const formStyle = {
 export const actionsButtons = {
   display: "flex",
   justifyContent: "end",
+  gap: 1,
   mt: 2,
-};
-
-export const buttonStyle = {
-  mr: 1,
 };

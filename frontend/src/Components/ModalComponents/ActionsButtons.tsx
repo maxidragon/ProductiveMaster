@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import { Box, Button } from "@mui/material";
-import { actionsButtons, buttonStyle } from "./modalStyles";
+import { actionsButtons } from "./modalStyles";
 import CancelIcon from "@mui/icons-material/Cancel";
 
 interface Props {
@@ -13,12 +13,7 @@ interface Props {
 const ActionsButtons = ({ cancel, submit, submitText, submitIcon }: Props) => {
   return (
     <Box sx={actionsButtons}>
-      <Button
-        variant="contained"
-        sx={buttonStyle}
-        endIcon={<CancelIcon />}
-        onClick={cancel}
-      >
+      <Button variant="contained" endIcon={<CancelIcon />} onClick={cancel}>
         Cancel
       </Button>
       <Button
