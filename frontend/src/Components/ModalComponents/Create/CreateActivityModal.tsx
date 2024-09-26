@@ -1,5 +1,5 @@
-import { formStyle, style } from "../modalStyles";
-import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
+import { style } from "../modalStyles";
+import { Box, Modal, TextField, Typography } from "@mui/material";
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
 import { useRef } from "react";
 import { enqueueSnackbar } from "notistack";
@@ -61,31 +61,19 @@ const CreateActivityModal = ({
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <Grid container sx={formStyle}>
-          <Grid item>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Create activity
-            </Typography>
-          </Grid>
-          <Grid item>
-            <DateTimePicker label="Start" inputRef={startTimeRef} />
-          </Grid>
-          <Grid item>
-            <DateTimePicker label="End" inputRef={endTimeRef} />
-          </Grid>
-          <Grid item>
-            <TextField placeholder={"Title"} fullWidth inputRef={titleRef} />
-          </Grid>
-          <Grid item>
-            <TextField
-              multiline
-              rows={15}
-              placeholder={"Write description here..."}
-              fullWidth
-              inputRef={descriptionRef}
-            />
-          </Grid>
-        </Grid>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Create activity
+        </Typography>
+        <DateTimePicker label="Start" inputRef={startTimeRef} />
+        <DateTimePicker label="End" inputRef={endTimeRef} />
+        <TextField placeholder={"Title"} fullWidth inputRef={titleRef} />
+        <TextField
+          multiline
+          rows={15}
+          placeholder={"Write description here..."}
+          fullWidth
+          inputRef={descriptionRef}
+        />
         <ActionsButtons
           cancel={handleClose}
           submit={handleCreate}

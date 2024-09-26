@@ -3,13 +3,12 @@ import {
   Box,
   Checkbox,
   FormControlLabel,
-  Grid,
   Modal,
   TextField,
   Typography,
 } from "@mui/material";
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
-import { formStyle, style } from "../modalStyles";
+import { style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { addProjectParticipant } from "../../../logic/projectParticipants";
 import { ProjectModalProps } from "../../../logic/interfaces";
@@ -44,27 +43,19 @@ const AddProjectParticipantModal = ({
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <Grid container sx={formStyle}>
-          <Grid item>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Add user to project by email
-            </Typography>
-          </Grid>
-          <Grid item>
-            <TextField placeholder={"Email"} fullWidth inputRef={emailRef} />
-          </Grid>
-          <Grid item>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={isOwner}
-                  onChange={(event) => setIsOwner(event.target.checked)}
-                />
-              }
-              label="Owner"
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Add user to project by email
+        </Typography>
+        <TextField placeholder={"Email"} fullWidth inputRef={emailRef} />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isOwner}
+              onChange={(event) => setIsOwner(event.target.checked)}
             />
-          </Grid>
-        </Grid>
+          }
+          label="Owner"
+        />
         <ActionsButtons
           cancel={handleClose}
           submit={handleCreate}

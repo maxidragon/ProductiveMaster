@@ -1,6 +1,6 @@
-import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
+import { Box, Modal, TextField, Typography } from "@mui/material";
 import { Edit as EditIcon } from "@mui/icons-material";
-import { formStyle, style } from "../modalStyles";
+import { style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { Activity, ModalProps } from "../../../logic/interfaces";
@@ -51,65 +51,53 @@ const EditActivityModal = ({
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <Grid container sx={formStyle}>
-          <Grid item>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Edit activity
-            </Typography>
-          </Grid>
-          <Grid item>
-            <DateTimePicker
-              label="Start"
-              value={dayjs(activity.start_time)}
-              onChange={(value) =>
-                editActivity({
-                  ...activity,
-                  start_time: new Date(dayjs(value).toISOString()),
-                })
-              }
-            />
-          </Grid>
-          <Grid item>
-            <DateTimePicker
-              label="End"
-              value={dayjs(activity.end_time)}
-              onChange={(value) =>
-                editActivity({
-                  ...activity,
-                  end_time: new Date(dayjs(value).toISOString()),
-                })
-              }
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              placeholder={"Title"}
-              fullWidth
-              value={activity.title}
-              onChange={(event) =>
-                editActivity({
-                  ...activity,
-                  title: event.target.value,
-                })
-              }
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              multiline
-              rows={15}
-              placeholder={"Write description here..."}
-              fullWidth
-              value={activity.description}
-              onChange={(event) =>
-                editActivity({
-                  ...activity,
-                  description: event.target.value,
-                })
-              }
-            />
-          </Grid>
-        </Grid>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Edit activity
+        </Typography>
+        <DateTimePicker
+          label="Start"
+          value={dayjs(activity.start_time)}
+          onChange={(value) =>
+            editActivity({
+              ...activity,
+              start_time: new Date(dayjs(value).toISOString()),
+            })
+          }
+        />
+        <DateTimePicker
+          label="End"
+          value={dayjs(activity.end_time)}
+          onChange={(value) =>
+            editActivity({
+              ...activity,
+              end_time: new Date(dayjs(value).toISOString()),
+            })
+          }
+        />
+        <TextField
+          placeholder={"Title"}
+          fullWidth
+          value={activity.title}
+          onChange={(event) =>
+            editActivity({
+              ...activity,
+              title: event.target.value,
+            })
+          }
+        />
+        <TextField
+          multiline
+          rows={15}
+          placeholder={"Write description here..."}
+          fullWidth
+          value={activity.description}
+          onChange={(event) =>
+            editActivity({
+              ...activity,
+              description: event.target.value,
+            })
+          }
+        />
         <ActionsButtons
           cancel={handleClose}
           submit={handleEdit}

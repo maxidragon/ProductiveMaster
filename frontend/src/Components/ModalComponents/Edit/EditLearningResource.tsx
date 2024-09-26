@@ -1,6 +1,6 @@
-import { Box, Typography, Modal, TextField, Grid } from "@mui/material";
+import { Box, Typography, Modal, TextField } from "@mui/material";
 import { Edit as EditIcon } from "@mui/icons-material";
-import { formStyle, style } from "../modalStyles";
+import { style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { updateLearningResource } from "../../../logic/learningResources";
 import { LearningResource, ModalProps } from "../../../logic/interfaces";
@@ -39,39 +39,31 @@ const EditLearningResourceModal = ({
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <Grid container sx={formStyle}>
-          <Grid item>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Edit resource
-            </Typography>
-          </Grid>
-          <Grid item>
-            <TextField
-              placeholder={"Title"}
-              fullWidth
-              value={resource.title}
-              onChange={(event) =>
-                updateResource({
-                  ...resource,
-                  title: event.target.value,
-                })
-              }
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              placeholder={"URL"}
-              fullWidth
-              value={resource.url}
-              onChange={(event) =>
-                updateResource({
-                  ...resource,
-                  url: event.target.value,
-                })
-              }
-            />
-          </Grid>
-        </Grid>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Edit resource
+        </Typography>
+        <TextField
+          placeholder={"Title"}
+          fullWidth
+          value={resource.title}
+          onChange={(event) =>
+            updateResource({
+              ...resource,
+              title: event.target.value,
+            })
+          }
+        />
+        <TextField
+          placeholder={"URL"}
+          fullWidth
+          value={resource.url}
+          onChange={(event) =>
+            updateResource({
+              ...resource,
+              url: event.target.value,
+            })
+          }
+        />
         <ActionsButtons
           cancel={handleClose}
           submit={handleEdit}

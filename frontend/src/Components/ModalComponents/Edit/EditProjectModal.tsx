@@ -7,10 +7,9 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Grid,
 } from "@mui/material";
 import { Edit as EditIcon } from "@mui/icons-material";
-import { formStyle, style } from "../modalStyles";
+import { style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { updateProject } from "../../../logic/projects";
 import { ModalProps, Project } from "../../../logic/interfaces";
@@ -54,76 +53,64 @@ const EditProjectModal = ({
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <Grid container sx={formStyle}>
-          <Grid item>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Edit project
-            </Typography>
-          </Grid>
-          <Grid item>
-            <TextField
-              placeholder={"Title"}
-              fullWidth
-              value={project.title}
-              onChange={(event) =>
-                editProject({
-                  ...project,
-                  title: event.target.value,
-                })
-              }
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              placeholder={"Github"}
-              fullWidth
-              value={project.github}
-              onChange={(event) =>
-                editProject({
-                  ...project,
-                  github: event.target.value,
-                })
-              }
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              multiline
-              rows={15}
-              placeholder={"Write project description here..."}
-              fullWidth
-              value={project.description}
-              onChange={(event) =>
-                editProject({
-                  ...project,
-                  description: event.target.value,
-                })
-              }
-            />
-          </Grid>
-          <Grid item>
-            <FormControl fullWidth>
-              <InputLabel id="status">Status</InputLabel>
-              <Select
-                labelId="status"
-                label="Status"
-                required
-                name="status"
-                value={project.status}
-                onChange={(event) =>
-                  editProject({
-                    ...project,
-                    status: event.target.value,
-                  })
-                }
-              >
-                <MenuItem value={"PLANNED"}>Planned</MenuItem>
-                <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
-                <MenuItem value={"DONE"}>Done</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Edit project
+        </Typography>
+        <TextField
+          placeholder={"Title"}
+          fullWidth
+          value={project.title}
+          onChange={(event) =>
+            editProject({
+              ...project,
+              title: event.target.value,
+            })
+          }
+        />
+        <TextField
+          placeholder={"Github"}
+          fullWidth
+          value={project.github}
+          onChange={(event) =>
+            editProject({
+              ...project,
+              github: event.target.value,
+            })
+          }
+        />
+        <TextField
+          multiline
+          rows={15}
+          placeholder={"Write project description here..."}
+          fullWidth
+          value={project.description}
+          onChange={(event) =>
+            editProject({
+              ...project,
+              description: event.target.value,
+            })
+          }
+        />
+        <FormControl fullWidth>
+          <InputLabel id="status">Status</InputLabel>
+          <Select
+            labelId="status"
+            label="Status"
+            required
+            name="status"
+            value={project.status}
+            onChange={(event) =>
+              editProject({
+                ...project,
+                status: event.target.value,
+              })
+            }
+          >
+            <MenuItem value={"PLANNED"}>Planned</MenuItem>
+            <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
+            <MenuItem value={"DONE"}>Done</MenuItem>
+          </Select>
+        </FormControl>
         <ActionsButtons
           cancel={handleClose}
           submit={handleEdit}

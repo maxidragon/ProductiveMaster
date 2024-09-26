@@ -1,7 +1,7 @@
 import { useRef } from "react";
-import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
+import { Box, Modal, TextField, Typography } from "@mui/material";
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
-import { formStyle, style } from "../modalStyles";
+import { style } from "../modalStyles";
 import { createNote } from "../../../logic/notes";
 import { enqueueSnackbar } from "notistack";
 import { ModalProps } from "../../../logic/interfaces";
@@ -39,25 +39,17 @@ const CreateNoteModal = ({ open, handleClose }: ModalProps): JSX.Element => {
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <Grid container sx={formStyle}>
-          <Grid item>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Create note
-            </Typography>
-          </Grid>
-          <Grid item>
-            <TextField placeholder={"Title"} fullWidth inputRef={titleRef} />
-          </Grid>
-          <Grid item>
-            <TextField
-              multiline
-              rows={15}
-              placeholder={"Write your note here..."}
-              fullWidth
-              inputRef={descriptionRef}
-            />
-          </Grid>
-        </Grid>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Create note
+        </Typography>
+        <TextField placeholder={"Title"} fullWidth inputRef={titleRef} />
+        <TextField
+          multiline
+          rows={15}
+          placeholder={"Write your note here..."}
+          fullWidth
+          inputRef={descriptionRef}
+        />
         <ActionsButtons
           cancel={handleClose}
           submit={handleCreate}

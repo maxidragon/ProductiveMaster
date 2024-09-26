@@ -7,12 +7,11 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Grid,
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
 import { Edit as EditIcon } from "@mui/icons-material";
-import { formStyle, style } from "../modalStyles";
+import { style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { updateTask } from "../../../logic/tasks";
 import {
@@ -93,126 +92,104 @@ const EditTaskModal = ({
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <Grid container sx={formStyle}>
-          <Grid item>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Edit task
-            </Typography>
-          </Grid>
-          <Grid item>
-            <TextField
-              placeholder={"Title"}
-              fullWidth
-              value={task.title}
-              onChange={(event) =>
-                editTask({ ...task, title: event.target.value })
-              }
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              placeholder={"Issue"}
-              fullWidth
-              value={task.issue}
-              onChange={(event) =>
-                editTask({ ...task, issue: event.target.value })
-              }
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              placeholder={"Pull Request"}
-              fullWidth
-              value={task.pull_request}
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Edit task
+        </Typography>
+        <TextField
+          placeholder={"Title"}
+          fullWidth
+          value={task.title}
+          onChange={(event) => editTask({ ...task, title: event.target.value })}
+        />
+        <TextField
+          placeholder={"Issue"}
+          fullWidth
+          value={task.issue}
+          onChange={(event) => editTask({ ...task, issue: event.target.value })}
+        />
+        <TextField
+          placeholder={"Pull Request"}
+          fullWidth
+          value={task.pull_request}
+          onChange={(event) =>
+            editTask({
+              ...task,
+              pull_request: event.target.value,
+            })
+          }
+        />
+        <TextField
+          multiline
+          rows={15}
+          placeholder={"Write task description here..."}
+          fullWidth
+          value={task.description}
+          onChange={(event) =>
+            editTask({
+              ...task,
+              description: event.target.value,
+            })
+          }
+        />
+        <FormControl fullWidth>
+          <InputLabel id="status">Status</InputLabel>
+          <Select
+            labelId="status"
+            label="Status"
+            required
+            name="status"
+            value={task.status}
+            onChange={(event) =>
+              editTask({
+                ...task,
+                status: event.target.value,
+              })
+            }
+          >
+            <MenuItem value={"TODO"}>To do</MenuItem>
+            <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
+            <MenuItem value={"DONE"}>Done</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl fullWidth>
+          <InputLabel id="assigneLabel">Assignee</InputLabel>
+          <Select
+            labelId="assigneLabel"
+            value={assignee}
+            label="Assignee"
+            onChange={(event) => setAssignee(+event.target.value)}
+          >
+            <MenuItem value={0}>No assignee</MenuItem>
+            {participants &&
+              participants.map((participant) => (
+                <MenuItem
+                  value={participant.user.id}
+                  sx={{ display: "flex", gap: 1 }}
+                >
+                  <AvatarComponent
+                    userId={participant.user.id}
+                    username={participant.user.username}
+                    size="30px"
+                  />
+                  {participant.user.username}
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={task.high_priority}
               onChange={(event) =>
                 editTask({
                   ...task,
-                  pull_request: event.target.value,
+                  high_priority: event.target.checked,
                 })
               }
             />
-          </Grid>
-          <Grid item>
-            <TextField
-              multiline
-              rows={15}
-              placeholder={"Write task description here..."}
-              fullWidth
-              value={task.description}
-              onChange={(event) =>
-                editTask({
-                  ...task,
-                  description: event.target.value,
-                })
-              }
-            />
-          </Grid>
-          <Grid item>
-            <FormControl fullWidth>
-              <InputLabel id="status">Status</InputLabel>
-              <Select
-                labelId="status"
-                label="Status"
-                required
-                name="status"
-                value={task.status}
-                onChange={(event) =>
-                  editTask({
-                    ...task,
-                    status: event.target.value,
-                  })
-                }
-              >
-                <MenuItem value={"TODO"}>To do</MenuItem>
-                <MenuItem value={"IN_PROGRESS"}>In progress</MenuItem>
-                <MenuItem value={"DONE"}>Done</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <FormControl fullWidth>
-              <InputLabel id="assigneLabel">Assignee</InputLabel>
-              <Select
-                labelId="assigneLabel"
-                value={assignee}
-                label="Assignee"
-                onChange={(event) => setAssignee(+event.target.value)}
-              >
-                <MenuItem value={0}>No assignee</MenuItem>
-                {participants &&
-                  participants.map((participant) => (
-                    <MenuItem
-                      value={participant.user.id}
-                      sx={{ display: "flex", gap: 1 }}
-                    >
-                      <AvatarComponent
-                        userId={participant.user.id}
-                        username={participant.user.username}
-                        size="30px"
-                      />
-                      {participant.user.username}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={task.high_priority}
-                  onChange={(event) =>
-                    editTask({
-                      ...task,
-                      high_priority: event.target.checked,
-                    })
-                  }
-                />
-              }
-              label="High priority"
-            />
-          </Grid>
-        </Grid>
+          }
+          label="High priority"
+        />
         <ActionsButtons
           cancel={handleClose}
           submit={handleEdit}

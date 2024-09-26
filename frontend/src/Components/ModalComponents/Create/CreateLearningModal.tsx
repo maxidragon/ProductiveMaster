@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   Box,
   FormControl,
-  Grid,
   InputLabel,
   MenuItem,
   Modal,
@@ -12,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
-import { formStyle, style } from "../modalStyles";
+import { style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { LearningCategory, ModalProps } from "../../../logic/interfaces";
 import { getAllLearningCategories } from "../../../logic/learningCategories";
@@ -71,52 +70,37 @@ const CreateLearningModal = ({
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <Grid container sx={formStyle}>
-          <Grid item>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Create learning
-            </Typography>
-          </Grid>
-          <Grid item>
-            <TextField placeholder={"Name"} fullWidth inputRef={titleRef} />
-          </Grid>
-          <Grid item>
-            <TextField
-              multiline
-              rows={15}
-              placeholder={"Write description here..."}
-              fullWidth
-              inputRef={descriptionRef}
-            />
-          </Grid>
-          <Grid item>
-            <FormControl fullWidth>
-              <InputLabel id="goal-category-select-label">
-                Learning Category
-              </InputLabel>
-              <Select
-                labelId="goal-category-select-label"
-                id="goal-category-select"
-                value={selected}
-                label="Learning Category"
-                onChange={(event: SelectChangeEvent<number>) => {
-                  setSelected(event.target.value as number);
-                }}
-              >
-                {learningCategories.map(
-                  (learningCategory: LearningCategory) => (
-                    <MenuItem
-                      key={learningCategory.id}
-                      value={learningCategory.id}
-                    >
-                      {learningCategory.name}
-                    </MenuItem>
-                  ),
-                )}
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Create learning
+        </Typography>
+        <TextField placeholder={"Name"} fullWidth inputRef={titleRef} />
+        <TextField
+          multiline
+          rows={15}
+          placeholder={"Write description here..."}
+          fullWidth
+          inputRef={descriptionRef}
+        />
+        <FormControl fullWidth>
+          <InputLabel id="goal-category-select-label">
+            Learning Category
+          </InputLabel>
+          <Select
+            labelId="goal-category-select-label"
+            id="goal-category-select"
+            value={selected}
+            label="Learning Category"
+            onChange={(event: SelectChangeEvent<number>) => {
+              setSelected(event.target.value as number);
+            }}
+          >
+            {learningCategories.map((learningCategory: LearningCategory) => (
+              <MenuItem key={learningCategory.id} value={learningCategory.id}>
+                {learningCategory.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <ActionsButtons
           cancel={handleClose}
           submit={handleCreate}

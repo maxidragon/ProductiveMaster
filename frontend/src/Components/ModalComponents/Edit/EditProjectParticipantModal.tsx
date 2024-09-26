@@ -2,12 +2,11 @@ import {
   Box,
   Typography,
   Modal,
-  Grid,
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
 import { Edit as EditIcon } from "@mui/icons-material";
-import { formStyle, style } from "../modalStyles";
+import { style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { ModalProps, ProjectParticipant } from "../../../logic/interfaces";
 import { updateProjectParticipant } from "../../../logic/projectParticipants";
@@ -48,32 +47,24 @@ const EditProjectParticipantModal = ({
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <Grid container sx={formStyle}>
-          <Grid item>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Edit user
-            </Typography>
-          </Grid>
-          <Grid item>
-            {user.user.username} added by {user.added_by.username}
-          </Grid>
-          <Grid item>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={user.is_owner}
-                  onChange={(event) =>
-                    updateUser({
-                      ...user,
-                      is_owner: event.target.checked,
-                    })
-                  }
-                />
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Edit user
+        </Typography>
+        {user.user.username} added by {user.added_by.username}
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={user.is_owner}
+              onChange={(event) =>
+                updateUser({
+                  ...user,
+                  is_owner: event.target.checked,
+                })
               }
-              label="Owner"
             />
-          </Grid>
-        </Grid>
+          }
+          label="Owner"
+        />
         <ActionsButtons
           cancel={handleClose}
           submit={handleEdit}

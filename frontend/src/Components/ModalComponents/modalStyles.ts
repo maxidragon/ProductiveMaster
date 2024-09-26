@@ -2,6 +2,9 @@ export const style = {
   position: "absolute" as const,
   top: "50%",
   left: "50%",
+  display: "flex",
+  flexDirection: "column",
+  gap: 2,
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
@@ -9,13 +12,6 @@ export const style = {
   boxShadow: 24,
   p: 4,
   overflow: "auto",
-};
-
-export const formStyle = {
-  "& > *": {
-    mb: "15px",
-    width: "100%",
-  },
 };
 
 export const actionsButtons = {

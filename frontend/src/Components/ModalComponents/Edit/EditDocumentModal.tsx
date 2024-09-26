@@ -1,6 +1,6 @@
-import { Box, Typography, Modal, TextField, Grid } from "@mui/material";
+import { Box, Typography, Modal, TextField } from "@mui/material";
 import { Edit as EditIcon } from "@mui/icons-material";
-import { formStyle, style } from "../modalStyles";
+import { style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import {
   Document as DocumentInterface,
@@ -42,39 +42,31 @@ const EditDocumentModal = ({
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <Grid container sx={formStyle}>
-          <Grid item>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Edit document
-            </Typography>
-          </Grid>
-          <Grid item>
-            <TextField
-              placeholder={"Title"}
-              fullWidth
-              value={document.title}
-              onChange={(event) =>
-                editDocument({
-                  ...document,
-                  title: event.target.value,
-                })
-              }
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              placeholder={"URL"}
-              fullWidth
-              value={document.url}
-              onChange={(event) =>
-                editDocument({
-                  ...document,
-                  url: event.target.value,
-                })
-              }
-            />
-          </Grid>
-        </Grid>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Edit document
+        </Typography>
+        <TextField
+          placeholder={"Title"}
+          fullWidth
+          value={document.title}
+          onChange={(event) =>
+            editDocument({
+              ...document,
+              title: event.target.value,
+            })
+          }
+        />
+        <TextField
+          placeholder={"URL"}
+          fullWidth
+          value={document.url}
+          onChange={(event) =>
+            editDocument({
+              ...document,
+              url: event.target.value,
+            })
+          }
+        />
         <ActionsButtons
           cancel={handleClose}
           submit={handleEdit}

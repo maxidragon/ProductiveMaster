@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   Box,
   FormControl,
-  Grid,
   InputLabel,
   MenuItem,
   Modal,
@@ -13,7 +12,7 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
-import { formStyle, style } from "../modalStyles";
+import { style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { createGoal } from "../../../logic/goals";
 import {
@@ -88,53 +87,39 @@ const CreateGoalModal = ({ open, handleClose }: ModalProps): JSX.Element => {
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <Grid container sx={formStyle}>
-          <Grid item>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Create goal
-            </Typography>
-          </Grid>
-          <Grid item>
-            <TextField placeholder={"Title"} fullWidth inputRef={titleRef} />
-          </Grid>
-          <Grid item>
-            <TextField
-              multiline
-              rows={15}
-              placeholder={"Write description here..."}
-              fullWidth
-              inputRef={descriptionRef}
-            />
-          </Grid>
-          <Grid item>
-            <FormControl fullWidth>
-              <InputLabel id="goal-category-select-label">
-                Goal Category
-              </InputLabel>
-              <Select
-                labelId="goal-category-select-label"
-                id="goal-category-select"
-                value={selected}
-                label="Goal Category"
-                onChange={(event: SelectChangeEvent<number>) => {
-                  setSelected(event.target.value as number);
-                }}
-              >
-                <MenuItem key={0} value={0}>
-                  Without category
-                </MenuItem>
-                {goalCategories.map((goalCategory: GoalCategory) => (
-                  <MenuItem key={goalCategory.id} value={goalCategory.id}>
-                    {goalCategory.title}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <DatePicker label="Deadline" inputRef={deadlineRef} />
-          </Grid>
-        </Grid>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Create goal
+        </Typography>
+        <TextField placeholder={"Title"} fullWidth inputRef={titleRef} />
+        <TextField
+          multiline
+          rows={15}
+          placeholder={"Write description here..."}
+          fullWidth
+          inputRef={descriptionRef}
+        />
+        <FormControl fullWidth>
+          <InputLabel id="goal-category-select-label">Goal Category</InputLabel>
+          <Select
+            labelId="goal-category-select-label"
+            id="goal-category-select"
+            value={selected}
+            label="Goal Category"
+            onChange={(event: SelectChangeEvent<number>) => {
+              setSelected(event.target.value as number);
+            }}
+          >
+            <MenuItem key={0} value={0}>
+              Without category
+            </MenuItem>
+            {goalCategories.map((goalCategory: GoalCategory) => (
+              <MenuItem key={goalCategory.id} value={goalCategory.id}>
+                {goalCategory.title}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <DatePicker label="Deadline" inputRef={deadlineRef} />
         <ActionsButtons
           cancel={handleClose}
           submit={handleCreate}

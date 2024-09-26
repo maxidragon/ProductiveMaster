@@ -4,7 +4,6 @@ import {
   Typography,
   Modal,
   TextField,
-  Grid,
   Checkbox,
   FormControlLabel,
   FormControl,
@@ -13,7 +12,7 @@ import {
   Select,
 } from "@mui/material";
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
-import { formStyle, style } from "../modalStyles";
+import { style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { createTask } from "../../../logic/tasks";
 import { getProjectParticipants } from "../../../logic/projectParticipants";
@@ -97,65 +96,51 @@ const CreateTaskModal = ({
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <Grid container sx={formStyle}>
-          <Grid item>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Create task
-            </Typography>
-          </Grid>
-          <Grid item>
-            <TextField placeholder={"Title"} fullWidth inputRef={titleRef} />
-          </Grid>
-          <Grid item>
-            <TextField
-              placeholder={"Github issue"}
-              fullWidth
-              inputRef={githubLinkRef}
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              multiline
-              rows={15}
-              placeholder={"Write task description  here..."}
-              fullWidth
-              inputRef={descriptionRef}
-            />
-          </Grid>
-          <Grid item>
-            <FormControlLabel
-              control={<Checkbox inputRef={highPriorityRef} />}
-              label="High priority"
-            />
-          </Grid>
-        </Grid>
-        <Grid item>
-          <FormControl fullWidth>
-            <InputLabel id="assigneLabel">Assignee</InputLabel>
-            <Select
-              labelId="assigneLabel"
-              value={assignee}
-              label="Assignee"
-              onChange={(e) => setAssignee(+e.target.value)}
-            >
-              <MenuItem value={0}>No assignee</MenuItem>
-              {participants &&
-                participants.map((participant) => (
-                  <MenuItem
-                    value={participant.user.id}
-                    sx={{ display: "flex", gap: 1 }}
-                  >
-                    <AvatarComponent
-                      userId={participant.user.id}
-                      username={participant.user.username}
-                      size="30px"
-                    />
-                    {participant.user.username}
-                  </MenuItem>
-                ))}
-            </Select>
-          </FormControl>
-        </Grid>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Create task
+        </Typography>
+        <TextField placeholder={"Title"} fullWidth inputRef={titleRef} />
+        <TextField
+          placeholder={"Github issue"}
+          fullWidth
+          inputRef={githubLinkRef}
+        />
+        <TextField
+          multiline
+          rows={15}
+          placeholder={"Write task description  here..."}
+          fullWidth
+          inputRef={descriptionRef}
+        />
+        <FormControlLabel
+          control={<Checkbox inputRef={highPriorityRef} />}
+          label="High priority"
+        />
+        <FormControl fullWidth>
+          <InputLabel id="assigneLabel">Assignee</InputLabel>
+          <Select
+            labelId="assigneLabel"
+            value={assignee}
+            label="Assignee"
+            onChange={(e) => setAssignee(+e.target.value)}
+          >
+            <MenuItem value={0}>No assignee</MenuItem>
+            {participants &&
+              participants.map((participant) => (
+                <MenuItem
+                  value={participant.user.id}
+                  sx={{ display: "flex", gap: 1 }}
+                >
+                  <AvatarComponent
+                    userId={participant.user.id}
+                    username={participant.user.username}
+                    size="30px"
+                  />
+                  {participant.user.username}
+                </MenuItem>
+              ))}
+          </Select>
+        </FormControl>
         <ActionsButtons
           cancel={handleClose}
           submit={handleCreate}

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Modal, Box, TextField, Typography, Grid, Button } from "@mui/material";
+import { Modal, Box, TextField, Typography, Button } from "@mui/material";
 import { Edit as EditIcon } from "@mui/icons-material";
-import { formStyle, style } from "../modalStyles";
+import { style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import {
   getUserData,
@@ -60,97 +60,79 @@ const EditUserDataModal = ({ open, handleClose }: ModalProps): JSX.Element => {
     <>
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
-          <Grid container sx={formStyle}>
-            <Grid item>
-              <Typography variant="h4">Edit user data</Typography>
-            </Grid>
-            {data && (
-              <>
-                <Grid item>
-                  <TextField
-                    margin="normal"
-                    label="Github profile"
-                    autoFocus
-                    value={data.github_profile}
-                    onChange={(event) =>
-                      setData({ ...data, github_profile: event.target.value })
+          <Typography variant="h4">Edit user data</Typography>
+          {data && (
+            <>
+              <TextField
+                margin="normal"
+                label="Github profile"
+                autoFocus
+                value={data.github_profile}
+                onChange={(event) =>
+                  setData({ ...data, github_profile: event.target.value })
+                }
+              />
+              <TextField
+                margin="normal"
+                label="Wakatime API key"
+                autoFocus
+                value={data.wakatime_api_key}
+                onChange={(event) =>
+                  setData({ ...data, wakatime_api_key: event.target.value })
+                }
+              />
+              <TextField
+                margin="normal"
+                label="GPRM stats link"
+                autoFocus
+                value={data.gprm_stats}
+                onChange={(event) =>
+                  setData({ ...data, gprm_stats: event.target.value })
+                }
+              />
+              <TextField
+                margin="normal"
+                label="GPRM streak link"
+                autoFocus
+                value={data.gprm_streak}
+                onChange={(event) =>
+                  setData({ ...data, gprm_streak: event.target.value })
+                }
+              />
+              <TextField
+                margin="normal"
+                label="GPRM languages link"
+                autoFocus
+                value={data.gprm_languages}
+                onChange={(event) =>
+                  setData({ ...data, gprm_languages: event.target.value })
+                }
+              />
+              <Typography variant="h6">{avatar && avatar.name}</Typography>
+              <Button variant="contained" component="label">
+                Upload Avatar
+                <input
+                  accept="image/*"
+                  id="contained-button-file"
+                  multiple
+                  type="file"
+                  style={{ display: "none" }}
+                  onChange={(event) => {
+                    if (event.target.files) {
+                      setAvatar(event.target.files[0]);
                     }
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    margin="normal"
-                    label="Wakatime API key"
-                    autoFocus
-                    value={data.wakatime_api_key}
-                    onChange={(event) =>
-                      setData({ ...data, wakatime_api_key: event.target.value })
-                    }
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    margin="normal"
-                    label="GPRM stats link"
-                    autoFocus
-                    value={data.gprm_stats}
-                    onChange={(event) =>
-                      setData({ ...data, gprm_stats: event.target.value })
-                    }
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    margin="normal"
-                    label="GPRM streak link"
-                    autoFocus
-                    value={data.gprm_streak}
-                    onChange={(event) =>
-                      setData({ ...data, gprm_streak: event.target.value })
-                    }
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    margin="normal"
-                    label="GPRM languages link"
-                    autoFocus
-                    value={data.gprm_languages}
-                    onChange={(event) =>
-                      setData({ ...data, gprm_languages: event.target.value })
-                    }
-                  />
-                </Grid>
-                <Grid item>
-                  <Typography variant="h6">{avatar && avatar.name}</Typography>
-                  <Button variant="contained" component="label">
-                    Upload Avatar
-                    <input
-                      accept="image/*"
-                      id="contained-button-file"
-                      multiple
-                      type="file"
-                      style={{ display: "none" }}
-                      onChange={(event) => {
-                        if (event.target.files) {
-                          setAvatar(event.target.files[0]);
-                        }
-                      }}
-                    />
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={handleDeleteAvatar}
-                  >
-                    Delete Avatar
-                  </Button>
-                </Grid>
-              </>
-            )}
-          </Grid>
+                  }}
+                />
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleDeleteAvatar}
+              >
+                Delete Avatar
+              </Button>
+            </>
+          )}
           <ActionsButtons
             cancel={handleClose}
             submit={handleEdit}

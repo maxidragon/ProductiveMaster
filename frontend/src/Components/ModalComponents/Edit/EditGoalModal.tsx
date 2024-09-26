@@ -4,7 +4,6 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
-  Grid,
   InputLabel,
   MenuItem,
   Modal,
@@ -15,7 +14,7 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { Edit as EditIcon } from "@mui/icons-material";
-import { formStyle, style } from "../modalStyles";
+import { style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { updateGoalById } from "../../../logic/goals";
 import { EditGoal, GoalCategory, ModalProps } from "../../../logic/interfaces";
@@ -82,90 +81,74 @@ const EditGoalModal = ({
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <Grid container sx={formStyle}>
-          <Grid item>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Update goal
-            </Typography>
-          </Grid>
-          <Grid item>
-            <TextField
-              placeholder={"Title"}
-              fullWidth
-              value={goal.title}
-              onChange={(event) =>
-                updateGoal({ ...goal, title: event.target.value })
-              }
-            />
-          </Grid>
-          <Grid item>
-            <TextField
-              multiline
-              rows={15}
-              placeholder={"Write description here..."}
-              fullWidth
-              value={goal.description}
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Update goal
+        </Typography>
+        <TextField
+          placeholder={"Title"}
+          fullWidth
+          value={goal.title}
+          onChange={(event) =>
+            updateGoal({ ...goal, title: event.target.value })
+          }
+        />
+        <TextField
+          multiline
+          rows={15}
+          placeholder={"Write description here..."}
+          fullWidth
+          value={goal.description}
+          onChange={(event) =>
+            updateGoal({
+              ...goal,
+              description: event.target.value,
+            })
+          }
+        />
+        <FormControl fullWidth>
+          <InputLabel id="goal-category-select-label">Goal Category</InputLabel>
+          <Select
+            labelId="goal-category-select-label"
+            id="goal-category-select"
+            value={selected}
+            label="Goal Category"
+            onChange={(event: SelectChangeEvent<number>) => {
+              setSelected(+event.target.value);
+            }}
+          >
+            <MenuItem key={0} value={0}>
+              Without category
+            </MenuItem>
+            {goalCategories.map((goalCategory: GoalCategory) => (
+              <MenuItem key={goalCategory.id} value={goalCategory.id}>
+                {goalCategory.title}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <DatePicker
+          label="End"
+          value={dayjs(goal.deadline)}
+          onChange={(value) => {
+            if (!value) return;
+            const formattedDate = new Date(value.toISOString());
+            updateGoal({ ...goal, deadline: formattedDate });
+          }}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={goal.is_achieved}
               onChange={(event) =>
                 updateGoal({
                   ...goal,
-                  description: event.target.value,
+                  is_achieved: event.target.checked,
                 })
               }
             />
-          </Grid>
-          <Grid item>
-            <FormControl fullWidth>
-              <InputLabel id="goal-category-select-label">
-                Goal Category
-              </InputLabel>
-              <Select
-                labelId="goal-category-select-label"
-                id="goal-category-select"
-                value={selected}
-                label="Goal Category"
-                onChange={(event: SelectChangeEvent<number>) => {
-                  setSelected(+event.target.value);
-                }}
-              >
-                <MenuItem key={0} value={0}>
-                  Without category
-                </MenuItem>
-                {goalCategories.map((goalCategory: GoalCategory) => (
-                  <MenuItem key={goalCategory.id} value={goalCategory.id}>
-                    {goalCategory.title}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <DatePicker
-              label="End"
-              value={dayjs(goal.deadline)}
-              onChange={(value) => {
-                if (!value) return;
-                const formattedDate = new Date(value.toISOString());
-                updateGoal({ ...goal, deadline: formattedDate });
-              }}
-            />
-          </Grid>
-          <Grid item>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={goal.is_achieved}
-                  onChange={(event) =>
-                    updateGoal({
-                      ...goal,
-                      is_achieved: event.target.checked,
-                    })
-                  }
-                />
-              }
-              label="Is achieved"
-            />
-          </Grid>
-        </Grid>
+          }
+          label="Is achieved"
+        />
         <ActionsButtons
           cancel={handleClose}
           submit={handleEdit}

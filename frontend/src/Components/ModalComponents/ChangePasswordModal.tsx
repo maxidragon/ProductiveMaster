@@ -1,5 +1,5 @@
-import { Modal, Box, TextField, Typography, Grid } from "@mui/material";
-import { formStyle, style } from "./modalStyles";
+import { Modal, Box, TextField, Typography } from "@mui/material";
+import { style } from "./modalStyles";
 import { useRef } from "react";
 import { enqueueSnackbar } from "notistack";
 import { changePassword } from "../../logic/auth";
@@ -43,41 +43,31 @@ const ChangePasswordModal = ({ open, handleClose }: ModalProps) => {
     <>
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
-          <Grid container sx={formStyle}>
-            <Grid item>
-              <Typography variant="h4">Change password</Typography>
-            </Grid>
-            <Grid item>
-              <TextField
-                margin="normal"
-                label="Old password"
-                autoComplete="password"
-                autoFocus
-                inputRef={oldPasswordRef}
-                type="password"
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                margin="normal"
-                label="New password"
-                autoComplete="new-password"
-                autoFocus
-                inputRef={newPasswordRef}
-                type="password"
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                margin="normal"
-                label="Repeat password"
-                autoComplete="new-password"
-                autoFocus
-                inputRef={newPasswordAgainRef}
-                type="password"
-              />
-            </Grid>
-          </Grid>
+          <Typography variant="h4">Change password</Typography>
+          <TextField
+            margin="normal"
+            label="Old password"
+            autoComplete="password"
+            autoFocus
+            inputRef={oldPasswordRef}
+            type="password"
+          />
+          <TextField
+            margin="normal"
+            label="New password"
+            autoComplete="new-password"
+            autoFocus
+            inputRef={newPasswordRef}
+            type="password"
+          />
+          <TextField
+            margin="normal"
+            label="Repeat password"
+            autoComplete="new-password"
+            autoFocus
+            inputRef={newPasswordAgainRef}
+            type="password"
+          />
           <ActionsButtons
             cancel={handleClose}
             submit={handleSubmit}

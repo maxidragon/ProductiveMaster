@@ -1,7 +1,7 @@
 import { useRef } from "react";
-import { Box, Grid, Modal, TextField, Typography } from "@mui/material";
+import { Box, Modal, TextField, Typography } from "@mui/material";
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
-import { formStyle, style } from "../modalStyles";
+import { style } from "../modalStyles";
 import { enqueueSnackbar } from "notistack";
 import { createDocument } from "../../../logic/documents";
 import { ProjectModalProps } from "../../../logic/interfaces";
@@ -42,19 +42,11 @@ const CreateDocumentModal = ({
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
-        <Grid container sx={formStyle}>
-          <Grid item>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Create document
-            </Typography>
-          </Grid>
-          <Grid item>
-            <TextField placeholder={"Title"} fullWidth inputRef={titleRef} />
-          </Grid>
-          <Grid item>
-            <TextField placeholder={"URL"} fullWidth inputRef={urlRef} />
-          </Grid>
-        </Grid>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          Create document
+        </Typography>
+        <TextField placeholder={"Title"} fullWidth inputRef={titleRef} />
+        <TextField placeholder={"URL"} fullWidth inputRef={urlRef} />
         <ActionsButtons
           cancel={handleClose}
           submit={handleCreate}
