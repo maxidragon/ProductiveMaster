@@ -27,6 +27,7 @@ import ResetPassword from "./Pages/Auth/ResetPassword/ResetPassword";
 import ProjectParticipants from "./Pages/ProjectParticipants/ProjectParticipants";
 import SingleProject from "./Pages/Projects/SingleProject";
 import LearningResourcesSearch from "./Pages/LearningResources/LearningResourcesSearch";
+import DailyTasks from "./Pages/DailyTasks/DailyTasks";
 
 const router = createBrowserRouter([
   {
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
   {
     path: "/activities",
     element: <Layout children={<Activities />} />,
+  },
+  {
+    path: "/daily-tasks",
+    element: <Layout children={<DailyTasks />} />,
   },
   {
     path: "/goals/categories",

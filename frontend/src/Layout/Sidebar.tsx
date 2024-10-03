@@ -11,17 +11,20 @@ import {
 import { RecentLearning, RecentProject } from "../logic/interfaces";
 import { getRecentProjects } from "../logic/projects";
 import { getRecentLearnings } from "../logic/learning";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import FolderCopyIcon from "@mui/icons-material/FolderCopy";
-import PeopleIcon from "@mui/icons-material/People";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import NoteAltIcon from "@mui/icons-material/NoteAlt";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import SettingsIcon from "@mui/icons-material/Settings";
-import BookIcon from "@mui/icons-material/Book";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import TopicIcon from "@mui/icons-material/Topic";
+import {
+  Dashboard as DashboardIcon,
+  FolderCopy as FolderCopyIcon,
+  Task as TaskIcon,
+  BarChart as BarChartIcon,
+  NoteAlt as NoteAltIcon,
+  FormatListNumbered as FormatListNumberedIcon,
+  CalendarMonth as CalendarMonthIcon,
+  Settings as SettingsIcon,
+  Book as BookIcon,
+  ExpandLess as ExpandLessIcon,
+  ExpandMore as ExpandMoreIcon,
+  Topic as TopicIcon,
+} from "@mui/icons-material";
 
 interface Props {
   openProjectNav: boolean;
@@ -89,9 +92,15 @@ const Sidebar = ({
             ))}
         </List>
       </Collapse>
+      <ListItemButton component={Link} to={"/daily-tasks"}>
+        <ListItemIcon>
+          <FormatListNumberedIcon />
+        </ListItemIcon>
+        <ListItemText primary="Daily tasks" />
+      </ListItemButton>
       <ListItemButton component={Link} to={"/tasks"}>
         <ListItemIcon>
-          <PeopleIcon />
+          <TaskIcon />
         </ListItemIcon>
         <ListItemText primary="Tasks" />
       </ListItemButton>

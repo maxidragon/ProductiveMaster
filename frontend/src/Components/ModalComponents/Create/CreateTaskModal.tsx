@@ -108,7 +108,7 @@ const CreateTaskModal = ({
         <TextField
           multiline
           rows={15}
-          placeholder={"Write task description  here..."}
+          placeholder={"Write task description here..."}
           fullWidth
           inputRef={descriptionRef}
         />

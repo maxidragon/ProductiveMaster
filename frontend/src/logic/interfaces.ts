@@ -42,6 +42,15 @@ export interface Task {
   completed_at?: Date;
 }
 
+export interface DailyTask {
+  id: number;
+  title: string;
+  description?: string;
+  date: Date;
+  updated_at: Date;
+  completed_at?: Date | null;
+}
+
 export interface TaskForProject {
   id: number;
   title: string;
