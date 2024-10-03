@@ -11,5 +11,6 @@ urlpatterns = [
     path('activities/', include('activities.urls')),
     path('goals/', include('goals.urls')),
     path('learnings/', include('learning.urls'), name='learning'),
+    path('daily-tasks/', include('daily_tasks.urls')),
     path('', include('tasks.urls')),
 ]
