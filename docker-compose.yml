@@ -1,6 +1,6 @@
 services:
   backend:
-    image: maxidragon/productive-backend:latest
+    image: maxidragon/productive-backend:main
     build:
       context: ./backend
       dockerfile: Dockerfile
