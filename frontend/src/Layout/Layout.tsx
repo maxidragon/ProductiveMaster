@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Toolbar,
@@ -11,17 +11,13 @@ import {
 
 import Drawer from "./Drawer";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { isUserLoggedIn } from "../logic/auth";
 import Sidebar from "./Sidebar";
 import Copyright from "./Copyright";
 import Navbar from "./Navbar";
 
-interface Props {
-  children: ReactElement;
-}
-
-const Layout = ({ children }: Props): JSX.Element => {
+const Layout = (): JSX.Element => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(true);
   const [openProjectNav, setOpenProjectNav] = useState<boolean>(true);
@@ -113,7 +109,9 @@ const Layout = ({ children }: Props): JSX.Element => {
           overflow: "auto",
         }}
       >
-        <Container sx={{ mt: 4, mb: 4 }}>{children}</Container>
+        <Container sx={{ mt: 4, mb: 4 }}>
+          <Outlet />
+        </Container>
         <Box sx={{ mt: "auto", mb: 2 }}>
           <Copyright />
         </Box>

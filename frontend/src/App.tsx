@@ -15,7 +15,6 @@ import Projects from "./Pages/Projects/Projects";
 import ErrorElement from "./Pages/ErrorElement/ErrorElement";
 import TasksForProject from "./Pages/Tasks/TasksForProject";
 import Tasks from "./Pages/Tasks/Tasks";
-import Activities from "./Pages/Activities/Activities";
 import GoalCategories from "./Pages/GoalCategories/GoalCategories";
 import Settings from "./Pages/Settings/Settings";
 import DocumentsForProject from "./Pages/Documents/DocumentsForProject";
@@ -32,7 +31,81 @@ import DailyTasks from "./Pages/DailyTasks/DailyTasks";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout children={<Dashboard />} />,
+    element: <Layout />,
+    children: [
+      {
+        path: "/",
+        element: <Dashboard />,
+      },
+      {
+        path: "/notes",
+        element: <Notes />,
+      },
+      {
+        path: "/note/:id",
+        element: <SingleNote />,
+      },
+      {
+        path: "/goals",
+        element: <Goals />,
+      },
+      {
+        path: "/projects",
+        element: <Projects />,
+      },
+      {
+        path: "/projects/:projectId",
+        element: <SingleProject />,
+      },
+      {
+        path: "/tasks",
+        element: <Tasks />,
+      },
+      {
+        path: "/tasks/project/:projectId",
+        element: <TasksForProject />,
+      },
+      {
+        path: "documents/:projectId",
+        element: <DocumentsForProject />,
+      },
+      {
+        path: "/participants/:projectId",
+        element: <ProjectParticipants />,
+      },
+      {
+        path: "/daily-tasks",
+        element: <DailyTasks />,
+      },
+      {
+        path: "/goals/categories",
+        element: <GoalCategories />,
+      },
+      {
+        path: "/settings",
+        element: <Settings />,
+      },
+      {
+        path: "/learning",
+        element: <Learning />,
+      },
+      {
+        path: "/learning/categories",
+        element: <LearningCategories />,
+      },
+      {
+        path: "learning/resources",
+        element: <LearningResourcesSearch />,
+      },
+      {
+        path: "learning/:learningId/resources",
+        element: <LearningResources />,
+      },
+      {
+        path: "*",
+        element: <ErrorElement message="404 not found" />,
+      },
+    ],
   },
   {
     path: "/auth/login",
@@ -49,78 +122,6 @@ const router = createBrowserRouter([
   {
     path: "/auth/password/reset/:resetId",
     element: <ResetPassword />,
-  },
-  {
-    path: "/notes",
-    element: <Layout children={<Notes />} />,
-  },
-  {
-    path: "/note/:id",
-    element: <Layout children={<SingleNote />} />,
-  },
-  {
-    path: "/goals",
-    element: <Layout children={<Goals />} />,
-  },
-  {
-    path: "/projects",
-    element: <Layout children={<Projects />} />,
-  },
-  {
-    path: "/projects/:projectId",
-    element: <Layout children={<SingleProject />} />,
-  },
-  {
-    path: "/tasks",
-    element: <Layout children={<Tasks />} />,
-  },
-  {
-    path: "/tasks/project/:projectId",
-    element: <Layout children={<TasksForProject />} />,
-  },
-  {
-    path: "documents/:projectId",
-    element: <Layout children={<DocumentsForProject />} />,
-  },
-  {
-    path: "/participants/:projectId",
-    element: <Layout children={<ProjectParticipants />} />,
-  },
-  {
-    path: "/activities",
-    element: <Layout children={<Activities />} />,
-  },
-  {
-    path: "/daily-tasks",
-    element: <Layout children={<DailyTasks />} />,
-  },
-  {
-    path: "/goals/categories",
-    element: <Layout children={<GoalCategories />} />,
-  },
-  {
-    path: "/settings",
-    element: <Layout children={<Settings />} />,
-  },
-  {
-    path: "/learning",
-    element: <Layout children={<Learning />} />,
-  },
-  {
-    path: "/learning/categories",
-    element: <Layout children={<LearningCategories />} />,
-  },
-  {
-    path: "learning/resources",
-    element: <Layout children={<LearningResourcesSearch />} />,
-  },
-  {
-    path: "learning/:learningId/resources",
-    element: <Layout children={<LearningResources />} />,
-  },
-  {
-    path: "*",
-    element: <Layout children={<ErrorElement message="404 not found" />} />,
   },
 ]);
 

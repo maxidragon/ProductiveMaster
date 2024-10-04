@@ -18,7 +18,6 @@ import {
   BarChart as BarChartIcon,
   NoteAlt as NoteAltIcon,
   FormatListNumbered as FormatListNumberedIcon,
-  CalendarMonth as CalendarMonthIcon,
   Settings as SettingsIcon,
   Book as BookIcon,
   ExpandLess as ExpandLessIcon,
@@ -103,12 +102,6 @@ const Sidebar = ({
           <TaskIcon />
         </ListItemIcon>
         <ListItemText primary="Tasks" />
-      </ListItemButton>
-      <ListItemButton component={Link} to={"/activities"}>
-        <ListItemIcon>
-          <CalendarMonthIcon />
-        </ListItemIcon>
-        <ListItemText primary="Activities" />
       </ListItemButton>
       <ListItemButton component={Link} to={"/notes"}>
         <ListItemIcon>
