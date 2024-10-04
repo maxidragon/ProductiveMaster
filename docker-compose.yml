@@ -1,6 +1,6 @@
 services:
   backend:
-    image: maxidragon/productive-backend:latest
+    image: maxidragon/productive-backend:main
     container_name: productivemaster-prod-backend
     build:
       context: ./backend
