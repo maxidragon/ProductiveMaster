@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CircularProgress,
-  TextField,
-} from "@mui/material";
+import { Box, Button, CircularProgress, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Note } from "../../logic/interfaces";
@@ -17,6 +10,7 @@ import {
 } from "@mui/icons-material";
 import { enqueueSnackbar } from "notistack";
 import { useConfirm } from "material-ui-confirm";
+import MDEditor from "@uiw/react-md-editor";
 const SingleNote = () => {
   const navigate = useNavigate();
   const confirm = useConfirm();
@@ -66,8 +60,8 @@ const SingleNote = () => {
     enqueueSnackbar("Note copied!", { variant: "success" });
   };
 
-  return (
-    <>
+  if (!note)
+    return (
       <Box
         sx={{
           display: "flex",
@@ -76,61 +70,59 @@ const SingleNote = () => {
           alignItems: "center",
         }}
       >
-        <Card sx={{ width: 700, mr: 5, mt: 2 }}>
-          {note ? (
-            <CardContent
-              sx={{ mt: 2, display: "flex", flexDirection: "column" }}
-            >
-              <TextField
-                placeholder={"Title"}
-                fullWidth
-                value={note.title}
-                onChange={(event) =>
-                  setNote({ ...note, title: event.target.value })
-                }
-              />
-              <TextField
-                multiline
-                rows={15}
-                placeholder={"Write your note here..."}
-                fullWidth
-                value={note.description}
-                onChange={(event) =>
-                  setNote({ ...note, description: event.target.value })
-                }
-              />
-              <Box
-                sx={{ display: "flex", justifyContent: "end", gap: 1, mt: 2 }}
-              >
-                <Button
-                  variant="contained"
-                  endIcon={<CopyIcon />}
-                  onClick={handleCopy}
-                >
-                  Copy
-                </Button>
-                <Button
-                  variant="contained"
-                  color="success"
-                  endIcon={<EditIcon />}
-                  onClick={handleEdit}
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  endIcon={<DeleteIcon />}
-                  onClick={handleDelete}
-                >
-                  Delete
-                </Button>
-              </Box>
-            </CardContent>
-          ) : (
-            <CircularProgress />
-          )}
-        </Card>
+        <CircularProgress />
+      </Box>
+    );
+
+  return (
+    <>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <TextField
+          placeholder={"Title"}
+          fullWidth
+          value={note.title}
+          onChange={(event) => setNote({ ...note, title: event.target.value })}
+        />
+        <Box sx={{ mt: 2, display: "flex", flexDirection: "column" }}>
+          <MDEditor
+            value={note.description}
+            autoFocus
+            height="60vh"
+            onChange={(value) => {
+              setNote({ ...note, description: value || "" });
+            }}
+          />
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "end", gap: 1, mt: 2 }}>
+          <Button
+            variant="contained"
+            endIcon={<CopyIcon />}
+            onClick={handleCopy}
+          >
+            Copy
+          </Button>
+          <Button
+            variant="contained"
+            color="success"
+            endIcon={<EditIcon />}
+            onClick={handleEdit}
+          >
+            Edit
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            endIcon={<DeleteIcon />}
+            onClick={handleDelete}
+          >
+            Delete
+          </Button>
+        </Box>
       </Box>
     </>
   );

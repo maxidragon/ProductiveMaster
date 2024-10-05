@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, Typography } from "@mui/material";
-import { Note } from "../../logic/interfaces";
+import { Note } from "../../../logic/interfaces";
 
 interface Props {
   note: Note;
@@ -25,11 +25,6 @@ const NoteCard = ({ note }: Props): JSX.Element => {
     >
       <CardContent sx={{ display: "flex", flexDirection: "column" }}>
         <Typography variant="h6">{note.title}</Typography>
-        <Typography variant="body2">
-          {note.description && note.description.length > 30
-            ? note.description.substring(0, 30) + "..."
-            : note.description}
-        </Typography>
       </CardContent>
     </Card>
   );

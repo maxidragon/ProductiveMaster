@@ -8,9 +8,9 @@ import {
   TextField,
   Table,
 } from "@mui/material";
-import NoteCard from "../../Components/CardComponents/NoteCard";
+import NoteCard from "./Components/NoteCard";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import CreateNoteModal from "../../Components/ModalComponents/Create/CreateNoteModal";
+import CreateNoteModal from "./Components/CreateNoteModal";
 import { calculateTotalPages } from "../../logic/other";
 import PaginationFooter from "../../Components/Pagination/PaginationFooter";
 
