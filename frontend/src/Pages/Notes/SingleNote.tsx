@@ -93,6 +93,9 @@ const SingleNote = () => {
             value={note.description}
             autoFocus
             height="60vh"
+            textareaProps={{
+              placeholder: "Add your note here...",
+            }}
             onChange={(value) => {
               setNote({ ...note, description: value || "" });
             }}
