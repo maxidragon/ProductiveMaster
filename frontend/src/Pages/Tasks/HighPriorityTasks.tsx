@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { Task } from "../../logic/interfaces";
 import { getHighPriorityTasks } from "../../logic/tasks";
 import { LinearProgress } from "@mui/material";
-import TasksTable from "../../Components/Table/TasksTable";
+import TasksTable from "./Components/TasksTable";
 import { calculateTotalPages } from "../../logic/other";
 
 const HighPriorityTasks = () => {

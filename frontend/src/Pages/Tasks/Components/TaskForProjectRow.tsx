@@ -14,14 +14,16 @@ import {
   CheckCircle as CheckCircleIcon,
   Delete as DeleteIcon,
   Edit as EditIcon,
+  Add as PlusIcon,
   TaskAlt as TaskAltIcon,
 } from "@mui/icons-material";
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
 import { deleteTask, updateTask } from "../../../logic/tasks";
 import { statusPretyName } from "../../../logic/other";
-import EditTaskModal from "../../ModalComponents/Edit/EditTaskModal";
-import AvatarComponent from "../../AvatarComponent";
+import EditTaskModal from "../../../Pages/Tasks/Components/Modal/EditTaskModal";
+import AvatarComponent from "../../../Components/AvatarComponent";
+import AddAsDailyTaskModal from "../../../Pages/Tasks/Components/Modal/AddAsDailyTaskModal";
 
 interface Props {
   task: TaskForProject;
@@ -38,6 +40,7 @@ const TasksForProjectRow = ({
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editedTask, setEditedTask] = useState<TaskForProject>(task);
+  const [isAddAsDailyModalOpen, setIsAddAsDailyModalOpen] = useState(false);
   const [taskOwner] = useState(task.owner);
   const [taskAssignee] = useState(task.assignee);
 
@@ -165,6 +168,9 @@ const TasksForProjectRow = ({
             )}
           </TableCell>
           <TableCell>
+            <IconButton onClick={() => setIsAddAsDailyModalOpen(true)}>
+              <PlusIcon />
+            </IconButton>
             {editedTask.status !== "DONE" &&
               (isProjectOwner ||
                 localStorage.getItem("userId") ===
@@ -206,6 +212,11 @@ const TasksForProjectRow = ({
           editTask={editTask}
         />
       )}
+      <AddAsDailyTaskModal
+        open={isAddAsDailyModalOpen}
+        handleClose={() => setIsAddAsDailyModalOpen(false)}
+        task={editedTask}
+      />
     </>
   );
 };

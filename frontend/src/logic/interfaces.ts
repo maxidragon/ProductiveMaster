@@ -47,6 +47,7 @@ export interface DailyTask {
   title: string;
   description?: string;
   date: Date;
+  project_task?: TaskForProject;
   updated_at: Date;
   completed_at?: Date | null;
 }

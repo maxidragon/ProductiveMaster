@@ -10,7 +10,7 @@ import {
   TextField,
   Box,
 } from "@mui/material";
-import TasksTable from "../../Components/Table/TasksTable";
+import TasksTable from "./Components/TasksTable";
 import { calculateTotalPages } from "../../logic/other";
 
 const Tasks = () => {

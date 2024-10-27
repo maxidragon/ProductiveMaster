@@ -15,11 +15,13 @@ export const createDailyTask = async (
   title: string,
   description: string,
   date: Date,
+  taskId?: number,
 ) => {
   const response = await backendRequest("daily-tasks/create/", "POST", true, {
     title,
     description,
     date: formatDate(date),
+    project_task: taskId,
   });
   return {
     status: response.status,
@@ -34,6 +36,7 @@ export const updateDailyTask = async (task: DailyTask) => {
     true,
     {
       ...task,
+      project_task: task.project_task?.id,
     },
   );
   return {

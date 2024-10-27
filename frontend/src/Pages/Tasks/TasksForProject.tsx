@@ -13,9 +13,9 @@ import {
 import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { TaskForProject } from "../../logic/interfaces";
-import CreateTaskModal from "../../Components/ModalComponents/Create/CreateTaskModal";
+import CreateTaskModal from "./Components/Modal/CreateTaskModal";
 import { calculateTotalPages } from "../../logic/other";
-import TasksForProjectTable from "../../Components/Table/TasksForProjectTable";
+import TasksForProjectTable from "./Components/TasksForProjectTable";
 import { isProjectOwner as isProjectOwnerCheck } from "../../logic/projectParticipants";
 
 const TasksForProject = () => {

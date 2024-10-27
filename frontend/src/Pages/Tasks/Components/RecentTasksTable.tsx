@@ -7,8 +7,8 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
-import { TaskForProject } from "../../logic/interfaces";
-import RecentTaskRow from "./Row/RecentTaskRow";
+import { TaskForProject } from "../../../logic/interfaces";
+import RecentTaskRow from "./RecentTaskRow";
 
 interface Props {
   tasks: TaskForProject[];

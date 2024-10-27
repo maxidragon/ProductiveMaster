@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   TableRow,
   TableCell,
@@ -6,9 +6,9 @@ import {
   Link,
   Chip,
   Box,
-  Tooltip,
 } from "@mui/material";
 import {
+  Assignment as AssignmentIcon,
   AssignmentReturned as AssignmentReturnedIcon,
   CheckCircle as CheckCircleIcon,
   Delete as DeleteIcon,
@@ -17,24 +17,25 @@ import {
 } from "@mui/icons-material";
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
-import { Task, TaskForProject } from "../../../logic/interfaces";
+import { Task } from "../../../logic/interfaces";
 import { deleteTask, updateTask } from "../../../logic/tasks";
+import { Link as RouterLink } from "react-router-dom";
 import { statusPretyName } from "../../../logic/other";
-import AvatarComponent from "../../AvatarComponent";
-import EditTaskModal from "../../ModalComponents/Edit/EditTaskModal";
+import { isProjectOwner as isProjectOwnerFetch } from "../../../logic/projectParticipants";
+import EditTaskModal from "../../../Pages/Tasks/Components/Modal/EditTaskModal";
 
 interface Props {
-  task: TaskForProject;
-  isProjectOwner: boolean;
+  task: Task;
+  handleStatusUpdate: (status: string) => void;
 }
 
-const RecentTaskRow = ({ task, isProjectOwner }: Props): JSX.Element => {
+const TaskRow = ({ task, handleStatusUpdate }: Props): JSX.Element => {
+  const userId = localStorage.getItem("userId") || "";
+  const [isProjectOwner, setIsProjectOwner] = useState(false);
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [editedTask, setEditedTask] = useState<TaskForProject>(task);
-  const [taskOwner] = useState(task.owner);
-  const [taskAssignee] = useState(task.assignee);
+  const [editedTask, setEditedTask] = useState<Task>(task);
 
   const handleDelete = async (): Promise<void> => {
     if (task === null) return;
@@ -53,26 +54,17 @@ const RecentTaskRow = ({ task, isProjectOwner }: Props): JSX.Element => {
       });
   };
   const editTask = (task: Task): void => {
-    const taskToSet = {
-      ...task,
-      owner: taskOwner,
-      assignee: taskAssignee,
-    };
-    setEditedTask(taskToSet);
+    setEditedTask(task);
   };
-
   const handleComplete = async (): Promise<void> => {
     const task = { ...editedTask, status: "DONE", completed_at: new Date() };
     setEditedTask(task);
-    const response = await updateTask({
-      ...task,
-      owner: task.owner.id,
-      assignee: task.assignee?.id,
-    });
+    const response = await updateTask(task);
     if (response.status === 200) {
       enqueueSnackbar("Status is successfully changed to done!", {
         variant: "success",
       });
+      handleStatusUpdate("DONE");
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
@@ -80,7 +72,15 @@ const RecentTaskRow = ({ task, isProjectOwner }: Props): JSX.Element => {
 
   const handleCloseEditModal = (): void => {
     setEdit(false);
+    handleStatusUpdate(editedTask.status);
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      const isOwner = await isProjectOwnerFetch(editedTask.project.id);
+      setIsProjectOwner(isOwner["is_owner"]);
+    };
+    fetchData();
+  }, [editedTask.project.id]);
 
   return (
     <>
@@ -98,6 +98,15 @@ const RecentTaskRow = ({ task, isProjectOwner }: Props): JSX.Element => {
             )}
           </TableCell>
           <TableCell>{editedTask.description}</TableCell>
+          <TableCell>{editedTask.project.title}</TableCell>
+          <TableCell>
+            <IconButton
+              component={RouterLink}
+              to={`/tasks/project/${editedTask.project.id}`}
+            >
+              <AssignmentIcon />
+            </IconButton>
+          </TableCell>
           <TableCell>
             <Box sx={{ display: "inline-block", ml: 1 }}>
               <Chip
@@ -111,30 +120,6 @@ const RecentTaskRow = ({ task, isProjectOwner }: Props): JSX.Element => {
                 }
               />
             </Box>
-          </TableCell>
-          <TableCell>
-            <Tooltip title={editedTask.owner.username}>
-              <IconButton>
-                <AvatarComponent
-                  userId={editedTask.owner.id}
-                  username={editedTask.owner.username}
-                  size="30px"
-                />
-              </IconButton>
-            </Tooltip>
-          </TableCell>
-          <TableCell>
-            {editedTask.assignee && (
-              <Tooltip title={editedTask.assignee.username}>
-                <IconButton>
-                  <AvatarComponent
-                    userId={editedTask.assignee.id}
-                    username={editedTask.assignee.username}
-                    size="30px"
-                  />
-                </IconButton>
-              </Tooltip>
-            )}
           </TableCell>
           <TableCell>
             {editedTask.issue && (
@@ -161,26 +146,20 @@ const RecentTaskRow = ({ task, isProjectOwner }: Props): JSX.Element => {
           <TableCell>
             {editedTask.status !== "DONE" &&
               (isProjectOwner ||
-                localStorage.getItem("userId") ===
-                  editedTask.owner.id.toString() ||
-                localStorage.getItem("userId") ===
-                  editedTask.assignee?.id.toString()) && (
+                userId === editedTask.owner.toString() ||
+                userId === editedTask.assignee?.toString()) && (
                 <IconButton onClick={handleComplete}>
                   <CheckCircleIcon />
                 </IconButton>
               )}
             {(isProjectOwner ||
-              localStorage.getItem("userId") ===
-                editedTask.owner.id.toString() ||
-              localStorage.getItem("userId") ===
-                editedTask.assignee?.id.toString()) && (
+              userId === editedTask.owner.toString() ||
+              userId === editedTask.assignee?.toString()) && (
               <IconButton onClick={() => setEdit(true)}>
                 <EditIcon />
               </IconButton>
             )}
-            {(isProjectOwner ||
-              localStorage.getItem("userId") ===
-                editedTask.owner.id.toString()) && (
+            {(isProjectOwner || userId === editedTask.owner.toString()) && (
               <IconButton onClick={handleDelete}>
                 <DeleteIcon />
               </IconButton>
@@ -192,11 +171,7 @@ const RecentTaskRow = ({ task, isProjectOwner }: Props): JSX.Element => {
         <EditTaskModal
           open={edit}
           handleClose={handleCloseEditModal}
-          task={{
-            ...editedTask,
-            owner: editedTask.owner.id,
-            assignee: editedTask.assignee?.id,
-          }}
+          task={editedTask}
           editTask={editTask}
         />
       )}
@@ -204,4 +179,4 @@ const RecentTaskRow = ({ task, isProjectOwner }: Props): JSX.Element => {
   );
 };
 
-export default RecentTaskRow;
+export default TaskRow;

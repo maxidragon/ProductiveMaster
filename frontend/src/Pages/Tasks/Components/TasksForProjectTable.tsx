@@ -8,30 +8,32 @@ import {
   TableBody,
   TableFooter,
 } from "@mui/material";
-import { Task } from "../../logic/interfaces";
-import TaskRow from "./Row/TaskRow";
-import PaginationFooter from "../Pagination/PaginationFooter";
+import { TaskForProject } from "../../../logic/interfaces";
+import PaginationFooter from "../../../Components/Pagination/PaginationFooter";
+import TaskForProjectRow from "./TaskForProjectRow";
 
 interface Props {
-  tasks: Task[];
+  tasks: TaskForProject[];
   page: number;
   totalPages: number;
   totalItems: number;
+  isProjectOwner: boolean;
   handlePageChange: (page: number) => void;
   status?: string;
   fetchData: (pageParam: number, statusParam?: string) => void;
 }
 
-const TasksTable = ({
+const TasksForProjectTable = ({
   tasks,
   page,
   totalPages,
   totalItems,
+  isProjectOwner,
   handlePageChange,
   status,
   fetchData,
 }: Props): JSX.Element => {
-  const handleStatusUpdate = (statusParam: string): void => {
+  const handleStatusUpdate = (statusParam: string) => {
     if (status === statusParam) return;
     fetchData(page, status);
   };
@@ -43,19 +45,20 @@ const TasksTable = ({
           <TableRow>
             <TableCell>Title</TableCell>
             <TableCell>Description</TableCell>
-            <TableCell>Project</TableCell>
-            <TableCell>Tasks for project</TableCell>
             <TableCell>Status</TableCell>
+            <TableCell>Author</TableCell>
+            <TableCell>Assignee</TableCell>
             <TableCell>Issue</TableCell>
             <TableCell>PR</TableCell>
             <TableCell>Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {tasks.map((task: Task) => (
-            <TaskRow
+          {tasks.map((task: TaskForProject) => (
+            <TaskForProjectRow
               key={task.id}
               task={task}
+              isProjectOwner={isProjectOwner}
               handleStatusUpdate={handleStatusUpdate}
             />
           ))}
@@ -75,4 +78,4 @@ const TasksTable = ({
   );
 };
 
-export default TasksTable;
+export default TasksForProjectTable;

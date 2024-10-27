@@ -13,6 +13,8 @@ import {
 } from "../../../logic/dailyTasks";
 import { useConfirm } from "material-ui-confirm";
 import {
+  Box,
+  Chip,
   IconButton,
   ListItem,
   ListItemAvatar,
@@ -20,6 +22,7 @@ import {
 } from "@mui/material";
 import EditDailyTaskModal from "./EditDailyTaskModal";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface TaskItemProps {
   task: DailyTask;
@@ -28,6 +31,7 @@ interface TaskItemProps {
 
 const TaskItem = ({ task, fetchData }: TaskItemProps) => {
   const confirm = useConfirm();
+  const navigate = useNavigate();
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
   const handleDelete = async () => {
     confirm({
@@ -102,7 +106,28 @@ const TaskItem = ({ task, fetchData }: TaskItemProps) => {
             </IconButton>
           </ListItemAvatar>
         )}
-        <ListItemText primary={task.title} secondary={task.description || ""} />
+        <ListItemText
+          primary={
+            <Box
+              component="span"
+              sx={{ display: "flex", alignItems: "center", gap: 3 }}
+            >
+              {task.title}
+              {task.project_task && (
+                <Chip
+                  color="primary"
+                  label={
+                    task.project_task ? task.project_task.project.title : ""
+                  }
+                  onClick={() =>
+                    navigate(`/projects/${task.project_task?.project.id}`)
+                  }
+                />
+              )}
+            </Box>
+          }
+          secondary={task.description || ""}
+        />
       </ListItem>
       <EditDailyTaskModal
         open={isOpenEditModal}

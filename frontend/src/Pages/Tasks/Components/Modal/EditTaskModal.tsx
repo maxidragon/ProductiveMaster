@@ -11,18 +11,18 @@ import {
   Checkbox,
 } from "@mui/material";
 import { Edit as EditIcon } from "@mui/icons-material";
-import { style } from "../modalStyles";
+import { style } from "../../../../Components/ModalComponents/modalStyles";
 import { enqueueSnackbar } from "notistack";
-import { updateTask } from "../../../logic/tasks";
+import { updateTask } from "../../../../logic/tasks";
 import {
   ModalProps,
   ProjectParticipant,
   Task,
-} from "../../../logic/interfaces";
+} from "../../../../logic/interfaces";
 import { useState, useEffect } from "react";
-import { getProjectParticipants } from "../../../logic/projectParticipants";
-import ActionsButtons from "../ActionsButtons";
-import AvatarComponent from "../../AvatarComponent";
+import { getProjectParticipants } from "../../../../logic/projectParticipants";
+import ActionsButtons from "../../../../Components/ModalComponents/ActionsButtons";
+import AvatarComponent from "../../../../Components/AvatarComponent";
 
 interface Props extends ModalProps {
   task: Task;

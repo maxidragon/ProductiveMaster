@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   TableRow,
   TableCell,
@@ -6,36 +6,38 @@ import {
   Link,
   Chip,
   Box,
+  Tooltip,
 } from "@mui/material";
 import {
-  Assignment as AssignmentIcon,
   AssignmentReturned as AssignmentReturnedIcon,
   CheckCircle as CheckCircleIcon,
   Delete as DeleteIcon,
   Edit as EditIcon,
+  Add as PlusIcon,
   TaskAlt as TaskAltIcon,
 } from "@mui/icons-material";
 import { useConfirm } from "material-ui-confirm";
 import { enqueueSnackbar } from "notistack";
-import { Task } from "../../../logic/interfaces";
+import { Task, TaskForProject } from "../../../logic/interfaces";
 import { deleteTask, updateTask } from "../../../logic/tasks";
-import { Link as RouterLink } from "react-router-dom";
 import { statusPretyName } from "../../../logic/other";
-import { isProjectOwner as isProjectOwnerFetch } from "../../../logic/projectParticipants";
-import EditTaskModal from "../../ModalComponents/Edit/EditTaskModal";
+import AvatarComponent from "../../../Components/AvatarComponent";
+import EditTaskModal from "../../../Pages/Tasks/Components/Modal/EditTaskModal";
+import AddAsDailyTaskModal from "./Modal/AddAsDailyTaskModal";
 
 interface Props {
-  task: Task;
-  handleStatusUpdate: (status: string) => void;
+  task: TaskForProject;
+  isProjectOwner: boolean;
 }
 
-const TaskRow = ({ task, handleStatusUpdate }: Props): JSX.Element => {
-  const userId = localStorage.getItem("userId") || "";
-  const [isProjectOwner, setIsProjectOwner] = useState(false);
+const RecentTaskRow = ({ task, isProjectOwner }: Props): JSX.Element => {
   const confirm = useConfirm();
   const [hide, setHide] = useState(false);
   const [edit, setEdit] = useState(false);
-  const [editedTask, setEditedTask] = useState<Task>(task);
+  const [editedTask, setEditedTask] = useState<TaskForProject>(task);
+  const [isAddAsDailyModalOpen, setIsAddAsDailyModalOpen] = useState(false);
+  const [taskOwner] = useState(task.owner);
+  const [taskAssignee] = useState(task.assignee);
 
   const handleDelete = async (): Promise<void> => {
     if (task === null) return;
@@ -54,17 +56,26 @@ const TaskRow = ({ task, handleStatusUpdate }: Props): JSX.Element => {
       });
   };
   const editTask = (task: Task): void => {
-    setEditedTask(task);
+    const taskToSet = {
+      ...task,
+      owner: taskOwner,
+      assignee: taskAssignee,
+    };
+    setEditedTask(taskToSet);
   };
+
   const handleComplete = async (): Promise<void> => {
     const task = { ...editedTask, status: "DONE", completed_at: new Date() };
     setEditedTask(task);
-    const response = await updateTask(task);
+    const response = await updateTask({
+      ...task,
+      owner: task.owner.id,
+      assignee: task.assignee?.id,
+    });
     if (response.status === 200) {
       enqueueSnackbar("Status is successfully changed to done!", {
         variant: "success",
       });
-      handleStatusUpdate("DONE");
     } else {
       enqueueSnackbar("Something went wrong!", { variant: "error" });
     }
@@ -72,15 +83,7 @@ const TaskRow = ({ task, handleStatusUpdate }: Props): JSX.Element => {
 
   const handleCloseEditModal = (): void => {
     setEdit(false);
-    handleStatusUpdate(editedTask.status);
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      const isOwner = await isProjectOwnerFetch(editedTask.project.id);
-      setIsProjectOwner(isOwner["is_owner"]);
-    };
-    fetchData();
-  }, [editedTask.project.id]);
 
   return (
     <>
@@ -98,15 +101,6 @@ const TaskRow = ({ task, handleStatusUpdate }: Props): JSX.Element => {
             )}
           </TableCell>
           <TableCell>{editedTask.description}</TableCell>
-          <TableCell>{editedTask.project.title}</TableCell>
-          <TableCell>
-            <IconButton
-              component={RouterLink}
-              to={`/tasks/project/${editedTask.project.id}`}
-            >
-              <AssignmentIcon />
-            </IconButton>
-          </TableCell>
           <TableCell>
             <Box sx={{ display: "inline-block", ml: 1 }}>
               <Chip
@@ -120,6 +114,30 @@ const TaskRow = ({ task, handleStatusUpdate }: Props): JSX.Element => {
                 }
               />
             </Box>
+          </TableCell>
+          <TableCell>
+            <Tooltip title={editedTask.owner.username}>
+              <IconButton>
+                <AvatarComponent
+                  userId={editedTask.owner.id}
+                  username={editedTask.owner.username}
+                  size="30px"
+                />
+              </IconButton>
+            </Tooltip>
+          </TableCell>
+          <TableCell>
+            {editedTask.assignee && (
+              <Tooltip title={editedTask.assignee.username}>
+                <IconButton>
+                  <AvatarComponent
+                    userId={editedTask.assignee.id}
+                    username={editedTask.assignee.username}
+                    size="30px"
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
           </TableCell>
           <TableCell>
             {editedTask.issue && (
@@ -144,22 +162,31 @@ const TaskRow = ({ task, handleStatusUpdate }: Props): JSX.Element => {
             )}
           </TableCell>
           <TableCell>
+            <IconButton onClick={() => setIsAddAsDailyModalOpen(true)}>
+              <PlusIcon />
+            </IconButton>
             {editedTask.status !== "DONE" &&
               (isProjectOwner ||
-                userId === editedTask.owner.toString() ||
-                userId === editedTask.assignee?.toString()) && (
+                localStorage.getItem("userId") ===
+                  editedTask.owner.id.toString() ||
+                localStorage.getItem("userId") ===
+                  editedTask.assignee?.id.toString()) && (
                 <IconButton onClick={handleComplete}>
                   <CheckCircleIcon />
                 </IconButton>
               )}
             {(isProjectOwner ||
-              userId === editedTask.owner.toString() ||
-              userId === editedTask.assignee?.toString()) && (
+              localStorage.getItem("userId") ===
+                editedTask.owner.id.toString() ||
+              localStorage.getItem("userId") ===
+                editedTask.assignee?.id.toString()) && (
               <IconButton onClick={() => setEdit(true)}>
                 <EditIcon />
               </IconButton>
             )}
-            {(isProjectOwner || userId === editedTask.owner.toString()) && (
+            {(isProjectOwner ||
+              localStorage.getItem("userId") ===
+                editedTask.owner.id.toString()) && (
               <IconButton onClick={handleDelete}>
                 <DeleteIcon />
               </IconButton>
@@ -171,12 +198,21 @@ const TaskRow = ({ task, handleStatusUpdate }: Props): JSX.Element => {
         <EditTaskModal
           open={edit}
           handleClose={handleCloseEditModal}
-          task={editedTask}
+          task={{
+            ...editedTask,
+            owner: editedTask.owner.id,
+            assignee: editedTask.assignee?.id,
+          }}
           editTask={editTask}
         />
       )}
+      <AddAsDailyTaskModal
+        open={isAddAsDailyModalOpen}
+        handleClose={() => setIsAddAsDailyModalOpen(false)}
+        task={editedTask}
+      />
     </>
   );
 };
 
-export default TaskRow;
+export default RecentTaskRow;

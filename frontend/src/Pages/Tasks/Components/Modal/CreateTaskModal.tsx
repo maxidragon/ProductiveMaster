@@ -12,16 +12,16 @@ import {
   Select,
 } from "@mui/material";
 import { AddCircle as AddCircleIcon } from "@mui/icons-material";
-import { style } from "../modalStyles";
+import { style } from "../../../../Components/ModalComponents/modalStyles";
 import { enqueueSnackbar } from "notistack";
-import { createTask } from "../../../logic/tasks";
-import { getProjectParticipants } from "../../../logic/projectParticipants";
+import { createTask } from "../../../../logic/tasks";
+import { getProjectParticipants } from "../../../../logic/projectParticipants";
 import {
   ProjectModalProps,
   ProjectParticipant,
-} from "../../../logic/interfaces";
-import ActionsButtons from "../ActionsButtons";
-import AvatarComponent from "../../AvatarComponent";
+} from "../../../../logic/interfaces";
+import ActionsButtons from "../../../../Components/ModalComponents/ActionsButtons";
+import AvatarComponent from "../../../../Components/AvatarComponent";
 
 const CreateTaskModal = ({
   open,
