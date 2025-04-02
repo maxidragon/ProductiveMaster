@@ -136,7 +136,7 @@ const App = () => {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <ThemeProvider theme={darkTheme}>
         <SnackbarProvider>
-          <ConfirmProvider>
+          <ConfirmProvider useLegacyReturn>
             <RouterProvider router={router} />
           </ConfirmProvider>
         </SnackbarProvider>
