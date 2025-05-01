@@ -61,7 +61,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
-    "@vitejs/plugin-react": "^4.3.3",
+    "@vitejs/plugin-react": "^4.4.1",
     "c8": "^10.1.2",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^10.0.2",
