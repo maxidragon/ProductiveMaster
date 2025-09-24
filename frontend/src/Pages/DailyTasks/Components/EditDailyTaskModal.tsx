@@ -46,7 +46,7 @@ const EditDailyTaskModal = ({
     <Modal open={open} onClose={handleClose}>
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Create task for {formatDate(new Date(task.date))}
+          Edit task for {formatDate(new Date(task.date))}
         </Typography>
         <TextField
           placeholder={"Title"}
@@ -66,6 +66,9 @@ const EditDailyTaskModal = ({
             setEditedTask({ ...editedTask, description: e.target.value })
           }
         />
+        <Typography id="modal-modal-description" variant="subtitle1">
+          Created at: {formatDate(new Date(task.created_at))}
+        </Typography>
         <ActionsButtons
           cancel={handleClose}
           submit={handleSubmit}

@@ -12,7 +12,7 @@ class ListDailyTasks(APIView):
     def get(self, request, date):
         date_obj = datetime.strptime(date, "%Y-%m-%d")
         tasks = DailyTask.objects.filter(
-            date__year=date_obj.year, date__month=date_obj.month, date__day=date_obj.day, owner=request.user).order_by('-updated_at')
+            date__year=date_obj.year, date__month=date_obj.month, date__day=date_obj.day, owner=request.user).order_by('-updated_at', '-created_at')
         serializer = DailyTaskSerializer(tasks, many=True)
         return Response(serializer.data)
 

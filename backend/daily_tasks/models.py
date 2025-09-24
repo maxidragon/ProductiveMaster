@@ -10,3 +10,4 @@ class DailyTask(models.Model):
     project_task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='project_tasks', blank=True, null=True)
     completed_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
